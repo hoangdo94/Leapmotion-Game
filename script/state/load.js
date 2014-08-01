@@ -23,6 +23,7 @@ var loadState = {
 		
 		//load images
 		game.load.image('bg', 'asset/image/bg.jpg');
+		game.load.image('player', 'asset/image/player.png');
 		
 		//load audios
 		//game.load.audio('music', 'asset/sound/music.wav');
