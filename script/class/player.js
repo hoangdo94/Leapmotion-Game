@@ -1,43 +1,26 @@
-var defaultVelocity = 10;
-var Player = function(controller, sprite) {
-	this.controller = controller;
-	this.sprite = sprite;
-	this.velocity = defaultVelocity;
+var Player = function(game, sprite, startPosition) {
+	this.game = game;
 	
-	sprite.anchor.setTo(0.5, 0.5); 
-	sprite.animations.add('fly');
-	sprite.animations.play('fly', 20, true);};
+	//add sprite
+	this.sprite = game.add.sprite(startPosition.x, startPosition.y, sprite);
+	this.sprite.anchor.set(0.5);
+	var scale = 1/9;
+	this.sprite.scale.x = this.sprite.scale.y = scale;
+	this.sprite.animations.add('fly');
+	this.sprite.animations.play('fly', 20, true);
+	
+	//enable aracade physics for player sprite
+	this.game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
+	this.sprite.body.collideWorldBounds = true; 
+	
+	this.controller = new KeyboardController(game,this);
+};
 
 Player.prototype = {
 
 	constructor: Player,
-	
-	
+
 	update: function() {
-		var input = this.controller.getInput();
-		this.inputHandle(input);
-	},
-	
-	inputHandle: function(input) {
-		if (input == "UP") {
-			this.sprite.y -= this.velocity;
-		}
-		
-		if (input == "DOWN") {
-			this.sprite.y += this.velocity;
-		}
-		
-		if (input == "LEFT") {
-			this.sprite.x -= this.velocity;
-		}
-		
-		if (input == "RIGHT") {
-			this.sprite.x += this.velocity;
-		}
-		
-		if (input == "SPACEBAR") {
-			// Do something here
-		}
+		this.controller.update();
 	}
 };
-
