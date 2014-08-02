@@ -23,7 +23,7 @@ var loadState = {
 		
 		//load images
 		game.load.image('bg', 'asset/image/bg.jpg');
-		
+		game.load.spritesheet('playerSprite', 'asset/image/shipAnimation.png', 115, 69, 8);
 		//load audios
 		//game.load.audio('music', 'asset/sound/music.wav');
 	},
