@@ -13,7 +13,10 @@ var playState = {
 		//add player
 		var startPosition = {x:w / 2, y: h / 2}
 		this.player = new Player('player', startPosition);
+
+        //set the controller
 		this.player.controller = new KeyboardController(this.player);
+        //this.player.controller = new LeapController(this.player);
 
 		//add enemy manager
 		this.enemyManager = new EnemyManager(game, this.player);
