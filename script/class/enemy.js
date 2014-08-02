@@ -25,7 +25,7 @@ Enemy.prototype = {
 	
 	update: function() {
 		if (this.sprite.y > h){
-			this.manager.kill(this);
+			this.sprite.body.velocity.y = 0;
 		}
 	},
 	
