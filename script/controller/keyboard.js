@@ -20,7 +20,7 @@ KeyboardController.prototype = {
 			this.player.sprite.y += 10;
 		}
 		if (this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
-			
+			this.player.fire();
 		}
 	},
 	

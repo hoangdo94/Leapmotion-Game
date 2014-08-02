@@ -26,6 +26,9 @@ var loadState = {
 
 		game.load.spritesheet('playerSprite', 'asset/image/player.png', 720, 713, 1);
 		
+		game.load.image('enemy', 'asset/image/player.png');
+		game.load.image('bullet', 'asset/image/laser.png');
+		
 		//load audios
 		//game.load.audio('music', 'asset/sound/music.wav');
 	},
