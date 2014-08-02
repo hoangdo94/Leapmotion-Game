@@ -49,7 +49,7 @@ Laser.prototype.setLevel = function(level) {
 };
 
 Laser.prototype.fireOne = function() {
-	var bullet = this.bullets.getFirstExists(false);
+	var bullet = this.bullets.getFirstDead(false);
 	if (bullet)
 	{
 		bullet.reset(this.player.sprite.x, this.player.sprite.y - this.player.sprite.height/2 + 4);
@@ -58,13 +58,13 @@ Laser.prototype.fireOne = function() {
 };
 
 Laser.prototype.fireTwo = function() {
-	var bullet = this.bullets.getFirstExists(false);
+	var bullet = this.bullets.getFirstDead(false);
 	if (bullet) {
 		bullet.reset(this.player.sprite.x + (this.player.sprite.width/4 - 5), this.player.sprite.y - this.player.sprite.height/2 + 20);
 		bullet.body.velocity.y = -800;	
 	}
 
-	bullet = this.bullets.getFirstExists(false);
+	bullet = this.bullets.getFirstDead(false);
 	if (bullet) {
 		bullet.reset(this.player.sprite.x - (this.player.sprite.width/4 - 5), this.player.sprite.y - this.player.sprite.height/2 + 20);
 		bullet.body.velocity.y = -800;
@@ -72,19 +72,19 @@ Laser.prototype.fireTwo = function() {
 };
 
 Laser.prototype.fireThree = function() {
-	var bullet = this.bullets.getFirstExists(false);
+	var bullet = this.bullets.getFirstDead(false);
 	if (bullet) {
 		bullet.reset(this.player.sprite.x, this.player.sprite.y - this.player.sprite.height/2);
 		bullet.body.velocity.y = -800;
 	}
 
-	bullet = this.bullets.getFirstExists(false);
+	bullet = this.bullets.getFirstDead(false);
 	if (bullet) {
 		bullet.reset(this.player.sprite.x + (this.player.sprite.width/2 - 10), this.player.sprite.y - this.player.sprite.height/2 + 20);
 		bullet.body.velocity.y = -800;
 	}
 
-	bullet = this.bullets.getFirstExists(false);
+	bullet = this.bullets.getFirstDead(false);
 	if (bullet) {
 		bullet.reset(this.player.sprite.x - (this.player.sprite.width/2 - 10), this.player.sprite.y - this.player.sprite.height/2 + 20);
 		bullet.body.velocity.y = -800;
@@ -92,25 +92,25 @@ Laser.prototype.fireThree = function() {
 };
 
 Laser.prototype.fireFour = function() {
-	var bullet = this.bullets.getFirstExists(false);
+	var bullet = this.bullets.getFirstDead(false);
 	if (bullet) {
 		bullet.reset(this.player.sprite.x + (this.player.sprite.width/2 - 10), this.player.sprite.y - this.player.sprite.height/2 + 40);
 		bullet.body.velocity.y = -800;
 	}
 
-	bullet = this.bullets.getFirstExists(false);
+	bullet = this.bullets.getFirstDead(false);
 	if (bullet) {
 		bullet.reset(this.player.sprite.x + (this.player.sprite.width/2 - 10)/3, this.player.sprite.y - this.player.sprite.height/2 + 20);
 		bullet.body.velocity.y = -800;
 	}
 
-	bullet = this.bullets.getFirstExists(false);
+	bullet = this.bullets.getFirstDead(false);
 	if (bullet) {
 		bullet.reset(this.player.sprite.x - (this.player.sprite.width/2 - 10)/3, this.player.sprite.y - this.player.sprite.height/2 + 20);
 		bullet.body.velocity.y = -800;
 	}
 
-	bullet = this.bullets.getFirstExists(false);
+	bullet = this.bullets.getFirstDead(false);
 	if (bullet) {
 		bullet.reset(this.player.sprite.x - (this.player.sprite.width/2 - 10), this.player.sprite.y - this.player.sprite.height/2 + 40);
 		bullet.body.velocity.y = -800;
@@ -119,31 +119,31 @@ Laser.prototype.fireFour = function() {
 };
 
 Laser.prototype.fireFive = function() {
-	var bullet = this.bullets.getFirstExists(false);
+	var bullet = this.bullets.getFirstDead(false);
 	if (bullet) {
 		bullet.reset(this.player.sprite.x, this.player.sprite.y - this.player.sprite.height/2);
 		bullet.body.velocity.y = -800;
 	}
 
-	bullet = this.bullets.getFirstExists(false);
+	bullet = this.bullets.getFirstDead(false);
 	if (bullet) {
 		bullet.reset(this.player.sprite.x + (this.player.sprite.width/4 - 5), this.player.sprite.y - this.player.sprite.height/2 + 20);
 		bullet.body.velocity.y = -800;
 	}
 
-	bullet = this.bullets.getFirstExists(false);
+	bullet = this.bullets.getFirstDead(false);
 	if (bullet) {
 		bullet.reset(this.player.sprite.x + (this.player.sprite.width/2 - 10), this.player.sprite.y - this.player.sprite.height/2 + 40);
 		bullet.body.velocity.y = -800;
 	}
 
-	bullet = this.bullets.getFirstExists(false);
+	bullet = this.bullets.getFirstDead(false);
 	if (bullet) {
 		bullet.reset(this.player.sprite.x - (this.player.sprite.width/4 - 5), this.player.sprite.y - this.player.sprite.height/2 + 20);
 		bullet.body.velocity.y = -800;
 	}
 
-	bullet = this.bullets.getFirstExists(false);
+	bullet = this.bullets.getFirstDead(false);
 	if (bullet) {
 		bullet.reset(this.player.sprite.x - (this.player.sprite.width/2 - 10), this.player.sprite.y - this.player.sprite.height/2 + 40);
 		bullet.body.velocity.y = -800;
@@ -183,7 +183,7 @@ Rocket.prototype.fire = function() {
 	if (game.time.now > this.bulletTime)
 	{
 		//  Grab the first bullet we can from the pool
-		var bullet = this.bullets.getFirstExists(false);
+		var bullet = this.bullets.getFirstDead(false);
 
 		if (bullet && this.enemyManager.sprites.getFirstAlive() !== null)
 		{
