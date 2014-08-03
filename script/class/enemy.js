@@ -25,7 +25,7 @@ Enemy.prototype = {
 	
 	update: function() {
 		if (this.sprite.y > h){
-			this.manager.kill(this);
+			this.manager.kill(this.sprite);
 		}
 	},
 	
@@ -45,7 +45,9 @@ EnemyManager.prototype = {
 
 	update: function() {
 		this.sprites.forEach(function(enemy){
-			enemy.owner.update();
+			if(enemy){
+				enemy.owner.update();
+			}
 		});
 		game.physics.arcade.overlap(this.player.sprite, this.sprites, this.playerHitEnemy, null, this);
 
@@ -56,8 +58,10 @@ EnemyManager.prototype = {
 	},
 
 	kill: function(enemy) {
-		enemy.kill();
-		this.sprites.remove(enemy);
+		if (enemy) {
+			enemy.kill();
+			this.sprites.remove(enemy);
+		}
 	},
 
 	add: function(enemyNumber, x, y) {
