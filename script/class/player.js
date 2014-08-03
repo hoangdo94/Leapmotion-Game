@@ -5,7 +5,7 @@ var Player = function(spriteName, startPosition) {
 	this.sprite = game.add.sprite(startPosition.x, startPosition.y, spriteName);
 	this.sprite.anchor.set(0.5);
 	this.sprite.animations.add('fly');
-	this.sprite.animations.play('fly', 20, true);
+	this.sprite.animations.play('fly', 5, true);
 	
 	//enable aracade physics for player sprite
 	game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
@@ -21,6 +21,10 @@ Player.prototype = {
 	constructor: Player,
 
 	update: function() {
+		this.additionalUpdate();
+	},
+	
+	additionalUpdate: function() {
 		this.controller.update();
 		this.mainBullet.update();
 		this.subBullet.update();

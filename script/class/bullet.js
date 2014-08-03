@@ -11,6 +11,10 @@ var Bullet = function(spriteName, player, enemyManager) {
     this.bullets.setAll('outOfBoundsKill', true);
     this.bullets.setAll('checkWorldBounds', true);
 	this.bulletTime = 0;
+	
+	// Bullet Hit Effects
+	this.bulletHitEffect = new BulletHitEffects();
+	this.boomEffect = new BoomEffects();
 };
 
 Bullet.prototype = {
@@ -22,7 +26,8 @@ Bullet.prototype = {
 	},
 
 	additionalUpdate: function() {
-
+		this.bulletHitEffect.update();
+		this.boomEffect.update();
 	},
 
 	fire: function() {
@@ -33,7 +38,12 @@ Bullet.prototype = {
 		//  When a bullet hits an enemy we kill them both
 		bullet.kill();
 		enemy.owner.HP--;
-		if (enemy.owner.HP <= 0) this.enemyManager.kill(enemy);
+		if (enemy.owner.HP <= 0) {
+			this.enemyManager.kill(enemy);
+			this.boomEffect.play(enemy.x, enemy.y);
+		}
+		
+		this.bulletHitEffect.play(bullet.x, bullet.y);
 	}
 };
 
@@ -207,4 +217,6 @@ Rocket.prototype.additionalUpdate = function() {
 			bullet.y -= 10;
 		});
 	}
+	this.bulletHitEffect.update();
+	this.boomEffect.update();
 };

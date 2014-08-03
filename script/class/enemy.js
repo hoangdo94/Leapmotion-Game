@@ -50,7 +50,6 @@ EnemyManager.prototype = {
 			}
 		});
 		game.physics.arcade.overlap(this.player.sprite, this.sprites, this.playerHitEnemy, null, this);
-
 	},
 
 	playerHitEnemy: function(player, enemy){
