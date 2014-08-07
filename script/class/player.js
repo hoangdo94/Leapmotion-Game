@@ -14,7 +14,18 @@ var Player = function(spriteName, startPosition) {
 	this.controller = null;
 	this.mainBullet = new Laser('laser', this, null);
 	this.subBullet = new Rocket('rocket', this, null);
-};
+	
+	// Effects
+	this.openGlowEffects = new OPenGlowEffects(3);
+	this.openGlowEffects.play(startPosition.x, startPosition.y);
+	
+	/*this.or = game.add.sprite(100, 100, 'rocket');
+	
+	this.orbit = new OrbitManager(this.or, 5);*/
+	};
+	
+	
+	
 
 Player.prototype = {
 
@@ -28,6 +39,8 @@ Player.prototype = {
 		this.controller.update();
 		this.mainBullet.update();
 		this.subBullet.update();
+		this.openGlowEffects.update(this.sprite.x, this.sprite.y);
+		/*this.orbit.update();*/
 	},
 	
 	fire: function() {

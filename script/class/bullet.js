@@ -13,8 +13,8 @@ var Bullet = function(spriteName, player, enemyManager) {
 	this.bulletTime = 0;
 	
 	// Bullet Hit Effects
-	this.bulletHitEffect = new BulletHitEffects();
-	this.boomEffect = new BoomEffects();
+	this.bulletHitEffect = new BulletHitEffects(2);
+	this.boomEffect = new BoomEffects(1);
 };
 
 Bullet.prototype = {
@@ -220,3 +220,32 @@ Rocket.prototype.additionalUpdate = function() {
 	this.bulletHitEffect.update();
 	this.boomEffect.update();
 };
+
+/*
+var OrbitManager = function(object, speed) {
+	this.x = 0;
+	this.y = 0;
+	this.origin = {x: object.x, y: object.y}
+	this.time = 0;
+	this.update = function() {
+		
+		
+		if (game.time.now > this.time) {
+			//object.x = this.x + object.x;
+			//object.y = this.y + object.y;
+			this.x += 1;
+			this.y = this.fx(this.x);
+			this.time = game.time.now + 1;
+			var newX = this.origin.x + this.x;
+			var newY = this.origin.y + this.y;
+			game.add.tween(object).to({y: newX, x: newY}, 1, Phaser.Easing.Linear.None, true, 0, 0, false);
+		}
+	}
+
+	
+	this.fx = function(x) {
+		var a = x;
+		return a*a;
+	}
+	
+}*/

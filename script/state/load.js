@@ -35,6 +35,7 @@ var loadState = {
 		game.load.image('subPowerup', 'asset/image/subPowerup.png');
 		game.load.spritesheet('bulletHit', 'asset/image/bulletbitspritesheet.png', 20, 20, 10);
 		game.load.spritesheet('explose', 'asset/image/explosion.png',133.5, 134, 12);
+		game.load.spritesheet('glow', 'asset/image/glow.png',200, 200, 18);
 		//load audios
 		//game.load.audio('music', 'asset/sound/music.wav');
 	},
