@@ -16,7 +16,7 @@ var playState = {
 
         //set the controller
 		this.player.controller = new KeyboardController(this.player);
-        //this.player.controller = new LeapController(this.player);
+		//this.player.controller = new LeapController(this.player);
 
 		//add enemy manager
 		this.enemyManager = new EnemyManager(game, this.player);

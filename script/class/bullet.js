@@ -23,11 +23,12 @@ Bullet.prototype = {
 	update: function() {
 		game.physics.arcade.overlap(this.bullets, this.enemyManager.sprites, this.bulletHitEnemy, null, this);
 		this.additionalUpdate();
+		this.bulletHitEffect.update();
+		this.boomEffect.update();
 	},
 
 	additionalUpdate: function() {
-		this.bulletHitEffect.update();
-		this.boomEffect.update();
+
 	},
 
 	fire: function() {
