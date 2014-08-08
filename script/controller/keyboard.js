@@ -1,40 +1,23 @@
-var KeyboardController = function(game, player) {
-	this.game = game;
+var KeyboardController = function(player) {
 	this.player = player;
 };
 KeyboardController.prototype = {
-
 	constructor: KeyboardController,
-	
 	update: function() {
-		if (this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
+		if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
 			this.player.sprite.x -= 10;
 		}
-		if (this.game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
+		if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
 			this.player.sprite.x += 10;
 		}
-		if (this.game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
+		if (game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
 			this.player.sprite.y -= 10;
 		}
-		if (this.game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
+		if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
 			this.player.sprite.y += 10;
 		}
-		if (this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
+		if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
 			this.player.fire();
 		}
-	},
-	
-};
-
-
-var LeapController = function () {
-
-}
-
-LeapController.prototype = {
-	constructor: LeapController,
-	
-	update: function() {
-		
 	}
-}
+};

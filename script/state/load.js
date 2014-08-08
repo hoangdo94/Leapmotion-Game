@@ -23,12 +23,21 @@ var loadState = {
 		
 		//load images
 		game.load.image('bg', 'asset/image/bg.jpg');
-
-		game.load.spritesheet('playerSprite', 'asset/image/player.png', 720, 713, 1);
+		game.load.spritesheet('player', 'asset/image/playerspritesheet.png', 112, 75, 2);
+		game.load.image('laser', 'asset/image/laser.png');
+		game.load.image('enemylaser', 'asset/image/enemylaser.png');
 		
-		game.load.image('enemy', 'asset/image/player.png');
-		game.load.image('bullet', 'asset/image/laser.png');
-		
+		game.load.image('rocket', 'asset/image/rocket.png');
+		game.load.image('enemy1', 'asset/image/enemy1.png');
+		game.load.image('enemy2', 'asset/image/enemy2.png');
+		game.load.image('enemy3', 'asset/image/enemy3.png');
+		game.load.image('enemy4', 'asset/image/enemy4.png');
+		game.load.image('enemy5', 'asset/image/enemy5.png');
+		game.load.image('mainPowerup', 'asset/image/mainPowerup.png');
+		game.load.image('subPowerup', 'asset/image/subPowerup.png');
+		game.load.spritesheet('bulletHit', 'asset/image/bulletbitspritesheet.png', 20, 20, 10);
+		game.load.spritesheet('explose', 'asset/image/explosion.png',133.5, 134, 12);
+		game.load.spritesheet('glow', 'asset/image/glow.png',200, 200, 18);
 		//load audios
 		//game.load.audio('music', 'asset/sound/music.wav');
 	},
