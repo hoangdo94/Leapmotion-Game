@@ -49,17 +49,18 @@ EnemyManager.prototype = {
 				enemy.owner.update();
 			}
 		});
-		game.physics.arcade.overlap(this.player.sprite, this.sprites, this.playerHitEnemy, null, this);
+		game.physics.arcade.overlap(this.sprites, this.player.sprite, this.playerHitEnemy, null, this);
 	},
 
-	playerHitEnemy: function(player, enemy){
-		this.kill(enemy);
+	playerHitEnemy: function(enemy, players){
+		enemy.kill();
+		players.kill();
+		//this.sprites.remove(enemy);
 	},
 
 	kill: function(enemy) {
 		if (enemy) {
 			enemy.kill();
-			this.sprites.remove(enemy);
 		}
 	},
 
