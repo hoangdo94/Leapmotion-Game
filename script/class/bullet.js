@@ -212,7 +212,7 @@ Rocket.prototype.additionalUpdate = function() {
 	var target = this.enemyManager.sprites.getFirstAlive();
 	if (target !== null) {
 		this.bullets.forEach(function(bullet){
-			bullet.rotation += 0.2;
+			bullet.rotation += 0.5;
 			bullet.x += (this.x > bullet.x)?10:-10;
 			bullet.y += (this.y > bullet.y)?10:-10;
 		}, target);

@@ -36,7 +36,7 @@ var BoomEffects = function(loop) {
         var boom = this.effects.getFirstExists(false);
 		// reset loopCount
         if (boom) {
-            boom.reset(x, y - 50);
+            boom.reset(x, y);
 			boom.animations.currentAnim.restart();
         }
     }
