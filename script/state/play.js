@@ -20,8 +20,7 @@ var playState = {
 
 		//add enemy manager
 		this.enemyManager = new EnemyManager(game, this.player);
-		this.player.mainBullet.enemyManager = this.enemyManager;
-		this.player.subBullet.enemyManager = this.enemyManager;	
+		this.player.initBullet(this.enemyManager);
 
 		//testing
 		game.add.text(10,10, 'Testing mode \n - Q: add a random wave of emenies\n - W: toggle sub weapon\n - E: toogle main weapon Level', { font: '20px Arial', fill: '#fff' });

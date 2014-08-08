@@ -192,13 +192,17 @@ Rocket.prototype.fire = function() {
 	 //  To avoid them being allowed to fire too fast we set a time limit
 	if (game.time.now > this.bulletTime)
 	{
-		//  Grab the first bullet we can from the pool
-		var bullet = this.bullets.getFirstDead(false);
-
-		if (bullet && this.enemyManager.sprites.getFirstAlive() !== null)
+		if (this.enemyManager.sprites.getFirstAlive() !== null)
 		{
+			//  Grab the first bullet we can from the pool
+			var bullet = this.bullets.getFirstDead(false);
 			//  And fire it
-			bullet.reset(this.player.sprite.x, this.player.sprite.y - this.player.sprite.height/2 + 4);
+			bullet.reset(this.player.sprite.x + this.player.sprite.width/2, this.player.sprite.y - this.player.sprite.height/2 + 4);
+
+			//another bullet
+			bullet = this.bullets.getFirstDead(false);
+			bullet.reset(this.player.sprite.x - this.player.sprite.width/2, this.player.sprite.y - this.player.sprite.height/2 + 4);
+
 			this.bulletTime = game.time.now + 500;
 		}
 	}
@@ -209,12 +213,12 @@ Rocket.prototype.additionalUpdate = function() {
 	if (target !== null) {
 		this.bullets.forEach(function(bullet){
 			bullet.rotation += 0.2;
-			bullet.x += (this.x - bullet.x)/20;
-			bullet.y += (this.y - bullet.y)/20;
+			bullet.x += (this.x > bullet.x)?10:-10;
+			bullet.y += (this.y > bullet.y)?10:-10;
 		}, target);
 	} else {
 		this.bullets.forEach(function(bullet){
-			bullet.rotation += 0.2;
+			bullet.rotation += 0.5;
 			bullet.y -= 10;
 		});
 	}

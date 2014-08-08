@@ -32,10 +32,6 @@ Player.prototype = {
 	constructor: Player,
 
 	update: function() {
-		this.additionalUpdate();
-	},
-	
-	additionalUpdate: function() {
 		this.controller.update();
 		this.mainBullet.update();
 		this.subBullet.update();
@@ -47,4 +43,9 @@ Player.prototype = {
 		this.mainBullet.fire();
 		if (this.subBullet.enabled) this.subBullet.fire();
 	},
+
+	initBullet: function(enemyManager) {
+		this.mainBullet.enemyManager = enemyManager;
+		this.subBullet.enemyManager = enemyManager;	
+	}
 };
