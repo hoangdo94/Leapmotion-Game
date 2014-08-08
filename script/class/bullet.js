@@ -21,8 +21,7 @@ Bullet.prototype = {
 	constructor: Bullet,
 
 	update: function() {
-		game.physics.arcade.overlap(this.bullets, this.enemyManager.sprites, this.bulletHitEnemy, null, this);
-		//game.physics.arcade.overlap(this.player, this.enemyManager.sprites, this.enemyManager.playerHitEnemy, null, this.player)
+		game.physics.arcade.overlap(this.enemyManager.sprites, this.bullets, this.bulletHitEnemy, null, this);
 		this.additionalUpdate();
 		this.bulletHitEffect.update();
 		this.boomEffect.update();
@@ -36,7 +35,7 @@ Bullet.prototype = {
 		
 	},
 
-	bulletHitEnemy: function(bullet, enemy) {
+	bulletHitEnemy: function(enemy, bullet) {
 		//  When a bullet hits an enemy we kill them both
 		bullet.kill();
 		enemy.owner.HP--;

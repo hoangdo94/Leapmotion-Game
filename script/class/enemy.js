@@ -54,8 +54,6 @@ EnemyManager.prototype = {
 
 	playerHitEnemy: function(enemy, players){
 		enemy.kill();
-		players.kill();
-		//this.sprites.remove(enemy);
 	},
 
 	kill: function(enemy) {
