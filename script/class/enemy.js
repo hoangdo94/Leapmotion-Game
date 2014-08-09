@@ -37,7 +37,9 @@ var EnemyManager = function(player) {
 	
 	// Collsion Handler
 	this.collsionManager = new CollisionManager();
-	this.starEffect = new StarEffects(1)
+	this.starEffect = new StarEffects();
+	this.mainPowerUpEffect = new PowerUpEffects('main');
+	this.subPowerUpEffect = new PowerUpEffects('sub');
 };
 
 EnemyManager.prototype = {	
@@ -61,7 +63,10 @@ EnemyManager.prototype = {
 		
 		if (enemy && enemy.owner.HP < 0 && !enemy.owner.stared) {
 			enemy.owner.stared = true;
-			this.starEffect.play(enemy.x, enemy.y);
+			var tmp = Math.random();
+			if (tmp>0.9) this.subPowerUpEffect.play(enemy.x, enemy.y);
+			else if (tmp>0.7) this.mainPowerUpEffect.play(enemy.x, enemy.y);
+			else this.starEffect.play(enemy.x, enemy.y);
 		}
 	},
 		
@@ -70,6 +75,8 @@ EnemyManager.prototype = {
 		game.physics.arcade.overlap(player.sprite, this.sprites, this.playerHitEnemy, null, this);
 		this.collsionManager.update(player);
 		this.starEffect.update(player);
+		this.mainPowerUpEffect.update(player);
+		this.subPowerUpEffect.update(player);
 	},
 
 	playerHitEnemy: function(player, enemy){
