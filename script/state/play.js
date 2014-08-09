@@ -39,7 +39,7 @@ var playState = {
 
 			if (game.time.now > this.time) {
 				this.addEnemy(Math.floor((Math.random() * 5) + 1));
-				this.time = game.time.now + 5000;
+				this.time = game.time.now + 10000;
 			}	
 		}
 
@@ -50,13 +50,14 @@ var playState = {
 	addEnemy: function(type) {
 		if (type < 3) {
 			for (var i=0; i<5; i++){
-				this.enemyManager.add(type, w/5 + 3*w/20*i, 0, 'enemylaserunchase', false);
+				this.enemyManager.add(type, w/5 + 3*w/20*i, 50, 'enemylaserunchase', false);
 			};
 		} else {
 			for (var i=0; i<5; i++){
-				this.enemyManager.add(type, w/5 + 3*w/20*i, 0, 'enemylaserchase', true);
+				this.enemyManager.add(type, w/5 + 3*w/20*i, 50, 'enemylaserchase', true);
 			};
 		}
 		
 	},
-}
+};
+

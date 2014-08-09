@@ -6,13 +6,16 @@ var Enemy = function(manager, spriteName, x, y, hp, bulletSprite, isChase) {
 	game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 	this.sprite.anchor.set(0.5);
 	this.sprite.body.allowRotation = false;
+	//this.sprite.body.collideWorldBounds = true;
+
 	this.sprite.scale.x = this.sprite.scale.y = 0.8;
 	this.sprite.owner = this;
-
 	this.sprite.body.velocity.y = 100;
 	//bullet
 	this.bullet = new EnemyBullet(bulletSprite, isChase);
 	this.stared = false;
+
+	this.time = 0;
 };
 
 Enemy.prototype = {
@@ -23,6 +26,13 @@ Enemy.prototype = {
 		if (this.sprite.y > h - this.sprite.height/2){
 			this.manager.kill(this.sprite);
 		}
+		/*
+		if (game.time.now > this.time) {
+			this.sprite.body.velocity.x = (Math.random() - 0.5)*500;
+			this.sprite.body.velocity.y = (Math.random() - 0.5)*500;
+			this.time = game.time.now + 2000;
+		}
+		*/
 	},
 	
 	changeBoundSize: function(wRatio, hRatio) {

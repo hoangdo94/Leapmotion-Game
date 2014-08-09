@@ -152,6 +152,7 @@ var PowerUpEffects = function(type) {
                 player.owner.mainBulletPowerUp();
                 player.owner.numOfPowerUpCollected = 0;
             }
+            player.owner.HUD.updateLevel();
         }
         else {
             player.owner.subBulletTime += player.owner.level * 3000;

@@ -23,7 +23,9 @@ var loadState = {
 		
 		//load images
 		game.load.image('bg', 'asset/image/bg.jpg');
-		game.load.spritesheet('player', 'asset/image/playerspritesheetnew.png', 112, 75, 3);
+		game.load.spritesheet('player', 'asset/image/player.png', 112, 75, 3);
+		game.load.spritesheet('number', 'asset/image/number.png', 19, 19, 11);
+		game.load.image('playerIcon', 'asset/image/playericon.png');
 		game.load.image('laser', 'asset/image/laser.png');
 		game.load.image('enemylaserchase', 'asset/image/enemylaserchase.png');
 		game.load.image('enemylaserunchase', 'asset/image/enemylaserunchase.png');

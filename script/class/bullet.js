@@ -221,7 +221,7 @@ HomingMissile.prototype.fire = function() {
 
 HomingMissile.prototype.additionalUpdate = function() {
 	var target = this.enemyManager.sprites.getFirstAlive();
-	if (target !== null) {
+	if (target !== null && target.exists) {
 		this.bullets.forEach(function(bullet){
 			bullet.rotation = game.physics.arcade.accelerateToObject(bullet, target, 800);
 			//bullet.rotation = game.physics.arcade.moveToObject(bullet, target, 500);
@@ -270,7 +270,7 @@ EnemyBullet.prototype = {
 					bullet.rotation = game.physics.arcade.moveToObject(bullet, target.sprite, 10, Math.floor(1000 + Math.random() * 1000));
 				else
 					bullet.body.velocity.y = 800;
-				this.bulletTime = game.time.now + 2000;
+				this.bulletTime = game.time.now + 3000;
 			}
 			
 		}
@@ -292,6 +292,7 @@ EnemyBullet.prototype = {
 		this.collsionManager.playerEnemyBulletCollision(player, bullet);
 		player.animations.play('injured', 20, true);
 		player.owner.HP--;
+		player.owner.HUD.updateHP();
 		if (player.owner.HP == 0) {
 			//game over :v
 			// chua viet
