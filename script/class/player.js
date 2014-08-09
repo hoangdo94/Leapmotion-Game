@@ -19,6 +19,7 @@ var Player = function(spriteName, startPosition) {
 	this.controller = null;
 	this.mainBullet = new Laser('laser', this, null);
 	this.subBullet = new HomingMissile('rocket', this, null);
+	this.superBullet = new SuperBullet('superbullet', this, null);
 	
 	// Effects
 	this.openGlowEffects = new OPenGlowEffects(3);
@@ -35,6 +36,7 @@ Player.prototype = {
 		this.controller.update();
 		this.mainBullet.update();
 		this.subBullet.update();
+		this.superBullet.update();
 		this.openGlowEffects.update(this.sprite.x, this.sprite.y);
 		// update animations
 		if (this.sprite.animations.currentAnim.loopCount > 0 && this.sprite.animations.currentAnim.name == 'injured') {
@@ -56,10 +58,15 @@ Player.prototype = {
 		this.mainBullet.fire();
 		if (this.subBullet.enabled) this.subBullet.fire();
 	},
+	
+	fireSuper: function() {
+		this.superBullet.fire(5);
+	},
 
 	initBullet: function(enemyManager) {
 		this.mainBullet.enemyManager = enemyManager;
-		this.subBullet.enemyManager = enemyManager;	
+		this.subBullet.enemyManager = enemyManager;
+		this.superBullet.enemyManager = enemyManager;
 	},
 
 	mainBulletPowerUp: function() {

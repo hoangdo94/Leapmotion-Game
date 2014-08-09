@@ -6,7 +6,7 @@ var Bullet = function(spriteName, object, enemyManager) {
 	this.bullets = game.add.group();
 	this.bullets.enableBody = true;
     this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
-    this.bullets.createMultiple(60, spriteName);
+    this.bullets.createMultiple(120, spriteName);
     this.bullets.setAll('anchor.x', 0.5);
     this.bullets.setAll('anchor.y', 1);
     this.bullets.setAll('outOfBoundsKill', true);
@@ -15,7 +15,7 @@ var Bullet = function(spriteName, object, enemyManager) {
 	
 	// Bullet Hit Effects
 	this.boomEffect = new BoomEffects(1);
-	
+
 	// Collsion Handler
 	this.collsionManager = new CollisionManager();
 };
@@ -292,5 +292,84 @@ EnemyBullet.prototype = {
 	bulletHitPlayer: function(player, bullet) {
 		this.collsionManager.playerEnemyBulletCollision(player, bullet);
 		player.animations.play('injured', 20, true);
+	}
+}
+
+
+var SuperBullet = function(spriteName, object, enemyManager) {
+	Bullet.call(this, spriteName, object, enemyManager);
+	this.level = 1;
+	this.angle = 0;
+	this.maxAngle = 0;
+	this.velocity = 800;
+	this.timing = 0;
+	this.isFinished = true;
+	this.isActive = true;
+	this.recharge = 1000;
+};
+
+SuperBullet.prototype = Object.create(Bullet.prototype);
+
+SuperBullet.prototype.setLevel = function(level) {
+	this.level = level;
+};
+
+SuperBullet.prototype.fireAround = function(angle) {
+	var bullet = this.bullets.getFirstDead(false);
+	if (bullet) {
+		bullet.reset(this.object.sprite.x, this.object.sprite.y);
+		bullet.body.velocity.y = -Math.cos(Math.PI * angle / 180) * this.velocity;
+		bullet.body.velocity.x = Math.sin(Math.PI * angle / 180) * this.velocity;
+	}
+}
+
+SuperBullet.prototype.fire = function(number) {
+	 //  To avoid them being allowed to fire too fast we set a time limit
+	this.maxAngle = number * 360;
+	if (this.isActive) { 
+		this.isFinished = false;
+		this.isActive = false;
+		this.recharge = 0;
+	}
+	
+};
+
+SuperBullet.prototype.update = function() {
+	game.physics.arcade.overlap(this.bullets, this.enemyManager.sprites, this.bulletHitEnemy, null, this);
+	this.additionalUpdate();
+	this.boomEffect.update();
+}
+
+SuperBullet.prototype.bulletHitEnemy = function(bullet, enemy) {
+	//  When a bullet hits an enemy we kill them both
+	if (enemy.owner.HP <= 0) {
+		enemy.exists = false;
+		this.boomEffect.play(enemy.x, enemy.y);
+	}
+	this.collsionManager.playerBulletEnemyCollision(bullet, enemy);
+	enemy.animations.play('injured', 20, true);
+}
+
+SuperBullet.prototype.additionalUpdate = function() {
+	if (game.time.now > this.timing)
+	{
+		if (!this.isFinished) {
+			this.fireAround(this.angle);
+			this.angle += 10;
+			
+			if (this.angle > this.maxAngle) {
+				this.angle = 0;
+				this.isFinished = true;
+			}
+		}
+		
+		if (this.recharge > 1000) {
+			this.isActive = true;
+			this.recharge = 1000;
+		}
+		
+		this.recharge += 1;
+		
+		this.timing = game.time.now + 5;
 	}
 }

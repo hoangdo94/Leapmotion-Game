@@ -29,6 +29,7 @@ var loadState = {
 		game.load.image('enemylaserunchase', 'asset/image/enemylaserunchase.png');
 		game.load.image('star', 'asset/image/star.png');
 		game.load.image('rocket', 'asset/image/rocket.png');
+		game.load.image('superbullet', 'asset/image/superBullet.png');
 		game.load.spritesheet('enemy1', 'asset/image/enemy1new.png',93, 84, 2);
 		game.load.spritesheet('enemy2', 'asset/image/enemy2new.png', 104, 84, 2);
 		game.load.spritesheet('enemy3', 'asset/image/enemy3new.png', 103, 84, 2);

@@ -19,5 +19,8 @@ KeyboardController.prototype = {
 		if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
 			this.player.fire();
 		}
+		if (game.input.keyboard.isDown(Phaser.Keyboard.S)) {
+			this.player.fireSuper();
+		}
 	}
 };
