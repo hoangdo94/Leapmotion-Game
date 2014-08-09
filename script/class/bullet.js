@@ -246,7 +246,7 @@ var EnemyBullet = function(spriteName, isChase) {
     this.bullets.setAll('anchor.y', 1);
     this.bullets.setAll('outOfBoundsKill', true);
     this.bullets.setAll('checkWorldBounds', true);
-	this.bulletTime = 0;
+	this.bulletTime = game.time.now + 2000;
 	// Collsion Handler
 	this.collsionManager = new CollisionManager();
 	this.outOfUsing = false;
@@ -291,5 +291,10 @@ EnemyBullet.prototype = {
 	bulletHitPlayer: function(player, bullet) {
 		this.collsionManager.playerEnemyBulletCollision(player, bullet);
 		player.animations.play('injured', 20, true);
+		player.owner.HP--;
+		if (player.owner.HP == 0) {
+			//game over :v
+			// chua viet
+		}
 	}
 }

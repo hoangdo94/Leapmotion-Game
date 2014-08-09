@@ -6,6 +6,7 @@ var Enemy = function(manager, spriteName, x, y, hp, bulletSprite, isChase) {
 	game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 	this.sprite.anchor.set(0.5);
 	this.sprite.body.allowRotation = false;
+	this.sprite.scale.x = this.sprite.scale.y = 0.8;
 	this.sprite.owner = this;
 
 	this.sprite.body.velocity.y = 100;
@@ -19,8 +20,8 @@ Enemy.prototype = {
 	constructor: Enemy,
 	
 	update: function() {
-		if (this.sprite.y > h){
-			this.sprite.exists = false;
+		if (this.sprite.y > h - this.sprite.height/2){
+			this.manager.kill(this.sprite);
 		}
 	},
 	
@@ -81,7 +82,6 @@ EnemyManager.prototype = {
 
 	playerHitEnemy: function(player, enemy){
 		this.collsionManager.playerEnemyCollision(player, enemy);
-		enemy.exists = false;
 	},
 
 	kill: function(enemy) {

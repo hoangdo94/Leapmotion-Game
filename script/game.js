@@ -1,5 +1,10 @@
+window.onload=function(){
+	screenfull.request();
+};
+
 var h = window.innerHeight;
 var w = window.innerWidth;
+var playing = true;
 
 var game = new Phaser.Game(w, h, Phaser.CANVAS, 'gameContainer');
 
