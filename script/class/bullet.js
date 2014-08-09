@@ -57,6 +57,7 @@ Bullet.prototype = {
 			this.boomEffect.play(enemy.x, enemy.y);
 		}
 		this.collsionManager.playerBulletEnemyCollision(bullet, enemy);
+		enemy.animations.play('injured', 20, true);
 	}
 };
 

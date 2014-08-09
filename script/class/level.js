@@ -26,7 +26,7 @@ Level.prototype = {
 			index = this.enemies.length-1;
 		}
 
-		this.enemies[index].enemiesList.push({type: enemyType, position.x: x, position.y: y});
+		//this.enemies[index].enemiesList.push({type: enemyType, position.x: x, position.y: y});
 	},
 
 	sort: function(){

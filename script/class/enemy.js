@@ -7,7 +7,11 @@ var Enemy = function(manager, spriteName, x, y, hp, bulletSprite, isChase) {
 	this.sprite.anchor.set(0.5);
 	this.sprite.body.allowRotation = false;
 	this.sprite.owner = this;
-
+	
+	this.sprite.animations.add('fly', [0]);
+	this.sprite.animations.add('injured', [1]);
+	this.sprite.animations.play('fly', 5, true);
+	
 	this.sprite.body.velocity.y = 100;
 	//bullet
 	this.bullet = new EnemyBullet(bulletSprite, isChase);
@@ -21,6 +25,10 @@ Enemy.prototype = {
 	update: function() {
 		if (this.sprite.y > h){
 			this.sprite.exists = false;
+		}
+		
+		if (this.sprite.animations.currentAnim.loopCount > 0 && this.sprite.animations.currentAnim.name == 'injured') {
+			this.sprite.animations.play('fly', 5, true);
 		}
 	},
 	
