@@ -14,7 +14,7 @@ var Player = function(spriteName, startPosition) {
 	
 	this.controller = null;
 	this.mainBullet = new Laser('laser', this, null);
-	this.subBullet = new Rocket('rocket', this, null);
+	this.subBullet = new HomingMissile('rocket', this, null);
 	
 	// Effects
 	this.openGlowEffects = new OPenGlowEffects(3);
