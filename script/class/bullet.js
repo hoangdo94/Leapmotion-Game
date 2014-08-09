@@ -203,13 +203,21 @@ Rocket.prototype.fire = function() {
 	 //  To avoid them being allowed to fire too fast we set a time limit
 	if (game.time.now > this.bulletTime)
 	{
-		//  Grab the first bullet we can from the pool
-		var bullet = this.bullets.getFirstDead(false);
-
-		if (bullet && this.enemyManager.sprites.getFirstAlive() !== null)
+		if (this.enemyManager.sprites.getFirstAlive() !== null)
 		{
+			//  Grab the first bullet we can from the pool
+			var bullet = this.bullets.getFirstDead(false);
 			//  And fire it
+/*<<<<<<< HEAD
 			bullet.reset(this.object.sprite.x, this.object.sprite.y - this.object.sprite.height/2 + 4);
+=======*/
+			bullet.reset(this.player.sprite.x + this.player.sprite.width/2, this.player.sprite.y - this.player.sprite.height/2 + 4);
+
+			//another bullet
+			bullet = this.bullets.getFirstDead(false);
+			bullet.reset(this.player.sprite.x - this.player.sprite.width/2, this.player.sprite.y - this.player.sprite.height/2 + 4);
+
+/*>>>>>>> ed27e76811bf3bfa601e643ac756e8f1dead24c3*/
 			this.bulletTime = game.time.now + 500;
 		}
 	}
@@ -219,13 +227,13 @@ Rocket.prototype.additionalUpdate = function() {
 	var target = this.enemyManager.sprites.getFirstAlive();
 	if (target !== null) {
 		this.bullets.forEach(function(bullet){
-			bullet.rotation += 0.2;
-			bullet.x += (this.x - bullet.x)/20;
-			bullet.y += (this.y - bullet.y)/20;
+			bullet.rotation += 0.5;
+			bullet.x += (this.x > bullet.x)?10:-10;
+			bullet.y += (this.y > bullet.y)?10:-10;
 		}, target);
 	} else {
 		this.bullets.forEach(function(bullet){
-			bullet.rotation += 0.2;
+			bullet.rotation += 0.5;
 			bullet.y -= 10;
 		});
 	}

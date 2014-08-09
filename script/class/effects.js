@@ -35,7 +35,7 @@ var BoomEffects = function(loop) {
         var boom = this.effects.getFirstExists(false);
 		// reset loopCount
         if (boom) {
-            boom.reset(x, y - 50);
+            boom.reset(x, y);
 			boom.animations.currentAnim.restart();
         }
     }
@@ -111,7 +111,6 @@ var StarEffects = function(loop) {
 	}
 	
 	this.playerHitStar = function(player, star) {
-		alert('hit');
 		game.physics.arcade.moveToObject(star, {x:w, y:0}, 100, 300);
 	}
 }

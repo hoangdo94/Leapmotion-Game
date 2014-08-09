@@ -46,4 +46,9 @@ Player.prototype = {
 		this.mainBullet.fire();
 		if (this.subBullet.enabled) this.subBullet.fire();
 	},
+
+	initBullet: function(enemyManager) {
+		this.mainBullet.enemyManager = enemyManager;
+		this.subBullet.enemyManager = enemyManager;	
+	}
 };
