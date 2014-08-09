@@ -128,7 +128,7 @@ var PowerUpEffects = function(type) {
         var powerUp = this.effects.getFirstExists(false);
         if (powerUp) {
             powerUp.reset(x, y);
-            powerUp.body.gravity.y = 800;
+            powerUp.body.gravity.y = 400;
             powerUp.body.velocity.y = -200;
         }
     }
@@ -152,6 +152,7 @@ var PowerUpEffects = function(type) {
                 player.owner.mainBulletPowerUp();
                 player.owner.numOfPowerUpCollected = 0;
             }
+            player.owner.HUD.updateLevel();
         }
         else {
             player.owner.subBulletTime += player.owner.level * 3000;

@@ -1,6 +1,7 @@
 var playState = {
 
 	create: function() {
+		playing = true;
 		game.physics.startSystem(Phaser.Physics.ARCADE);
 		this.time = 0;
 	
@@ -25,37 +26,38 @@ var playState = {
 	},
 	
 	update: function() {
-		//update background
-		this.bg.tilePosition.y += 1;
+		if (playing) {
+			//update background
+			this.bg.tilePosition.y += 1;
 
-		//update player
-		this.player.update();
+			//update player
+			this.player.update();
 
-		//update enemies
-		this.enemyManager.update(this.player);
+			//update enemies
+			this.enemyManager.update(this.player);
 		
 
-		//for testing
-		if (this.game.input.keyboard.isDown(Phaser.Keyboard.Q)) {
 			if (game.time.now > this.time) {
 				this.addEnemy(Math.floor((Math.random() * 5) + 1));
-				this.time = game.time.now + 500;
-			}
-			
+				this.time = game.time.now + 10000;
+			}	
 		}
+
+		
 	},
 
 	//this is just some functions for testing the game
 	addEnemy: function(type) {
 		if (type < 3) {
 			for (var i=0; i<5; i++){
-				this.enemyManager.add(type, w/5 + 3*w/20*i, 0, 'enemylaserunchase', false);
+				this.enemyManager.add(type, w/5 + 3*w/20*i, 50, 'enemylaserunchase', false);
 			};
 		} else {
 			for (var i=0; i<5; i++){
-				this.enemyManager.add(type, w/5 + 3*w/20*i, 0, 'enemylaserchase', true);
+				this.enemyManager.add(type, w/5 + 3*w/20*i, 50, 'enemylaserchase', true);
 			};
 		}
 		
 	},
-}
+};
+

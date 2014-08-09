@@ -6,16 +6,18 @@ var Enemy = function(manager, spriteName, x, y, hp, bulletSprite, isChase) {
 	game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 	this.sprite.anchor.set(0.5);
 	this.sprite.body.allowRotation = false;
-	this.sprite.owner = this;
-	
 	this.sprite.animations.add('fly', [0]);
 	this.sprite.animations.add('injured', [1]);
 	this.sprite.animations.play('fly', 5, true);
 	
+	this.sprite.scale.x = this.sprite.scale.y = 0.8;
+	this.sprite.owner = this;
 	this.sprite.body.velocity.y = 100;
 	//bullet
 	this.bullet = new EnemyBullet(bulletSprite, isChase);
 	this.stared = false;
+
+	this.time = 0;
 };
 
 Enemy.prototype = {
@@ -23,12 +25,12 @@ Enemy.prototype = {
 	constructor: Enemy,
 	
 	update: function() {
-		if (this.sprite.y > h){
-			this.sprite.exists = false;
+		if (this.sprite.y > h - this.sprite.height/2){
+			this.manager.kill(this.sprite);
 		}
 		
 		if (this.sprite.animations.currentAnim.loopCount > 0 && this.sprite.animations.currentAnim.name == 'injured') {
-			this.sprite.animations.play('fly', 5, true);
+				this.sprite.animations.play('fly', 5, true);
 		}
 	},
 	
@@ -89,7 +91,6 @@ EnemyManager.prototype = {
 
 	playerHitEnemy: function(player, enemy){
 		this.collsionManager.playerEnemyCollision(player, enemy);
-		enemy.exists = false;
 	},
 
 	kill: function(enemy) {
