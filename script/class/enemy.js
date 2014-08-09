@@ -1,4 +1,4 @@
-var Enemy = function(manager, spriteName, x, y, hp) {
+var Enemy = function(manager, spriteName, x, y, hp, bulletSprite, isChase) {
 	this.manager = manager;
 	this.HP = hp;
 	//add sprite
@@ -8,12 +8,10 @@ var Enemy = function(manager, spriteName, x, y, hp) {
 	this.sprite.body.allowRotation = false;
 	this.sprite.owner = this;
 
-	//bullet
-	this.bullet = new EnemyBullet('enemylaser', this, null);
-
 	this.sprite.body.velocity.y = 100;
-	
-	
+	//bullet
+	this.bullet = new EnemyBullet(bulletSprite, isChase);
+	this.stared = false;
 };
 
 Enemy.prototype = {
@@ -22,10 +20,8 @@ Enemy.prototype = {
 	
 	update: function() {
 		if (this.sprite.y > h){
-			this.manager.kill(this.sprite);
+			this.sprite.exists = false;
 		}
-		
-		//this.bullet.fire();
 	},
 	
 	changeBoundSize: function(wRatio, hRatio) {
@@ -41,28 +37,44 @@ var EnemyManager = function(player) {
 	
 	// Collsion Handler
 	this.collsionManager = new CollisionManager();
+	this.starEffect = new StarEffects(1)
 };
 
 EnemyManager.prototype = {	
 
 	constructor: EnemyManager,
 
-	update: function(player) {
-		this.sprites.forEach(function(enemy){
-			if(enemy){
-				enemy.owner.update();
-				enemy.owner.bullet.update(player);
-				enemy.owner.bullet.fire(player);
-				
-			}
-		});
-		game.physics.arcade.overlap(player.sprite, this.sprites, this.playerHitEnemy, null, this);
+	updateOperating: function(enemy, player){
+		if(enemy){
+			enemy.owner.update();
+			enemy.owner.bullet.update(player);
+		}
+
+		// Only visible enemy can fire
+		if (enemy && enemy.exists == true) {
+			enemy.owner.bullet.fire(enemy, player);
+		}
 		
+		if (enemy && !enemy.exists && enemy.owner.bullet.outOfUsing) {
+			this.kill(enemy);
+		}
+		
+		if (enemy && enemy.owner.HP < 0 && !enemy.owner.stared) {
+			enemy.owner.stared = true;
+			this.starEffect.play(enemy.x, enemy.y);
+		}
+	},
+		
+	update: function(player) {
+		this.sprites.forEach(this.updateOperating, this, false, player);
+		game.physics.arcade.overlap(player.sprite, this.sprites, this.playerHitEnemy, null, this);
+		this.collsionManager.update(player);
+		this.starEffect.update(player);
 	},
 
 	playerHitEnemy: function(player, enemy){
 		this.collsionManager.playerEnemyCollision(player, enemy);
-		this.kill(enemy);
+		enemy.exists = false;
 	},
 
 	kill: function(enemy) {
@@ -72,8 +84,8 @@ EnemyManager.prototype = {
 		}
 	},
 
-	add: function(enemyNumber, x, y) {
-		var enemy = new Enemy(this, 'enemy' + enemyNumber, x, y, enemyNumber);
+	add: function(enemyNumber, x, y, bulletSprite, isChase) {
+		var enemy = new Enemy(this, 'enemy' + enemyNumber, x, y, enemyNumber, bulletSprite, isChase);
 		this.sprites.add(enemy.sprite);
 	},
 
@@ -83,6 +95,7 @@ EnemyManager.prototype = {
 var CollisionManager = function() {
 	this.playerEnemyCollision = function(player, enemy) {
 		// do something here
+		
 	}
 	
 	this.playerEnemyBulletCollision = function(player, bullet) {
@@ -92,5 +105,11 @@ var CollisionManager = function() {
 	this.playerBulletEnemyCollision = function(bullet, enemy) {
 		bullet.kill();
 		enemy.owner.HP--;
+		
+		if (enemy.owner.HP <= 0) {
+		}
+	}
+	
+	this.update = function(player) {
 	}
 }

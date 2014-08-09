@@ -4,7 +4,8 @@ var Player = function(spriteName, startPosition) {
 	//add sprite
 	this.sprite = game.add.sprite(startPosition.x, startPosition.y, spriteName);
 	this.sprite.anchor.set(0.5);
-	this.sprite.animations.add('fly');
+	this.sprite.animations.add('fly',[0, 1]);
+	this.sprite.animations.add('injured', [2]);
 	this.sprite.animations.play('fly', 5, true);
 	
 	//enable aracade physics for player sprite
@@ -28,6 +29,10 @@ Player.prototype = {
 	getPos: function() { return {x: this.sprite.x, y: this.sprite.y}},
 	update: function() {
 		this.additionalUpdate();
+		// update animations
+		if (this.sprite.animations.currentAnim.loopCount > 0 && this.sprite.animations.currentAnim.name == 'injured') {
+			this.sprite.animations.play('fly', 5, true);
+		}
 	},
 	
 	additionalUpdate: function() {
@@ -35,7 +40,6 @@ Player.prototype = {
 		this.mainBullet.update();
 		this.subBullet.update();
 		this.openGlowEffects.update(this.sprite.x, this.sprite.y);
-		/*this.orbit.update();*/
 	},
 	
 	fire: function() {

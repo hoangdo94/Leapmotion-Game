@@ -66,9 +66,16 @@ var playState = {
 
 	//this is just some functions for testing the game
 	addEnemy: function(type) {
-		for (var i=0; i<5; i++){
-			this.enemyManager.add(type, w/5 + 3*w/20*i, 0);
-		};
+		if (type < 3) {
+			for (var i=0; i<5; i++){
+				this.enemyManager.add(type, w/5 + 3*w/20*i, 0, 'enemylaserunchase', false);
+			};
+		} else {
+			for (var i=0; i<5; i++){
+				this.enemyManager.add(type, w/5 + 3*w/20*i, 0, 'enemylaserchase', true);
+			};
+		}
+		
 	},
 
 	toggleSubBullet: function() {

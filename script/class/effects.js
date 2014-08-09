@@ -5,22 +5,21 @@ var BulletHitEffects = function(loop) {
     this.effects.setAll('anchor.x', 0.5);
     this.effects.setAll('anchor.y', 0.5);
     this.effects.callAll('animations.add', 'animations', 'hit',[0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 50, true);
-
+    
     this.play = function(x, y) {
         var hit = this.effects.getFirstExists(false);
         if (hit) {
             hit.reset(x, y - 50);
-			hit.animations.currentAnim.restart();
+			hit.animations.play('hit', 50, true);
         }
     }
     
     this.update = function() {
-        this.effects.forEach(function(hit){
-			if (hit.animations.currentAnim.loopCount == loop) {
+       this.effects.forEach(function(hit){
+			if(hit.animations.currentAnim.loopCount == loop - 1){
 				hit.kill();
 			}
     	});
-        
 	}	
 }
 
@@ -80,4 +79,39 @@ var OPenGlowEffects = function(loop) {
 			}
     	});
 	}	
+}
+
+var StarEffects = function(loop) {
+	this.loop = loop;
+	this.effects = game.add.group();
+	this.effects.enableBody = true;
+    this.effects.physicsBodyType = Phaser.Physics.ARCADE;
+    this.effects.createMultiple(60, 'star');
+    this.effects.setAll('anchor.x', 0.5);
+    this.effects.setAll('anchor.y', 0.5);
+	
+	this.play = function(x, y) {
+        var star = this.effects.getFirstExists(false);
+        if (star) {
+            star.reset(x, y);
+			star.body.gravity.y = 800;
+			star.body.velocity.y = -200;
+        }
+    }
+    
+    this.update = function(player) {
+        game.physics.arcade.overlap(player.sprite, this.effects, this.playerHitStar, null, this);
+        this.effects.forEach(function(star){
+			if (star) {
+				if (star.x > w || star.y > h) {
+					star.kill();
+				}
+			}
+    	});
+	}
+	
+	this.playerHitStar = function(player, star) {
+		alert('hit');
+		game.physics.arcade.moveToObject(star, {x:w, y:0}, 100, 300);
+	}
 }
