@@ -111,7 +111,6 @@ var StarEffects = function(loop) {
 	}
 	
 	this.playerHitStar = function(player, star) {
-		alert('hit');
 		game.physics.arcade.moveToObject(star, {x:w, y:0}, 100, 300);
 	}
 }
