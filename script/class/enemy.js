@@ -26,7 +26,7 @@ Enemy.prototype = {
 	
 	update: function() {
 		if (this.sprite.y > h - this.sprite.height/2){
-			this.manager.kill(this.sprite);
+			this.sprite.exists = false;
 		}
 		
 		if (this.sprite.animations.currentAnim.loopCount > 0 && this.sprite.animations.currentAnim.name == 'injured') {
@@ -47,7 +47,7 @@ var EnemyManager = function(player) {
 	
 	// Collsion Handler
 	this.collsionManager = new CollisionManager();
-	this.starEffect = new StarEffects();
+	this.starEffect = new StarEffects(this.player);
 	this.mainPowerUpEffect = new PowerUpEffects('main');
 	this.subPowerUpEffect = new PowerUpEffects('sub');
 };

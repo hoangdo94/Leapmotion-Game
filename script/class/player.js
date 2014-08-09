@@ -1,6 +1,8 @@
 var Player = function(spriteName, startPosition) {
 	this.HP = 3;
 	this.level = 1;
+	this.starNum = 0;
+	this.power = 0;
 
 	this.numOfPowerUpCollected = 0;
 	this.subBulletTime = 0;
@@ -55,7 +57,13 @@ Player.prototype = {
 				this.subBullet.enabled = false;
 			}
 		}
+		
+		this.power = this.superBullet.recharge * 100 / 1000;
+		if (this.power > 100)
+			this.power = 100;
+		this.HUD.updatePower();
 		this.HUD.updateSubBulletTimeText();
+		this.HUD.updateStar();
 	},
 	
 	fire: function() {
@@ -100,6 +108,17 @@ var PlayerHUD = function(player, x, y) {
 	//sub bullet time
 	this.subBulletTime = game.add.text(this.x, this.y + 50, 'S.Bullet Time:', { font: '16px Arial', fill: '#fff' });
 	this.timeText = game.add.text(this.x + 120, this.y + 48, '0s', { font: '18px Arial Bold', fill: '#fff' });
+	
+	this.star = game.add.sprite(this.x, this.y + 90, 'starnum');
+	this.star.anchor.set(0,0.5);
+	this.star.animations.add('normal', [0]);
+	this.star.animations.add('change', [1]);
+	this.star.animations.play('normal', 5, true);
+	game.physics.enable(this.star, Phaser.Physics.ARCADE);
+	this.starNum = game.add.text(this.star.x + 50, this.star.y, 'unknown', { font: '18px Arial Bold', fill: '#fff' });
+	this.starNum.anchor.set(0, 0.5);
+	
+	this.power = game.add.text(this.x, this.y + 120, 'Power: ', { font: '16px Arial', fill: '#fff' });
 };
 
 PlayerHUD.prototype = {
@@ -117,4 +136,15 @@ PlayerHUD.prototype = {
 	updateSubBulletTimeText: function(){
 		this.timeText.text = Math.ceil(this.player.subBulletTime/1000) + 's';
 	},
+	
+	updateStar: function() {
+		this.starNum.text = this.player.starNum;
+		if (this.star.animations.currentAnim.loopCount > 0 && this.star.animations.currentAnim.name == 'change') {
+			this.star.animations.play('normal', 5, true);
+		}
+	},
+	
+	updatePower: function() {
+		this.power.text = 'Power: '+ this.player.power + ' %';
+	}
 };

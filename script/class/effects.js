@@ -81,24 +81,28 @@ var OPenGlowEffects = function(loop) {
 	}	
 }
 
-var StarEffects = function() {
+var StarEffects = function(player) {
+	this.player = player;
 	this.effects = game.add.group();
 	this.effects.enableBody = true;
     this.effects.physicsBodyType = Phaser.Physics.ARCADE;
     this.effects.createMultiple(60, 'star');
     this.effects.setAll('anchor.x', 0.5);
     this.effects.setAll('anchor.y', 0.5);
-	
+	this.starLimitTime = 0;
+	this.add = false;
 	this.play = function(x, y) {
         var star = this.effects.getFirstExists(false);
-        if (star) {
+        if (star && this.starLimitTime < game.time.now) {
             star.reset(x, y);
 			star.body.gravity.y = 800;
 			star.body.velocity.y = -200;
+			this.starLimitTime = game.time.now + 10;
         }
     }
     
     this.update = function(player) {
+		game.physics.arcade.overlap(player.HUD.star, this.effects, this.updateStarNum, null, this);
         game.physics.arcade.overlap(player.sprite, this.effects, this.playerHitStar, null, this);
         this.effects.forEach(function(star){
             star.rotation += 0.1;
@@ -108,10 +112,21 @@ var StarEffects = function() {
 				}
 			}
     	});
+		
+		if(this.add) {
+			player.starNum += 1;
+			player.HUD.star.animations.play('change', 10, true);
+			this.add = false;
+		}
 	}
 	
 	this.playerHitStar = function(player, star) {
-		game.physics.arcade.moveToObject(star, {x:w, y:0}, 100, 300);
+		game.physics.arcade.moveToObject(star, {x: player.owner.HUD.star.x + 10, y: player.owner.HUD.star.y - 30}, 100, 300);		
+	}
+	
+	this.updateStarNum = function(starNum, star) {
+		star.kill();
+		this.add = true;
 	}
 }
 
