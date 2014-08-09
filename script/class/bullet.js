@@ -192,15 +192,15 @@ Laser.prototype.fire = function() {
 	}
 };
 
-var Rocket = function(spriteName, object, enemyManager) {
+var HomingMissile = function(spriteName, object, enemyManager) {
 	Bullet.call(this, spriteName, object, enemyManager);
 	this.enabled = false;
 	this.bullets.setAll('anchor.y', 0.5);
 };
 
-Rocket.prototype = Object.create(Bullet.prototype);
+HomingMissile.prototype = Object.create(Bullet.prototype);
 
-Rocket.prototype.fire = function() {
+HomingMissile.prototype.fire = function() {
 	 //  To avoid them being allowed to fire too fast we set a time limit
 	if (game.time.now > this.bulletTime)
 	{
@@ -209,32 +209,26 @@ Rocket.prototype.fire = function() {
 			//  Grab the first bullet we can from the pool
 			var bullet = this.bullets.getFirstDead(false);
 			//  And fire it
-/*<<<<<<< HEAD
-			bullet.reset(this.object.sprite.x, this.object.sprite.y - this.object.sprite.height/2 + 4);
-=======*/
-			bullet.reset(this.player.sprite.x + this.player.sprite.width/2, this.player.sprite.y - this.player.sprite.height/2 + 4);
+			bullet.reset(this.object.sprite.x + this.object.sprite.width/2, this.object.sprite.y - this.object.sprite.height/2 + 4);
 
 			//another bullet
 			bullet = this.bullets.getFirstDead(false);
-			bullet.reset(this.player.sprite.x - this.player.sprite.width/2, this.player.sprite.y - this.player.sprite.height/2 + 4);
+			bullet.reset(this.object.sprite.x - this.object.sprite.width/2, this.object.sprite.y - this.object.sprite.height/2 + 4);
 
-/*>>>>>>> ed27e76811bf3bfa601e643ac756e8f1dead24c3*/
 			this.bulletTime = game.time.now + 500;
 		}
 	}
 };
 
-Rocket.prototype.additionalUpdate = function() {
+HomingMissile.prototype.additionalUpdate = function() {
 	var target = this.enemyManager.sprites.getFirstAlive();
 	if (target !== null) {
 		this.bullets.forEach(function(bullet){
-			bullet.rotation += 0.5;
-			bullet.x += (this.x > bullet.x)?10:-10;
-			bullet.y += (this.y > bullet.y)?10:-10;
+			bullet.rotation = game.physics.arcade.accelerateToObject(bullet, target, 800);
+			//bullet.rotation = game.physics.arcade.moveToObject(bullet, target, 500);
 		}, target);
 	} else {
 		this.bullets.forEach(function(bullet){
-			bullet.rotation += 0.5;
 			bullet.y -= 10;
 		});
 	}
@@ -271,7 +265,7 @@ EnemyBullet.prototype = {
 			{
 				game.physics.enable(bullet, Phaser.Physics.ARCADE);
 				//  And fire it
-				bullet.reset(enemy.x, enemy.y);
+				bullet.reset(enemy.x, enemy.y + enemy.height);
 				
 				if (this.isChase)
 					bullet.rotation = game.physics.arcade.moveToObject(bullet, target.sprite, 10, Math.floor(1000 + Math.random() * 1000));

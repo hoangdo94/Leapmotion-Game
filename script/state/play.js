@@ -22,12 +22,6 @@ var playState = {
 		this.enemyManager = new EnemyManager(game, this.player);
 		this.player.initBullet(this.enemyManager);
 
-		//testing
-		game.add.text(10,10, 'Testing mode \n - Q: add a random wave of emenies\n - W: toggle sub weapon\n - E: toogle main weapon Level', { font: '20px Arial', fill: '#fff' });
-		game.add.text(10,h-80, 'Sub weapon enabled:\nMain weapon level: ', { font: '20px Arial', fill: '#fff' });
-		this.swtext = game.add.text(220,h-80, 'false', { font: '20px Arial', fill: '#abc' });
-		this.mwtext = game.add.text(220,h-56, '1', { font: '20px Arial', fill: '#abc' });
-		this.addEnemy(2);
 	},
 	
 	update: function() {
@@ -49,18 +43,6 @@ var playState = {
 			}
 			
 		}
-		if (this.game.input.keyboard.isDown(Phaser.Keyboard.W)) {
-			if (game.time.now > this.time) {
-				this.toggleSubBullet();
-				this.time = game.time.now + 500;
-			}
-		}
-		if (this.game.input.keyboard.isDown(Phaser.Keyboard.E)) {
-			if (game.time.now > this.time) {
-				this.toggleBulletLevel();
-				this.time = game.time.now + 500;
-			}
-		}
 	},
 
 	//this is just some functions for testing the game
@@ -76,17 +58,4 @@ var playState = {
 		}
 		
 	},
-
-	toggleSubBullet: function() {
-		this.player.subBullet.enabled = !this.player.subBullet.enabled;
-		this.swtext.text = this.player.subBullet.enabled;
-	},
-
-	toggleBulletLevel: function() {
-		this.player.level++;
-		if (this.player.level > 5) this.player.level = 1;
-		this.mwtext.text = this.player.level;
-		this.player.mainBullet.setLevel(this.player.level);
-	}
-
 }

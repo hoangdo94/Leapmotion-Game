@@ -81,8 +81,7 @@ var OPenGlowEffects = function(loop) {
 	}	
 }
 
-var StarEffects = function(loop) {
-	this.loop = loop;
+var StarEffects = function() {
 	this.effects = game.add.group();
 	this.effects.enableBody = true;
     this.effects.physicsBodyType = Phaser.Physics.ARCADE;
@@ -102,6 +101,7 @@ var StarEffects = function(loop) {
     this.update = function(player) {
         game.physics.arcade.overlap(player.sprite, this.effects, this.playerHitStar, null, this);
         this.effects.forEach(function(star){
+            star.rotation += 0.1;
 			if (star) {
 				if (star.x > w || star.y > h) {
 					star.kill();
@@ -113,4 +113,48 @@ var StarEffects = function(loop) {
 	this.playerHitStar = function(player, star) {
 		game.physics.arcade.moveToObject(star, {x:w, y:0}, 100, 300);
 	}
+}
+
+var PowerUpEffects = function(type) {
+    this.type = type;
+    this.effects = game.add.group();
+    this.effects.enableBody = true;
+    this.effects.physicsBodyType = Phaser.Physics.ARCADE;
+    this.effects.createMultiple(30, (this.type == 'main')?'mainPowerup':'subPowerup');
+    this.effects.setAll('anchor.x', 0.5);
+    this.effects.setAll('anchor.y', 0.5);
+    
+    this.play = function(x, y) {
+        var powerUp = this.effects.getFirstExists(false);
+        if (powerUp) {
+            powerUp.reset(x, y);
+            powerUp.body.gravity.y = 800;
+            powerUp.body.velocity.y = -200;
+        }
+    }
+    
+    this.update = function(player) {
+        game.physics.arcade.overlap(player.sprite, this.effects, this.playerHitPowerUp, null, this);
+        this.effects.forEach(function(powerUp){
+            if (powerUp) {
+                if (powerUp.x > w || powerUp.y > h) {
+                    powerUp.kill();
+                }
+            }
+        });
+    }
+    
+    this.playerHitPowerUp = function(player, powerUp) {
+        powerUp.kill();
+        if (this.type == 'main') {
+            player.owner.numOfPowerUpCollected++;
+            if (player.owner.numOfPowerUpCollected == Math.pow(2, player.owner.level+1)){
+                player.owner.mainBulletPowerUp();
+                player.owner.numOfPowerUpCollected = 0;
+            }
+        }
+        else {
+            player.owner.subBulletTime += player.owner.level * 3000;
+        }
+    }
 }
