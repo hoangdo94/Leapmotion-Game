@@ -1,7 +1,7 @@
 var LeapController = function (player) {
     this.player = player;
     // creates a new Leap Controller object
-    this.controller = new Leap.Controller();
+    this.controller = new Leap.Controller({enableGestures: true});
     // connect the controller with the web socket
     this.controller.connect();
 }
@@ -26,6 +26,17 @@ LeapController.prototype = {
                 // update new aircraft's position according to the position of the player's hand
                 player.sprite.x = handPos[0];
                 player.sprite.y = handPos[1];
+            }
+            // loop through the recognized gestures sent via frame
+            if(frame.valid && frame.gestures.length > 0){
+                frame.gestures.forEach(function(gesture){
+                    switch (gesture.type){
+                        case "circle":
+                            // if the gesture is 'circle', let the player fire super bullets
+                            player.fireSuper();
+                            break;
+                    }
+                });
             }
         });
     },
