@@ -5,7 +5,7 @@ var menuState = {
 		logo.anchor.setTo(0.5);
 		game.add.tween(logo).to({ y: h/2-80 }, 1000, Phaser.Easing.Bounce.Out).start();
 		
-		var label = game.add.text(w/2, h/2, 'Press ENTER to use Keyboard Controller\nPress SPACE to use Leap Controller', { font: '20px Arial', fill: '#fff' });
+		var label = game.add.text(w/2, h/2, 'Press ENTER to use Keyboard Controller\nPress SPACE to use Leapmotion Controller', { font: '20px Arial', fill: '#fff' });
 		label.anchor.setTo(0.5);
 		label.alpha = 0;
 		game.add.tween(label).delay(500).to({ alpha: 1}, 1000).start();
