@@ -92,8 +92,6 @@ var PlayerHUD = function(player, x, y) {
 	this.x = x;
 	this.y = y;
 
-	this.hud = game.add.group();
-
 	//player lives
 	this.playerIcon = game.add.sprite(this.x,this.y,'playerIcon');
 	this.xIcon1 = game.add.sprite(this.x + 40, this.y + 5, 'number');
@@ -109,16 +107,17 @@ var PlayerHUD = function(player, x, y) {
 	this.subBulletTime = game.add.text(this.x, this.y + 50, 'S.Bullet Time:', { font: '16px Arial', fill: '#fff' });
 	this.timeText = game.add.text(this.x + 120, this.y + 48, '0s', { font: '18px Arial Bold', fill: '#fff' });
 	
-	this.star = game.add.sprite(this.x, this.y + 90, 'starnum');
-	this.star.anchor.set(0,0.5);
+	//star
+	this.star = game.add.sprite(this.x + 100, this.y - 9, 'starnum');
 	this.star.animations.add('normal', [0]);
 	this.star.animations.add('change', [1]);
 	this.star.animations.play('normal', 5, true);
 	game.physics.enable(this.star, Phaser.Physics.ARCADE);
-	this.starNum = game.add.text(this.star.x + 50, this.star.y, 'unknown', { font: '18px Arial Bold', fill: '#fff' });
-	this.starNum.anchor.set(0, 0.5);
-	
-	this.power = game.add.text(this.x, this.y + 120, 'Power: ', { font: '16px Arial', fill: '#fff' });
+	this.starNum = game.add.text(this.star.x + 40, this.star.y + 12, 'unknown', { font: '20px Arial Bold', fill: '#fff' });
+
+	//power
+	this.power = game.add.text(this.x, this.y + 70, 'Skill Power: ', { font: '16px Arial', fill: '#fff' });
+	this.powerText = game.add.text(this.x + 120, this.y + 70, '0%', { font: '18px Arial Bold', fill: '#fff' });
 };
 
 PlayerHUD.prototype = {
@@ -130,7 +129,12 @@ PlayerHUD.prototype = {
 	},
 
 	updateLevel: function(){
-		this.levelText.text = this.player.level + ' (' + this.player.numOfPowerUpCollected + '/' + Math.pow(2, this.player.level+1) + ')';
+		if (this.player.level < 5) {
+			this.levelText.text = this.player.level + ' (' + this.player.numOfPowerUpCollected + '/' + Math.pow(2, this.player.level+1) + ')';
+		}
+		else {
+			this.levelText.text = '5 (32/32)';
+		}
 	},
 
 	updateSubBulletTimeText: function(){
@@ -145,6 +149,6 @@ PlayerHUD.prototype = {
 	},
 	
 	updatePower: function() {
-		this.power.text = 'Power: '+ this.player.power + ' %';
+		this.powerText.text = this.player.power + '%';
 	}
 };
