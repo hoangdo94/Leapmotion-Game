@@ -311,7 +311,7 @@ var SuperBullet = function(spriteName, object, enemyManager) {
 	this.timing = 0;
 	this.isFinished = true;
 	this.isActive = true;
-	this.recharge = 1000;
+	this.recharge = 0;
 };
 
 SuperBullet.prototype = Object.create(Bullet.prototype);
