@@ -116,7 +116,7 @@ var PlayerHUD = function(player, x, y) {
 	this.starNum = game.add.text(this.star.x + 40, this.star.y + 12, 'unknown', { font: '20px Arial Bold', fill: '#fff' });
 
 	//power
-	this.power = game.add.text(this.x, this.y + 70, 'Skill Power: ', { font: '16px Arial', fill: '#fff' });
+	this.power = game.add.text(this.x, this.y + 70, 'Skill Recharged: ', { font: '16px Arial', fill: '#fff' });
 	this.powerText = game.add.text(this.x + 120, this.y + 70, '0%', { font: '18px Arial Bold', fill: '#fff' });
 };
 
@@ -133,7 +133,7 @@ PlayerHUD.prototype = {
 			this.levelText.text = this.player.level + ' (' + this.player.numOfPowerUpCollected + '/' + Math.pow(2, this.player.level+1) + ')';
 		}
 		else {
-			this.levelText.text = '5 (32/32)';
+			this.levelText.text = '5 (MAXED)';
 		}
 	},
 
