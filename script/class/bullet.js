@@ -51,13 +51,15 @@ Bullet.prototype = {
 	},
 
 	bulletHitEnemy: function(bullet, enemy) {
-		//  When a bullet hits an enemy we kill them both
-		if (enemy.owner.HP <= 0) {
-			enemy.exists = false;
-			this.boomEffect.play(enemy.x, enemy.y);
+		//  When a bullet hits an enemy we kill them both (When they appear on the screen)
+		if (enemy.y > 0) {
+			if (enemy.owner.HP <= 0) {
+				enemy.exists = false;
+				this.boomEffect.play(enemy.x, enemy.y);
+			}
+			this.collsionManager.playerBulletEnemyCollision(bullet, enemy);
+			enemy.animations.play('injured', 20, true);
 		}
-		this.collsionManager.playerBulletEnemyCollision(bullet, enemy);
-		enemy.animations.play('injured', 20, true);
 	}
 };
 
