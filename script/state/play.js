@@ -6,15 +6,19 @@ var playState = {
 		this.time = 0;
 	
 		//add background
-		this.bg = game.add.tileSprite(0, 0, 2365, 1536, 'bg');
+		/*this.bg = game.add.tileSprite(0, 0, 2365, 1536, 'bg');
 		var scale = w/this.bg.width;
 		this.bg.scale.x =  scale;
-		this.bg.scale.y =  scale;
-
+		this.bg.scale.y =  scale;*/
+		
+		this.bg = new BackgroundControl();
 		//add player
 		var startPosition = {x:w / 2, y: h / 2}
 		this.player = new Player('player', startPosition);
 
+		this.bg.getOriginalPos(this.player);
+
+		
         //set the controller
 		if (controllerType == 1) this.player.controller = new KeyboardController(this.player);
 		else this.player.controller = new LeapController(this.player);
@@ -26,9 +30,11 @@ var playState = {
 	},
 	
 	update: function() {
+		
 		if (playing) {
 			//update background
-			this.bg.tilePosition.y += 1;
+			//this.bg.tilePosition.y += 1;
+			this.bg.update(this.player);
 
 			//update player
 			this.player.update();

@@ -22,7 +22,12 @@ var loadState = {
 		game.load.setPreloadSprite(preloading);
 		
 		//load images
-		game.load.image('bg', 'asset/image/bg.jpg');
+		game.load.image('bg', 'asset/image/bgnew.jpg');
+		game.load.image('planet1', 'asset/image/planet1_resized.png');
+		game.load.image('planet2', 'asset/image/planet2_resized.png');
+		game.load.image('planet3', 'asset/image/planet3.png');
+		game.load.image('planet4', 'asset/image/planet4.png');
+
 		game.load.spritesheet('player', 'asset/image/player.png', 112, 75, 3);
 		game.load.spritesheet('number', 'asset/image/number.png', 19, 19, 11);
 		game.load.image('playerIcon', 'asset/image/playericon.png');

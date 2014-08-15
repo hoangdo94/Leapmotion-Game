@@ -39,6 +39,8 @@ Enemy.prototype = {
 	},
 };
 
+//==================================================================================================================================================================
+
 var EnemyManager = function(player) {
 	this.player = player;
 	this.sprites = game.add.group();
@@ -107,6 +109,7 @@ EnemyManager.prototype = {
 
 };
 
+//==================================================================================================================================================================
 
 var CollisionManager = function() {
 	this.playerEnemyCollision = function(player, enemy) {

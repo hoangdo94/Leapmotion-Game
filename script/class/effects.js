@@ -23,6 +23,8 @@ var BulletHitEffects = function(loop) {
 	}	
 }
 
+//==================================================================================================================================================================
+
 var BoomEffects = function(loop) {
     this.loop = loop;
     this.effects = game.add.group();
@@ -49,6 +51,8 @@ var BoomEffects = function(loop) {
         
 	}	
 }
+
+//==================================================================================================================================================================
 
 var OPenGlowEffects = function(loop) {
 	this.loop = loop;
@@ -80,6 +84,8 @@ var OPenGlowEffects = function(loop) {
     	});
 	}	
 }
+
+//==================================================================================================================================================================
 
 var StarEffects = function(player) {
 	this.player = player;
@@ -130,6 +136,8 @@ var StarEffects = function(player) {
 	}
 }
 
+//==================================================================================================================================================================
+
 var PowerUpEffects = function(type) {
     this.type = type;
     this.effects = game.add.group();
@@ -173,4 +181,79 @@ var PowerUpEffects = function(type) {
             player.owner.subBulletTime += player.owner.level * 3000;
         }
     }
+}
+
+//==================================================================================================================================================================
+
+var BackgroundControl = function() {
+	this.bg = game.add.tileSprite(0, 0, 2365, 1536, 'bg');
+	var scale = w/this.bg.width;
+	this.bg.scale.x =  scale;
+	this.bg.scale.y =  scale;
+	
+	this.planet1 = game.add.sprite(300, 0, 'planet1');
+	game.physics.enable(this.planet1, Phaser.Physics.ARCADE);
+	
+	this.planet2 = game.add.sprite(800, -700, 'planet2');
+	game.physics.enable(this.planet2, Phaser.Physics.ARCADE);
+	this.planet2Tween = game.add.tween(this.planet2.scale).to({ x: 2, y: 2}, 120000);
+	this.planet2Flag = true;
+	
+	this.planet3 = game.add.sprite(1400, -900, 'planet3');
+	game.physics.enable(this.planet3, Phaser.Physics.ARCADE);
+	this.planet3Tween = game.add.tween(this.planet3).to({x: 0, y: 1600}, 120000);
+	this.planet3Flag = true;
+	
+	this.playerOriginPos = {};
+	this.update = function(player) {
+		if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
+			this.bg.tilePosition.x += 0.3;
+			this.planet1.body.velocity.x = 23;
+			this.planet2.body.velocity.x = 15;
+			this.planet3.body.velocity.x = 25;
+		} else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
+			this.bg.tilePosition.x += -0.3;
+			this.planet1.body.velocity.x = -23;
+			this.planet2.body.velocity.x = -15;
+			this.planet3.body.velocity.x = -25;
+		} else {
+			this.planet1.body.velocity.x = 0;
+			this.planet2.body.velocity.x = 0;
+			this.planet3.body.velocity.x = 0;
+		}
+		
+		if (game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
+			this.planet1.body.velocity.y = 28;
+			this.planet2.body.velocity.y = 20;
+			if (!this.planet3Flag)
+				this.planet3.body.velocity.y = 20;
+		} else if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
+			this.planet1.body.velocity.y = -4;
+			this.planet2.body.velocity.y = 0;
+			if (!this.planet3Flag)
+				this.planet3.body.velocity.y = 0;
+		} else {
+			this.planet1.body.velocity.y = 13;
+			this.planet2.body.velocity.y = 5;
+			if (!this.planet3Flag)
+				this.planet3.body.velocity.y = 5;
+		}
+		
+		if (this.planet2.y > -100 && this.planet2Flag) {
+			this.planet2Tween.start();
+			this.planet2Flag = false;
+		}
+		
+		if (this.planet1.y > 500 && this.planet3Flag) {
+			this.planet3Tween.start();
+			this.planet3Flag = false;
+			
+		}
+		this.bg.tilePosition.y += 0.5;
+	}
+	
+	this.getOriginalPos = function(player) {
+		this.playerOriginPos.x = player.sprite.x;
+		this.playerOriginPos.y = player.sprite.y;
+	}
 }
