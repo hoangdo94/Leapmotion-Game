@@ -1,3 +1,8 @@
+/**
+* Enemy of the game
+* @constructor
+* @param manager
+*/
 var Enemy = function(manager, spriteName, x, y, hp, bulletSprite, isChase, path) {
 	this.manager = manager;
 	this.HP = hp;
@@ -49,12 +54,9 @@ var EnemyManager = function(player) {
 	this.sprites = game.add.group();
 	this.sprites.enableBody = true;
     this.sprites.physicsBodyType = Phaser.Physics.ARCADE;
-	
 	this.movePathManager = new MovePathManager();
 
-	
 	// Collsion Handler
-	this.collsionManager = new CollisionManager();
 	this.starEffect = new StarEffects(this.player);
 	this.mainPowerUpEffect = new PowerUpEffects('main');
 	this.subPowerUpEffect = new PowerUpEffects('sub');
@@ -106,8 +108,6 @@ EnemyManager.prototype = {
 		
 	update: function(player) {
 		this.sprites.forEach(this.updateOperating, this, false, player);
-		game.physics.arcade.overlap(player.sprite, this.sprites, this.playerHitEnemy, null, this);
-		this.collsionManager.update(player);
 		this.starEffect.update(player);
 		this.mainPowerUpEffect.update(player);
 		this.subPowerUpEffect.update(player);
@@ -116,10 +116,6 @@ EnemyManager.prototype = {
 		} else {
 			this.isOutOfEnemies = false;
 		}
-	},
-
-	playerHitEnemy: function(player, enemy){
-		this.collsionManager.playerEnemyCollision(player, enemy);
 	},
 
 	kill: function(enemy) {
@@ -171,7 +167,11 @@ EnemyManager.prototype = {
 
 //==================================================================================================================================================================
 
-var CollisionManager = function() {
+var CollisionManager = function(player, enemyManager) {
+	this.player = player;
+	this.enemyManager = enemyManager;
+	this.boomEffect = new BoomEffects(1);
+	
 	this.playerEnemyCollision = function(player, enemy) {
 		// do something here
 		
@@ -184,12 +184,46 @@ var CollisionManager = function() {
 	this.playerBulletEnemyCollision = function(bullet, enemy) {
 		bullet.kill();
 		enemy.owner.HP--;
+	}
+	
+	this.update = function() {
+		if (this.player && this.enemyManager) {
+			game.physics.arcade.overlap(this.player.mainBullet.bullets, this.enemyManager.sprites, this.bulletHitEnemy, null, this);
+			game.physics.arcade.overlap(this.player.subBullet.bullets, this.enemyManager.sprites, this.bulletHitEnemy, null, this);
+			game.physics.arcade.overlap(this.player.superBullet.bullets, this.enemyManager.sprites, this.bulletHitEnemy, null, this);
+			
+			this.enemyManager.sprites.forEach(this.updateOperating, this, false, this.player);			
+		}
 		
-		if (enemy.owner.HP <= 0) {
+		this.boomEffect.update();
+	}
+	
+	this.updateOperating = function(enemy, player) {
+		game.physics.arcade.overlap(player.sprite, enemy.owner.bullet.bullets, this.bulletHitPlayer, null, this);
+	}
+	
+	this.bulletHitEnemy = function(bullet, enemy) {
+		//  When a bullet hits an enemy we kill them both (When they appear on the screen)
+		if (enemy.y > 0) {
+			if (enemy.owner.HP <= 0) {
+				enemy.exists = false;
+				this.boomEffect.play(enemy.x, enemy.y);
+			}
+			bullet.kill();
+			enemy.owner.HP--;
+			enemy.animations.play('injured', 20, true);
 		}
 	}
 	
-	this.update = function(player) {
+	this.bulletHitPlayer = function(player, bullet) {
+		bullet.kill();
+		player.animations.play('injured', 20, true);
+		player.owner.HP--;
+		player.owner.HUD.updateHP();
+		if (player.owner.HP == 0) {
+			//game over :v
+			// chua viet
+		}
 	}
 }
 

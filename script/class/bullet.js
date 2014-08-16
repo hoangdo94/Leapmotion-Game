@@ -1,6 +1,11 @@
-var Bullet = function(spriteName, player, enemyManager) {
+/**
+* Abstract class contains main attributes and method of a bullet
+* @constructor
+* @param {string} spriteName - references to name of bullet image file was loaded in load.js
+* @param {Player} player - references to currently player
+*/
+var Bullet = function(spriteName, player) {
 	this.player = player;
-	this.enemyManager = enemyManager;
 
 	// Sprite settings
 	this.bullets = game.add.group();
@@ -12,25 +17,21 @@ var Bullet = function(spriteName, player, enemyManager) {
     this.bullets.setAll('outOfBoundsKill', true);
     this.bullets.setAll('checkWorldBounds', true);
 	this.bulletTime = 0;
-	
-	// Bullet Hit Effects
-	this.boomEffect = new BoomEffects(1);
-
-	// Collsion Handler
-	this.collsionManager = new CollisionManager();
 };
 
 Bullet.prototype = {
 	constructor: Bullet,
 
 	update: function() {
-		game.physics.arcade.overlap(this.bullets, this.enemyManager.sprites, this.bulletHitEnemy, null, this);
 		this.additionalUpdate();
-		this.boomEffect.update();
 	},
 
 	additionalUpdate: function() {
-
+		this.bullets.forEach(function(bullet) {
+			if (bullet.x > w || bullet.x < 0 || bullet.y > h || bullet.y < 0) {
+				bullet.kill();
+			}
+		});
 	},
 
 	fire: function() {
@@ -48,25 +49,17 @@ Bullet.prototype = {
 				this.bulletTime = game.time.now + 100;
 			}
 		}
-	},
-
-	bulletHitEnemy: function(bullet, enemy) {
-		//  When a bullet hits an enemy we kill them both (When they appear on the screen)
-		if (enemy.y > 0) {
-			if (enemy.owner.HP <= 0) {
-				enemy.exists = false;
-				this.boomEffect.play(enemy.x, enemy.y);
-			}
-			this.collsionManager.playerBulletEnemyCollision(bullet, enemy);
-			enemy.animations.play('injured', 20, true);
-		}
 	}
 };
 
-//==================================================================================================================================================================
- 
-var Laser = function(spriteName, player, enemyManager) {
-	Bullet.call(this, spriteName, player, enemyManager);
+/**
+* Mainbullet of player. It inheritances from Bullet class
+* @constructor
+* @param {string} spriteName - references to name of bullet image file was loaded in load.js
+* @param {Player} player - references to currently player
+*/
+var Laser = function(spriteName, player) {
+	Bullet.call(this, spriteName, player);
 	this.level = 1;
 };
 
@@ -196,10 +189,16 @@ Laser.prototype.fire = function() {
 	}
 };
 
-//==================================================================================================================================================================
-
+/**
+* subbullet of player. It inheritances from Bullet class
+* @constructor
+* @param {string} spriteName - references to name of bullet image file was loaded in load.js
+* @param {Player} player - references to currently player
+* @param {EnemyManager} enemyManager - references enemyManager instance that currently controls enemy groups
+*/
 var HomingMissile = function(spriteName, player, enemyManager) {
-	Bullet.call(this, spriteName, player, enemyManager);
+	Bullet.call(this, spriteName, player);
+	this.enemyManager = enemyManager;
 	this.enabled = false;
 	this.bullets.setAll('anchor.y', 0.5);
 };
@@ -231,87 +230,22 @@ HomingMissile.prototype.additionalUpdate = function() {
 	if (target !== null && target.exists) {
 		this.bullets.forEach(function(bullet){
 			bullet.rotation = game.physics.arcade.accelerateToObject(bullet, target, 800);
-			//bullet.rotation = game.physics.arcade.moveToObject(bullet, target, 500);
 		}, target);
 	} else {
 		this.bullets.forEach(function(bullet){
 			bullet.y -= 10;
 		});
 	}
-	this.boomEffect.update();
 };
 
-//==================================================================================================================================================================
-
-var EnemyBullet = function(spriteName, isChase) {
-	this.isChase = isChase;
-	// Sprite settings
-	this.bullets = game.add.group();
-	this.bullets.enableBody = true;
-    this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
-    this.bullets.createMultiple(60, spriteName);
-    this.bullets.setAll('anchor.x', 0.5)	;
-    this.bullets.setAll('anchor.y', 1);
-    this.bullets.setAll('outOfBoundsKill', true);
-    this.bullets.setAll('checkWorldBounds', true);
-	this.bulletTime = game.time.now + 2000;
-	// Collsion Handler
-	this.collsionManager = new CollisionManager();
-	this.outOfUsing = false;
-}
-
-EnemyBullet.prototype = {
-	fire: function(enemy, target) {
-		 //  To avoid them being allowed to fire too fast we set a time limit
-		if (game.time.now > this.bulletTime)
-		{
-			//  Grab the first bullet we can from the pool
-			var bullet = this.bullets.getFirstDead(false);
-
-			if (bullet)
-			{
-				game.physics.enable(bullet, Phaser.Physics.ARCADE);
-				//  And fire it
-				bullet.reset(enemy.x, enemy.y + enemy.height);
-				
-				if (this.isChase)
-					bullet.rotation = game.physics.arcade.moveToObject(bullet, target.sprite, 10, Math.floor(1000 + Math.random() * 1000));
-				else
-					bullet.body.velocity.y = 800;
-				this.bulletTime = game.time.now + 3000;
-			}
-			
-		}
-	},
-	
-	update: function(player) {
-		game.physics.arcade.overlap(player.sprite, this.bullets, this.bulletHitPlayer, null, this);
-		this.bullets.forEach(function(bullet){
-			if(bullet){
-				// do something here
-			}
-		});
-		if (!this.bullets.getFirstExists(true)) {
-			this.outOfUsing = true;
-		} else this.outOfUsing = false;
-	},
-	
-	bulletHitPlayer: function(player, bullet) {
-		this.collsionManager.playerEnemyBulletCollision(player, bullet);
-		player.animations.play('injured', 20, true);
-		player.owner.HP--;
-		player.owner.HUD.updateHP();
-		if (player.owner.HP == 0) {
-			//game over :v
-			// chua viet
-		}
-	}
-}
-
-//==================================================================================================================================================================
-
-var SuperBullet = function(spriteName, player, enemyManager) {
-	Bullet.call(this, spriteName, player, enemyManager);
+/**
+* superbullet of player. It inheritances from Bullet class
+* @constructor
+* @param {string} spriteName - corresponding name of image file was loaded in loadState
+* @param {Player} player - references to currently Player instance
+*/
+var SuperBullet = function(spriteName, player) {
+	Bullet.call(this, spriteName, player);
 	this.level = 1;
 	this.angle = 0;
 	this.maxAngle = 0;
@@ -348,22 +282,6 @@ SuperBullet.prototype.fire = function(number) {
 	
 };
 
-SuperBullet.prototype.update = function() {
-	game.physics.arcade.overlap(this.bullets, this.enemyManager.sprites, this.bulletHitEnemy, null, this);
-	this.additionalUpdate();
-	this.boomEffect.update();
-}
-
-SuperBullet.prototype.bulletHitEnemy = function(bullet, enemy) {
-	//  When a bullet hits an enemy we kill them both
-	if (enemy.owner.HP <= 0) {
-		enemy.exists = false;
-		this.boomEffect.play(enemy.x, enemy.y);
-	}
-	this.collsionManager.playerBulletEnemyCollision(bullet, enemy);
-	enemy.animations.play('injured', 20, true);
-}
-
 SuperBullet.prototype.additionalUpdate = function() {
 	if (game.time.now > this.timing)
 	{
@@ -386,4 +304,57 @@ SuperBullet.prototype.additionalUpdate = function() {
 		
 		this.timing = game.time.now + 5;
 	}
+}
+
+/**
+* Enemy weapon
+* @constructor
+* @param {string} spriteName - corresponding name of image file was loaded in loadState
+* @param {boolean} isChase - the ability of chasing.
+*/
+var EnemyBullet = function(spriteName, isChase) {
+	this.isChase = isChase;
+	// Sprite settings
+	this.bullets = game.add.group();
+	this.bullets.enableBody = true;
+    this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
+    this.bullets.createMultiple(60, spriteName);
+    this.bullets.setAll('anchor.x', 0.5)	;
+    this.bullets.setAll('anchor.y', 1);
+    this.bullets.setAll('outOfBoundsKill', true);
+    this.bullets.setAll('checkWorldBounds', true);
+	this.bulletTime = game.time.now + 2000;
+	// Collsion Handler
+	this.outOfUsing = false;
+}
+
+EnemyBullet.prototype = {
+	fire: function(enemy, target) {
+		 //  To avoid them being allowed to fire too fast we set a time limit
+		if (game.time.now > this.bulletTime)
+		{
+			//  Grab the first bullet we can from the pool
+			var bullet = this.bullets.getFirstDead(false);
+
+			if (bullet)
+			{
+				game.physics.enable(bullet, Phaser.Physics.ARCADE);
+				//  And fire it
+				bullet.reset(enemy.x, enemy.y + enemy.height);
+				
+				if (this.isChase)
+					bullet.rotation = game.physics.arcade.moveToObject(bullet, target.sprite, 10, Math.floor(1000 + Math.random() * 1000));
+				else
+					bullet.body.velocity.y = 800;
+				this.bulletTime = game.time.now + 3000;
+			}
+			
+		}
+	},
+	
+	update: function(player) {
+		if (!this.bullets.getFirstExists(true)) {
+			this.outOfUsing = true;
+		} else this.outOfUsing = false;
+	},
 }

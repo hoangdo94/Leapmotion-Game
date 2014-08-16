@@ -6,19 +6,14 @@ var playState = {
 		this.time = 0;
 	
 		//add background
-		/*this.bg = game.add.tileSprite(0, 0, 2365, 1536, 'bg');
-		var scale = w/this.bg.width;
-		this.bg.scale.x =  scale;
-		this.bg.scale.y =  scale;*/
-		
 		this.bg = new BackgroundControl();
+		
 		//add player
 		var startPosition = {x:w / 2, y: h / 2}
 		this.player = new Player('player', startPosition);
 
 		this.bg.getOriginalPos(this.player);
 
-		
         //set the controller
 		if (controllerType == 1) this.player.controller = new KeyboardController(this.player);
 		else this.player.controller = new LeapController(this.player);
@@ -26,6 +21,9 @@ var playState = {
 		//add enemy manager
 		this.enemyManager = new EnemyManager(game, this.player);
 		this.player.initBullet(this.enemyManager);
+		
+		// CollisionManager
+		this.collisionManager = new CollisionManager(this.player, this.enemyManager);
 
 	},
 	
@@ -41,7 +39,9 @@ var playState = {
 			//update enemies
 			this.enemyManager.update(this.player);
 		
-
+			// Collision
+			this.collisionManager.update(this.player, this.enemyManager);
+			
 			if (this.enemyManager.isOutOfEnemies) {
 				this.addEnemy(Math.floor((Math.random() * 5) + 1), this.enemyManager.getRandromPathType());
 			}

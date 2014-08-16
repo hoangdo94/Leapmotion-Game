@@ -1,3 +1,8 @@
+/**
+* Effects occur when bullet of enemy hit player
+* @constructor
+* @param {number} loop - denfine the number of times the animation of this effects play
+*/
 var BulletHitEffects = function(loop) {
     this.loop = loop;
     this.effects = game.add.group();
@@ -23,8 +28,11 @@ var BulletHitEffects = function(loop) {
 	}	
 }
 
-//==================================================================================================================================================================
-
+/**
+* Effects occur when enemy explose
+* @constructor
+* @param {number} loop - denfine the number of times the animation of this effects play
+*/
 var BoomEffects = function(loop) {
     this.loop = loop;
     this.effects = game.add.group();
@@ -52,8 +60,11 @@ var BoomEffects = function(loop) {
 	}	
 }
 
-//==================================================================================================================================================================
-
+/**
+* Effects occur when player is being in safestate
+* @constructor
+* @param {number} loop - denfine the number of times the animation of this effects play
+*/
 var OPenGlowEffects = function(loop) {
 	this.loop = loop;
 	this.effects = game.add.group();
@@ -85,8 +96,11 @@ var OPenGlowEffects = function(loop) {
 	}	
 }
 
-//==================================================================================================================================================================
-
+/**
+* Effects occur when player hit star
+* @constructor
+* @param {Player} player - references to current Player instance
+*/
 var StarEffects = function(player) {
 	this.player = player;
 	this.effects = game.add.group();
@@ -136,8 +150,11 @@ var StarEffects = function(player) {
 	}
 }
 
-//==================================================================================================================================================================
-
+/**
+* Effects occur when player hit powerup
+* @constructor
+* @param {numbe} type - type of powerup
+*/
 var PowerUpEffects = function(type) {
     this.type = type;
     this.effects = game.add.group();
@@ -183,8 +200,10 @@ var PowerUpEffects = function(type) {
     }
 }
 
-//==================================================================================================================================================================
-
+/**
+* Handle background controlling during the gametime
+* @constructor
+*/
 var BackgroundControl = function() {
 	this.bg = game.add.tileSprite(0, 0, 2365, 1536, 'bg');
 	var scale = w/this.bg.width;

@@ -20,9 +20,9 @@ var Player = function(spriteName, startPosition) {
 	this.sprite.body.collideWorldBounds = true; 
 	
 	this.controller = null;
-	this.mainBullet = new Laser('laser', this, null);
+	this.mainBullet = new Laser('laser', this);
 	this.subBullet = new HomingMissile('rocket', this, null);
-	this.superBullet = new SuperBullet('superbullet', this, null);
+	this.superBullet = new SuperBullet('superbullet', this);
 	
 	// Effects
 	this.openGlowEffects = new OPenGlowEffects(3);
@@ -76,9 +76,7 @@ Player.prototype = {
 	},
 
 	initBullet: function(enemyManager) {
-		this.mainBullet.enemyManager = enemyManager;
 		this.subBullet.enemyManager = enemyManager;
-		this.superBullet.enemyManager = enemyManager;
 	},
 
 	mainBulletPowerUp: function() {
