@@ -19,11 +19,13 @@ var playState = {
 		else this.player.controller = new LeapController(this.player);
 
 		//add enemy manager
-		this.enemyManager = new EnemyManager(game, this.player);
+		this.enemyManager = new EnemyManager(this.player);
 		this.player.initBullet(this.enemyManager);
 		
 		// CollisionManager
 		this.collisionManager = new CollisionManager(this.player, this.enemyManager);
+
+		this.boss = new Boss('boss1', w/2, h/10);
 
 	},
 	
@@ -42,24 +44,20 @@ var playState = {
 			// Collision
 			this.collisionManager.update(this.player, this.enemyManager);
 			
+			/*
 			if (this.enemyManager.isOutOfEnemies) {
 				this.addEnemy(Math.floor((Math.random() * 5) + 1), this.enemyManager.getRandromPathType());
 			}
+			*/
 		}
 	},
 
 	//this is just some functions for testing the game
 	addEnemy: function(type, path) {
 		if (type < 3) {
-			/*for (var i=0; i<5; i++){
-				this.enemyManager.add(type, w/5 + 3*w/20*i, 50, 'enemylaserunchase', false, path);
-			};*/
-			this.enemyManager.addGroupPath(type, 400, 50, 'enemylaserunchase', false, 5, path);
+			this.enemyManager.addEnemyGroup(type, 400, 50, 'enemylaserunchase', false, 5, path);
 		} else {
-			/*for (var i=0; i<5; i++){
-				this.enemyManager.add(type, w/5 + 3*w/20*i, 50, 'enemylaserchase', true, path);
-			};*/
-			this.enemyManager.addGroupPath(type, 400, 50, 'enemylaserchase', true, 5, path);
+			this.enemyManager.addEnemyGroup(type, 400, 50, 'enemylaserchase', true, 5, path);
 		}
 	},
 };

@@ -358,3 +358,4 @@ EnemyBullet.prototype = {
 		} else this.outOfUsing = false;
 	},
 }
+

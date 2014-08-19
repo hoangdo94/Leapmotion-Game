@@ -22,9 +22,9 @@ var loadState = {
 		game.load.setPreloadSprite(preloading);
 		
 		//load images
-		game.load.image('bg', 'asset/image/bgnew.jpg');
-		game.load.image('planet1', 'asset/image/planet1_resized.png');
-		game.load.image('planet2', 'asset/image/planet2_resized.png');
+		game.load.image('bg', 'asset/image/bg.jpg');
+		game.load.image('planet1', 'asset/image/planet1.png');
+		game.load.image('planet2', 'asset/image/planet2.png');
 		game.load.image('planet3', 'asset/image/planet3.png');
 		game.load.image('planet4', 'asset/image/planet4.png');
 
@@ -37,17 +37,18 @@ var loadState = {
 		game.load.image('star', 'asset/image/star.png');
 		game.load.image('rocket', 'asset/image/rocket.png');
 		game.load.image('superbullet', 'asset/image/superBullet.png');
-		game.load.spritesheet('enemy1', 'asset/image/enemy1new.png',93, 84, 2);
-		game.load.spritesheet('enemy2', 'asset/image/enemy2new.png', 104, 84, 2);
-		game.load.spritesheet('enemy3', 'asset/image/enemy3new.png', 103, 84, 2);
-		game.load.spritesheet('enemy4', 'asset/image/enemy4new.png', 82, 83, 2);
-		game.load.spritesheet('enemy5', 'asset/image/enemy5new.png', 97, 84, 2);
+		game.load.spritesheet('enemy1', 'asset/image/enemy1.png',93, 84, 2);
+		game.load.spritesheet('enemy2', 'asset/image/enemy2.png', 104, 84, 2);
+		game.load.spritesheet('enemy3', 'asset/image/enemy3.png', 103, 84, 2);
+		game.load.spritesheet('enemy4', 'asset/image/enemy4.png', 82, 83, 2);
+		game.load.spritesheet('enemy5', 'asset/image/enemy5.png', 97, 84, 2);
 		game.load.image('mainPowerup', 'asset/image/mainPowerup.png');
 		game.load.image('subPowerup', 'asset/image/subPowerup.png');
 		game.load.spritesheet('bulletHit', 'asset/image/bulletbitspritesheet.png', 20, 20, 10);
 		game.load.spritesheet('explose', 'asset/image/explosion.png',133.5, 134, 12);
 		game.load.spritesheet('glow', 'asset/image/glow.png',200, 200, 18);
 		game.load.spritesheet('starnum', 'asset/image/starNum.png',40, 40, 2);
+		game.load.image('boss1', 'asset/image/boss1.png');
 		//load audios
 		//game.load.audio('music', 'asset/sound/music.wav');
 	},

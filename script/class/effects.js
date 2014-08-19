@@ -276,3 +276,66 @@ var BackgroundControl = function() {
 		this.playerOriginPos.y = player.sprite.y;
 	}
 }
+
+
+/**
+* Handle Collision
+* @constructor
+*/
+var CollisionManager = function(player, enemyManager) {
+    this.player = player;
+    this.enemyManager = enemyManager;
+    this.boomEffect = new BoomEffects(1);
+    
+    this.playerEnemyCollision = function(player, enemy) {
+        
+    }
+    
+    this.playerEnemyBulletCollision = function(player, bullet) {
+        bullet.kill();
+    }
+    
+    this.playerBulletEnemyCollision = function(bullet, enemy) {
+        bullet.kill();
+        enemy.owner.HP--;
+    }
+    
+    this.update = function() {
+        if (this.player && this.enemyManager) {
+            game.physics.arcade.overlap(this.player.mainBullet.bullets, this.enemyManager.sprites, this.bulletHitEnemy, null, this);
+            game.physics.arcade.overlap(this.player.subBullet.bullets, this.enemyManager.sprites, this.bulletHitEnemy, null, this);
+            game.physics.arcade.overlap(this.player.superBullet.bullets, this.enemyManager.sprites, this.bulletHitEnemy, null, this);
+            
+            this.enemyManager.sprites.forEach(this.updateOperating, this, false, this.player);          
+        }
+        
+        this.boomEffect.update();
+    }
+    
+    this.updateOperating = function(enemy, player) {
+        game.physics.arcade.overlap(player.sprite, enemy.owner.bullet.bullets, this.bulletHitPlayer, null, this);
+    }
+    
+    this.bulletHitEnemy = function(bullet, enemy) {
+        //  When a bullet hits an enemy we kill them both (When they appear on the screen)
+        if (enemy.y > 0) {
+            if (enemy.owner.HP <= 0) {
+                enemy.exists = false;
+                this.boomEffect.play(enemy.x, enemy.y);
+            }
+            bullet.kill();
+            enemy.owner.HP--;
+            enemy.animations.play('injured', 20, true);
+        }
+    }
+    
+    this.bulletHitPlayer = function(player, bullet) {
+        bullet.kill();
+        player.animations.play('injured', 20, true);
+        player.owner.HP--;
+        player.owner.HUD.updateHP();
+        if (player.owner.HP == 0) {
+            playing = false;
+        }
+    }
+}
