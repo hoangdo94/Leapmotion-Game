@@ -24,9 +24,7 @@ var playState = {
 		
 		// CollisionManager
 		this.collisionManager = new CollisionManager(this.player, this.enemyManager);
-
-		//this.boss = new Boss('boss1', w/2, h/10);
-
+		this.enemyManager.addBoss('boss1', w/2, h/10, 20);
 	},
 	
 	update: function() {
@@ -48,8 +46,6 @@ var playState = {
 			if (this.enemyManager.isOutOfEnemies) {
 				this.addEnemy(Math.floor((Math.random() * 5) + 1), this.enemyManager.getRandromPathType());
 			}
-			
-			//this.boss.update();
 		}
 	},
 

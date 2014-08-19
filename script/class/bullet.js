@@ -196,8 +196,10 @@ Laser.prototype.fire = function() {
 * @param {owner} owner - references to currently owner
 * @param {EnemyManager} enemyManager - references enemyManager instance that currently controls enemy groups
 */
-var HomingBullet = function(spriteName, owner) {
+var HomingBullet = function(spriteName, owner, enemyManager) {
 	Bullet.call(this, spriteName, owner);
+	this.enemyManager = enemyManager;
+	this.enabled = false;
 	this.bullets.setAll('anchor.y', 0.5);
 };
 
@@ -312,11 +314,10 @@ SuperBullet.prototype.additionalUpdate = function() {
 * @param {owner} owner - references to currently owner
 * @param {EnemyManager} enemyManager - references enemyManager instance that currently controls enemy groups
 */
-var SprayBullet = function(spriteName, owner, enemyManager) {
+var SprayBullet = function(spriteName, owner) {
 	Bullet.call(this, spriteName, owner);
-	this.enemyManager = enemyManager;
-	this.enabled = false;
 	this.bullets.setAll('anchor.y', 0.5);
+	//this.bullets.setAll('outOfBoundsKill', false);
 };
 
 SprayBullet.prototype = Object.create(Bullet.prototype);
@@ -324,19 +325,28 @@ SprayBullet.prototype = Object.create(Bullet.prototype);
 SprayBullet.prototype.fire = function() {
 	if (game.time.now > this.bulletTime)
 	{
-		if (this.enemyManager.sprites.getFirstAlive() !== null)
-		{
-			var bullet;
-			for (var i=0; i<8; i++){
-				bullet = this.bullets.getFirstDead(false);
-			}
-			this.bulletTime = game.time.now + 100;
+		var bullet;
+		var vertical;
+		var horizal;
+		for (var i=0; i<8; i++){
+			bullet = this.bullets.getFirstDead(false);
+			vertical = Math.cos(i*Math.PI/4 + this.owner.sprite.angle);
+			horizal = Math.sin(i*Math.PI/4 + this.owner.sprite.angle)
+			bullet.reset(this.owner.sprite.x + this.owner.sprite.width/2*vertical, this.owner.sprite.y + this.owner.sprite.height/2*horizal);
+			bullet.body.velocity.x =500*vertical;
+			bullet.body.velocity.y =500*horizal;
+			bullet.body.gravity.y = 300;
 		}
+		this.bulletTime = game.time.now + 1000;
 	}
 };
 
 SprayBullet.prototype.additionalUpdate = function() {
-	
+	/*
+	this.bullets.forEach(function(bullet){
+		if (bullet.x > h) bullet.exists = false;
+	});
+*/
 };
 
 /**

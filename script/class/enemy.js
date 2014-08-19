@@ -53,7 +53,6 @@ var Boss = function(spriteName, x, y, hp) {
 	this.sprite = game.add.sprite(x, y, spriteName);
 	game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 	this.sprite.anchor.set(0.5);
-	this.sprite.body.allowRotation = false;
 
 	tween = game.add.tween(this.sprite).to({ x: w/2, y: h/10}, 1500, Phaser.Easing.Linear.None)
 								  .to({ x: w/2+w/6, y: h/10+h/8-50}, 1000, Phaser.Easing.Linear.None)
@@ -67,8 +66,9 @@ var Boss = function(spriteName, x, y, hp) {
 								  .start();
 
 	this.HP = hp;
-	this.owner = this;
-	this.time = 0;
+	this.sprite.owner = this;
+	this.bullet = new SprayBullet('homingbullet', this);
+	this.isBoss = false;
 };
 
 Boss.prototype = {
