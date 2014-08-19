@@ -131,9 +131,11 @@ Boss.prototype = {
 		this.bossHeartSprite.x = this.sprite.x;
 		this.bossHeartSprite.y = this.sprite.y;
 		if (Math.abs(this.sprite.x - this.movePoints[this.currentPoint].x) < 5 && Math.abs(this.sprite.y == this.movePoints[this.currentPoint].y)<5) {
-				this.currentPoint++;
-				if (this.currentPoint >= this.movePoints.length) this.currentPoint = 0;
+			this.currentPoint++;
+			if (this.currentPoint >= this.movePoints.length) this.currentPoint = 0;
+			if (this.introDone) {
 				this.bullet.fire();
+			}
 		}
 
 		game.physics.arcade.moveToXY(this.sprite, this.movePoints[this.currentPoint].x, this.movePoints[this.currentPoint].y, 200);
