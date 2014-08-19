@@ -70,7 +70,7 @@ Boss.prototype = {
 	constructor: Boss,
 
 	update: function(){
-
+		this.sprite.angle += 1;
 	},
 
 };

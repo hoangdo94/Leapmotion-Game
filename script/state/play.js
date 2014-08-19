@@ -49,6 +49,7 @@ var playState = {
 				this.addEnemy(Math.floor((Math.random() * 5) + 1), this.enemyManager.getRandromPathType());
 			}
 			
+			this.boss.update();
 		}
 	},
 

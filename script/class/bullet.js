@@ -2,10 +2,10 @@
 * Abstract class contains main attributes and method of a bullet
 * @constructor
 * @param {string} spriteName - references to name of bullet image file was loaded in load.js
-* @param {Player} player - references to currently player
+* @param {owner} owner - references to currently owner
 */
-var Bullet = function(spriteName, player) {
-	this.player = player;
+var Bullet = function(spriteName, owner) {
+	this.owner = owner;
 
 	// Sprite settings
 	this.bullets = game.add.group();
@@ -44,7 +44,7 @@ Bullet.prototype = {
 			if (bullet)
 			{
 				//  And fire it
-				bullet.reset(this.player.x, this.player.y + 4);
+				bullet.reset(this.owner.x, this.owner.y + 4);
 				bullet.body.velocity.y = -800;
 				this.bulletTime = game.time.now + 100;
 			}
@@ -53,13 +53,13 @@ Bullet.prototype = {
 };
 
 /**
-* Mainbullet of player. It inheritances from Bullet class
+* Mainbullet of owner. It inheritances from Bullet class
 * @constructor
 * @param {string} spriteName - references to name of bullet image file was loaded in load.js
-* @param {Player} player - references to currently player
+* @param {owner} owner - references to currently owner
 */
-var Laser = function(spriteName, player) {
-	Bullet.call(this, spriteName, player);
+var Laser = function(spriteName, owner) {
+	Bullet.call(this, spriteName, owner);
 	this.level = 1;
 };
 
@@ -73,7 +73,7 @@ Laser.prototype.fireOne = function() {
 	var bullet = this.bullets.getFirstDead(false);
 	if (bullet)
 	{
-		bullet.reset(this.player.sprite.x, this.player.sprite.y - this.player.sprite.height/2 + 4);
+		bullet.reset(this.owner.sprite.x, this.owner.sprite.y - this.owner.sprite.height/2 + 4);
 		bullet.body.velocity.y = -800;
 	}
 };
@@ -81,13 +81,13 @@ Laser.prototype.fireOne = function() {
 Laser.prototype.fireTwo = function() {
 	var bullet = this.bullets.getFirstDead(false);
 	if (bullet) {
-		bullet.reset(this.player.sprite.x + (this.player.sprite.width/4 - 5), this.player.sprite.y - this.player.sprite.height/2 + 20);
+		bullet.reset(this.owner.sprite.x + (this.owner.sprite.width/4 - 5), this.owner.sprite.y - this.owner.sprite.height/2 + 20);
 		bullet.body.velocity.y = -800;	
 	}
 
 	bullet = this.bullets.getFirstDead(false);
 	if (bullet) {
-		bullet.reset(this.player.sprite.x - (this.player.sprite.width/4 - 5), this.player.sprite.y - this.player.sprite.height/2 + 20);
+		bullet.reset(this.owner.sprite.x - (this.owner.sprite.width/4 - 5), this.owner.sprite.y - this.owner.sprite.height/2 + 20);
 		bullet.body.velocity.y = -800;
 	}
 };
@@ -95,19 +95,19 @@ Laser.prototype.fireTwo = function() {
 Laser.prototype.fireThree = function() {
 	var bullet = this.bullets.getFirstDead(false);
 	if (bullet) {
-		bullet.reset(this.player.sprite.x, this.player.sprite.y - this.player.sprite.height/2);
+		bullet.reset(this.owner.sprite.x, this.owner.sprite.y - this.owner.sprite.height/2);
 		bullet.body.velocity.y = -800;
 	}
 
 	bullet = this.bullets.getFirstDead(false);
 	if (bullet) {
-		bullet.reset(this.player.sprite.x + (this.player.sprite.width/2 - 10), this.player.sprite.y - this.player.sprite.height/2 + 20);
+		bullet.reset(this.owner.sprite.x + (this.owner.sprite.width/2 - 10), this.owner.sprite.y - this.owner.sprite.height/2 + 20);
 		bullet.body.velocity.y = -800;
 	}
 
 	bullet = this.bullets.getFirstDead(false);
 	if (bullet) {
-		bullet.reset(this.player.sprite.x - (this.player.sprite.width/2 - 10), this.player.sprite.y - this.player.sprite.height/2 + 20);
+		bullet.reset(this.owner.sprite.x - (this.owner.sprite.width/2 - 10), this.owner.sprite.y - this.owner.sprite.height/2 + 20);
 		bullet.body.velocity.y = -800;
 	}
 };
@@ -115,25 +115,25 @@ Laser.prototype.fireThree = function() {
 Laser.prototype.fireFour = function() {
 	var bullet = this.bullets.getFirstDead(false);
 	if (bullet) {
-		bullet.reset(this.player.sprite.x + (this.player.sprite.width/2 - 10), this.player.sprite.y - this.player.sprite.height/2 + 40);
+		bullet.reset(this.owner.sprite.x + (this.owner.sprite.width/2 - 10), this.owner.sprite.y - this.owner.sprite.height/2 + 40);
 		bullet.body.velocity.y = -800;
 	}
 
 	bullet = this.bullets.getFirstDead(false);
 	if (bullet) {
-		bullet.reset(this.player.sprite.x + (this.player.sprite.width/2 - 10)/3, this.player.sprite.y - this.player.sprite.height/2 + 20);
+		bullet.reset(this.owner.sprite.x + (this.owner.sprite.width/2 - 10)/3, this.owner.sprite.y - this.owner.sprite.height/2 + 20);
 		bullet.body.velocity.y = -800;
 	}
 
 	bullet = this.bullets.getFirstDead(false);
 	if (bullet) {
-		bullet.reset(this.player.sprite.x - (this.player.sprite.width/2 - 10)/3, this.player.sprite.y - this.player.sprite.height/2 + 20);
+		bullet.reset(this.owner.sprite.x - (this.owner.sprite.width/2 - 10)/3, this.owner.sprite.y - this.owner.sprite.height/2 + 20);
 		bullet.body.velocity.y = -800;
 	}
 
 	bullet = this.bullets.getFirstDead(false);
 	if (bullet) {
-		bullet.reset(this.player.sprite.x - (this.player.sprite.width/2 - 10), this.player.sprite.y - this.player.sprite.height/2 + 40);
+		bullet.reset(this.owner.sprite.x - (this.owner.sprite.width/2 - 10), this.owner.sprite.y - this.owner.sprite.height/2 + 40);
 		bullet.body.velocity.y = -800;
 	}
 };
@@ -141,31 +141,31 @@ Laser.prototype.fireFour = function() {
 Laser.prototype.fireFive = function() {
 	var bullet = this.bullets.getFirstDead(false);
 	if (bullet) {
-		bullet.reset(this.player.sprite.x, this.player.sprite.y - this.player.sprite.height/2);
+		bullet.reset(this.owner.sprite.x, this.owner.sprite.y - this.owner.sprite.height/2);
 		bullet.body.velocity.y = -800;
 	}
 
 	bullet = this.bullets.getFirstDead(false);
 	if (bullet) {
-		bullet.reset(this.player.sprite.x + (this.player.sprite.width/4 - 5), this.player.sprite.y - this.player.sprite.height/2 + 20);
+		bullet.reset(this.owner.sprite.x + (this.owner.sprite.width/4 - 5), this.owner.sprite.y - this.owner.sprite.height/2 + 20);
 		bullet.body.velocity.y = -800;
 	}
 
 	bullet = this.bullets.getFirstDead(false);
 	if (bullet) {
-		bullet.reset(this.player.sprite.x + (this.player.sprite.width/2 - 10), this.player.sprite.y - this.player.sprite.height/2 + 40);
+		bullet.reset(this.owner.sprite.x + (this.owner.sprite.width/2 - 10), this.owner.sprite.y - this.owner.sprite.height/2 + 40);
 		bullet.body.velocity.y = -800;
 	}
 
 	bullet = this.bullets.getFirstDead(false);
 	if (bullet) {
-		bullet.reset(this.player.sprite.x - (this.player.sprite.width/4 - 5), this.player.sprite.y - this.player.sprite.height/2 + 20);
+		bullet.reset(this.owner.sprite.x - (this.owner.sprite.width/4 - 5), this.owner.sprite.y - this.owner.sprite.height/2 + 20);
 		bullet.body.velocity.y = -800;
 	}
 
 	bullet = this.bullets.getFirstDead(false);
 	if (bullet) {
-		bullet.reset(this.player.sprite.x - (this.player.sprite.width/2 - 10), this.player.sprite.y - this.player.sprite.height/2 + 40);
+		bullet.reset(this.owner.sprite.x - (this.owner.sprite.width/2 - 10), this.owner.sprite.y - this.owner.sprite.height/2 + 40);
 		bullet.body.velocity.y = -800;
 	}
 };
@@ -190,22 +190,20 @@ Laser.prototype.fire = function() {
 };
 
 /**
-* subbullet of player. It inheritances from Bullet class
+* subbullet of owner. It inheritances from Bullet class
 * @constructor
 * @param {string} spriteName - references to name of bullet image file was loaded in load.js
-* @param {Player} player - references to currently player
+* @param {owner} owner - references to currently owner
 * @param {EnemyManager} enemyManager - references enemyManager instance that currently controls enemy groups
 */
-var HomingMissile = function(spriteName, player, enemyManager) {
-	Bullet.call(this, spriteName, player);
-	this.enemyManager = enemyManager;
-	this.enabled = false;
+var HomingBullet = function(spriteName, owner) {
+	Bullet.call(this, spriteName, owner);
 	this.bullets.setAll('anchor.y', 0.5);
 };
 
-HomingMissile.prototype = Object.create(Bullet.prototype);
+HomingBullet.prototype = Object.create(Bullet.prototype);
 
-HomingMissile.prototype.fire = function() {
+HomingBullet.prototype.fire = function() {
 	 //  To avoid them being allowed to fire too fast we set a time limit
 	if (game.time.now > this.bulletTime)
 	{
@@ -214,18 +212,18 @@ HomingMissile.prototype.fire = function() {
 			//  Grab the first bullet we can from the pool
 			var bullet = this.bullets.getFirstDead(false);
 			//  And fire it
-			bullet.reset(this.player.sprite.x + this.player.sprite.width/2, this.player.sprite.y - this.player.sprite.height/2 + 4);
+			bullet.reset(this.owner.sprite.x + this.owner.sprite.width/2, this.owner.sprite.y - this.owner.sprite.height/2 + 4);
 
 			//another bullet
 			bullet = this.bullets.getFirstDead(false);
-			bullet.reset(this.player.sprite.x - this.player.sprite.width/2, this.player.sprite.y - this.player.sprite.height/2 + 4);
+			bullet.reset(this.owner.sprite.x - this.owner.sprite.width/2, this.owner.sprite.y - this.owner.sprite.height/2 + 4);
 
 			this.bulletTime = game.time.now + 500;
 		}
 	}
 };
 
-HomingMissile.prototype.additionalUpdate = function() {
+HomingBullet.prototype.additionalUpdate = function() {
 	var target = this.enemyManager.sprites.getFirstAlive();
 	if (target !== null && target.exists) {
 		this.bullets.forEach(function(bullet){
@@ -238,14 +236,15 @@ HomingMissile.prototype.additionalUpdate = function() {
 	}
 };
 
+
 /**
-* superbullet of player. It inheritances from Bullet class
+* superbullet of owner. It inheritances from Bullet class
 * @constructor
 * @param {string} spriteName - corresponding name of image file was loaded in loadState
-* @param {Player} player - references to currently Player instance
+* @param {owner} owner - references to currently owner instance
 */
-var SuperBullet = function(spriteName, player) {
-	Bullet.call(this, spriteName, player);
+var SuperBullet = function(spriteName, owner) {
+	Bullet.call(this, spriteName, owner);
 	this.level = 1;
 	this.angle = 0;
 	this.maxAngle = 0;
@@ -265,7 +264,7 @@ SuperBullet.prototype.setLevel = function(level) {
 SuperBullet.prototype.fireAround = function(angle) {
 	var bullet = this.bullets.getFirstDead(false);
 	if (bullet) {
-		bullet.reset(this.player.sprite.x, this.player.sprite.y);
+		bullet.reset(this.owner.sprite.x, this.owner.sprite.y);
 		bullet.body.velocity.y = -Math.cos(Math.PI * angle / 180) * this.velocity;
 		bullet.body.velocity.x = Math.sin(Math.PI * angle / 180) * this.velocity;
 	}
@@ -305,6 +304,40 @@ SuperBullet.prototype.additionalUpdate = function() {
 		this.timing = game.time.now + 5;
 	}
 }
+
+/**
+* Bullet of boss1. It inheritances from Bullet class
+* @constructor
+* @param {string} spriteName - references to name of bullet image file was loaded in load.js
+* @param {owner} owner - references to currently owner
+* @param {EnemyManager} enemyManager - references enemyManager instance that currently controls enemy groups
+*/
+var SprayBullet = function(spriteName, owner, enemyManager) {
+	Bullet.call(this, spriteName, owner);
+	this.enemyManager = enemyManager;
+	this.enabled = false;
+	this.bullets.setAll('anchor.y', 0.5);
+};
+
+SprayBullet.prototype = Object.create(Bullet.prototype);
+
+SprayBullet.prototype.fire = function() {
+	if (game.time.now > this.bulletTime)
+	{
+		if (this.enemyManager.sprites.getFirstAlive() !== null)
+		{
+			var bullet;
+			for (var i=0; i<8; i++){
+				bullet = this.bullets.getFirstDead(false);
+			}
+			this.bulletTime = game.time.now + 100;
+		}
+	}
+};
+
+SprayBullet.prototype.additionalUpdate = function() {
+	
+};
 
 /**
 * Enemy weapon
