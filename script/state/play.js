@@ -44,11 +44,11 @@ var playState = {
 			// Collision
 			this.collisionManager.update(this.player, this.enemyManager);
 			
-			/*
+			
 			if (this.enemyManager.isOutOfEnemies) {
 				this.addEnemy(Math.floor((Math.random() * 5) + 1), this.enemyManager.getRandromPathType());
 			}
-			*/
+			
 		}
 	},
 

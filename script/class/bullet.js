@@ -23,6 +23,10 @@ Bullet.prototype = {
 	constructor: Bullet,
 
 	update: function() {
+		this.additionalUpdate();
+	},
+
+	additionalUpdate: function() {
 		this.bullets.forEach(function(bullet) {
 			if (bullet.x > w || bullet.x < 0 || bullet.y > h || bullet.y < 0) {
 				bullet.kill();
@@ -348,10 +352,9 @@ EnemyBullet.prototype = {
 		}
 	},
 	
-	update: function(player) {
+	update: function() {
 		if (!this.bullets.getFirstExists(true)) {
 			this.outOfUsing = true;
 		} else this.outOfUsing = false;
 	},
 }
-

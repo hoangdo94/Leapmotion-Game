@@ -77,15 +77,15 @@ Boss.prototype = {
 
 //==================================================================================================================================================================
 
-var EnemyManager = function(player) {
-	this.player = player;
+var EnemyManager = function(owner) {
+	this.owner = owner;
 	this.sprites = game.add.group();
 	this.sprites.enableBody = true;
     this.sprites.physicsBodyType = Phaser.Physics.ARCADE;
 	this.movePathManager = new MovePathManager();
 
 	// Collsion Handler
-	this.starEffect = new StarEffects(this.player);
+	this.starEffect = new StarEffects(this.owner);
 	this.mainPowerUpEffect = new PowerUpEffects('main');
 	this.subPowerUpEffect = new PowerUpEffects('sub');
 	this.STRAIGHTPATH = 0;
@@ -100,15 +100,15 @@ EnemyManager.prototype = {
 
 	constructor: EnemyManager,
 
-	updateOperating: function(enemy, player){
+	updateOperating: function(enemy, owner){
 		if(enemy){
 			enemy.owner.update();
-			enemy.owner.bullet.update(player);
+			enemy.owner.bullet.update();
 		}
 
 		// Only visible enemy can fire
 		if (enemy && enemy.exists == true) {
-			enemy.owner.bullet.fire(enemy, player);
+			enemy.owner.bullet.fire(enemy, owner);
 		}
 		
 		if (enemy && !enemy.exists && enemy.owner.bullet.outOfUsing) {
@@ -134,11 +134,11 @@ EnemyManager.prototype = {
 		} 
 	},
 		
-	update: function(player) {
-		this.sprites.forEach(this.updateOperating, this, false, player);
-		this.starEffect.update(player);
-		this.mainPowerUpEffect.update(player);
-		this.subPowerUpEffect.update(player);
+	update: function(owner) {
+		this.sprites.forEach(this.updateOperating, this, false, owner);
+		this.starEffect.update(owner);
+		this.mainPowerUpEffect.update(owner);
+		this.subPowerUpEffect.update(owner);
 		if (!this.sprites.getFirstExists(true)) {
 			this.isOutOfEnemies = true;
 		} else {
@@ -154,7 +154,7 @@ EnemyManager.prototype = {
 	},
 
 	addBoss: function(spriteName, x, y, hp) {
-		var boss = new Boss(spriteName, x, y);
+		var boss = new Boss(spriteName, x, y, hp);
 		this.sprites.add(boss.sprite);
 	},
 
