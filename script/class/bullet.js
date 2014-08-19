@@ -23,10 +23,6 @@ Bullet.prototype = {
 	constructor: Bullet,
 
 	update: function() {
-		this.additionalUpdate();
-	},
-
-	additionalUpdate: function() {
 		this.bullets.forEach(function(bullet) {
 			if (bullet.x > w || bullet.x < 0 || bullet.y > h || bullet.y < 0) {
 				bullet.kill();
