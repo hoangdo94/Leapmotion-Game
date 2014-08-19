@@ -14,7 +14,7 @@ LevelManager.prototype = {
 	update: function() {
 		if (this.enemyManager.isOutOfEnemies) {
 			this.currentWave++;
-			if (this.currentWave<5){
+			if (this.currentWave<10){
 				this.addEnemy(Math.floor((Math.random() * 5) + 1), this.enemyManager.getRandromPathType(), 5);
 			}
 			else if (this.currentWave==10){
