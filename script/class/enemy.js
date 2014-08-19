@@ -54,6 +54,7 @@ var Boss = function(spriteName, x, y, hp) {
 	this.HP = hp;
 	this.sprite = game.add.sprite(x, y, spriteName);
 	game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
+	this.sprite.body.setSize(this.sprite.width/Math.sqrt(2), this.sprite.height/Math.sqrt(2), 0, 0);
 	this.sprite.anchor.set(0.5);
 	this.sprite.animations.add('fly', [0]);
 	this.sprite.animations.add('injured', [1]);
