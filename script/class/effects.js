@@ -335,7 +335,7 @@ var CollisionManager = function(player, enemyManager) {
         player.owner.HP--;
         player.owner.HUD.updateHP();
         if (player.owner.HP == 0) {
-           // playing = false;
+            
         }
     }
 }
