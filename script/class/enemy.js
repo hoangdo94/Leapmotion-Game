@@ -1,7 +1,13 @@
 /**
 * Enemy of the game
 * @constructor
-* @param
+* @param spriteName - name of sprite of enemy
+* @param x - x coordnates at first loading
+* @param y - y coordinates at first loading
+* @param hp - hp of enemy
+* @param bulletSprite - name of spirte of corresponding enemy bullet
+* @param isChase - define the ability of chasing to the player of enemy bullet
+* @param path - define the moving path of enemy
 */
 var Enemy = function(spriteName, x, y, hp, bulletSprite, isChase, path) {
 	this.HP = hp;

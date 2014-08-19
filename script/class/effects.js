@@ -281,6 +281,8 @@ var BackgroundControl = function() {
 /**
 * Handle Collision
 * @constructor
+* @param player - current game player, instance of Player
+* @param enemyManager - current instance of EnemyManager
 */
 var CollisionManager = function(player, enemyManager) {
     this.player = player;
@@ -335,7 +337,7 @@ var CollisionManager = function(player, enemyManager) {
         player.owner.HP--;
         player.owner.HUD.updateHP();
         if (player.owner.HP == 0) {
-            playing = false;
+            //playing = false;
         }
     }
 }
