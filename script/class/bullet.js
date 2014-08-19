@@ -253,7 +253,7 @@ var SuperBullet = function(spriteName, owner) {
 	this.velocity = 800;
 	this.timing = 0;
 	this.isFinished = true;
-	this.isActive = true;
+	this.isActive = false;
 	this.recharge = 0;
 };
 
