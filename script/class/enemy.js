@@ -50,11 +50,33 @@ Enemy.prototype = {
 //==================================================================================================================================================================
 
 var Boss = function(spriteName, x, y, hp) {
+	this.originX = x;
+	this.originY = y;
 	this.sprite = game.add.sprite(x, y, spriteName);
 	game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 	this.sprite.anchor.set(0.5);
+	this.sprite.animations.add('fly', [0]);
+	this.sprite.animations.add('injured', [1]);
+	this.sprite.animations.play('fly', 5, true);
+	this.sprite.exists = false;
+	
+	this.bossHeartSprite = game.add.sprite(x, y, 'bossheart');
+	this.bossHeartSprite.animations.add('fly', [0, 1]);
+	this.sprite.animations.play('fly', 10, true);
+	this.bossHeartSprite.anchor.set(0.5);
+	
+	this.introDone = false;
+	this.tweenBegin = false;
 
-	tween = game.add.tween(this.sprite).to({ x: w/2, y: h/10}, 1500, Phaser.Easing.Linear.None)
+	this.openSprite = game.add.sprite(x, y, spriteName);
+	this.openSprite.anchor.set(0.5);
+	//this.open.animations.add('fly', [0]);
+	//this.open.animations.play('fly', 5, true);
+	this.openSprite.scale.x = 0.1;
+	this.openSprite.scale.y = 0.1;
+	game.add.tween(this.openSprite.scale).to({x: 1, y: 1}, 2000, Phaser.Easing.Linear.None).start();
+
+	this.tween = game.add.tween(this.sprite).to({ x: w/2, y: h/10}, 1500, Phaser.Easing.Linear.None)
 								  .to({ x: w/2+w/6, y: h/10+h/8-50}, 1000, Phaser.Easing.Linear.None)
 								  .to({ x: 5*w/6, y: h/10+h/4}, 1500, Phaser.Easing.Linear.None)
 								  .to({ x: w/2+w/6, y: h/10+3*h/8+50}, 1000, Phaser.Easing.Linear.None)
@@ -62,9 +84,8 @@ var Boss = function(spriteName, x, y, hp) {
 								  .to({ x: w/2-w/6, y: h/10+3*h/8+50}, 1000, Phaser.Easing.Linear.None)
 								  .to({ x: w/6, y: h/10+h/4}, 1500, Phaser.Easing.Linear.None)
 								  .to({ x: w/2-w/6, y: h/10+h/8-50}, 1500, Phaser.Easing.Linear.None)
-								  .loop()
-								  .start();
-
+								  .loop();
+	
 	this.HP = hp;
 	this.sprite.owner = this;
 	this.bullet = new SprayBullet('homingbullet', this);
@@ -77,6 +98,24 @@ Boss.prototype = {
 
 	update: function(){
 		this.sprite.angle += 1;
+		// update animations
+		if (this.sprite.animations.currentAnim.loopCount > 0 && this.sprite.animations.currentAnim.name == 'injured') {
+			this.sprite.animations.play('fly', 5, true);
+		}
+		
+		if (this.openSprite.scale.x == 1) {
+			this.introDone = true;
+		}
+		
+		if (this.introDone && !this.tweenBegin) {
+			this.sprite.reset(this.originX, this.originY);
+			this.tween.start();
+			this.tweenBegin = true;
+			this.openSprite.destroy();
+		}
+		
+		this.bossHeartSprite.x = this.sprite.x;
+		this.bossHeartSprite.y = this.sprite.y;
 	},
 
 };

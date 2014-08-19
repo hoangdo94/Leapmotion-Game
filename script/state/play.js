@@ -24,7 +24,7 @@ var playState = {
 		
 		// CollisionManager
 		this.collisionManager = new CollisionManager(this.player, this.enemyManager);
-		this.enemyManager.addBoss('boss1', w/2, h/10, 20);
+		this.enemyManager.addBoss('boss', w/2, h/10, 20);
 	},
 	
 	update: function() {
