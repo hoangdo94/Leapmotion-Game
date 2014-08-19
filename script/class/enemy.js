@@ -30,6 +30,7 @@ var Enemy = function(spriteName, x, y, hp, bulletSprite, isChase, path) {
 	this.path = path;
 	this.pathNeededToUpdate = true;
 	this.time = 0;
+	this.isBoss = false;
 };
 
 Enemy.prototype = {
@@ -50,8 +51,7 @@ Enemy.prototype = {
 //==================================================================================================================================================================
 
 var Boss = function(spriteName, x, y, hp) {
-	this.originX = x;
-	this.originY = y;
+	this.HP = hp;
 	this.sprite = game.add.sprite(x, y, spriteName);
 	game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 	this.sprite.anchor.set(0.5);
@@ -60,8 +60,24 @@ var Boss = function(spriteName, x, y, hp) {
 	this.sprite.animations.play('fly', 5, true);
 	this.sprite.exists = false;
 	
+	this.movePoints = [	{x: w/2, y: h/10},
+						{x: w/2+w/6, y: h/10+h/8-50}, 
+						{x: 5*w/6, y: h/10+h/4},
+						{x: w/2+w/6, y: h/10+3*h/8+50},
+						{x: w/2, y: h/10+h/2},
+						{x: w/2-w/6, y: h/10+3*h/8+50},
+						{x: w/6, y: h/10+h/4},
+						{x: w/2-w/6, y: h/10+h/8-50}
+					  ];
+	
+	this.currentPoint = 0;
+
+
+	this.originX = x;
+	this.originY = y;
 	this.bossHeartSprite = game.add.sprite(x, y, 'bossheart');
 	this.bossHeartSprite.animations.add('fly', [0, 1]);
+	this.bossHeartSprite.animations.play('fly', 10, true);
 	this.sprite.animations.play('fly', 10, true);
 	this.bossHeartSprite.anchor.set(0.5);
 	
@@ -75,21 +91,19 @@ var Boss = function(spriteName, x, y, hp) {
 	this.openSprite.scale.x = 0.1;
 	this.openSprite.scale.y = 0.1;
 	game.add.tween(this.openSprite.scale).to({x: 1, y: 1}, 2000, Phaser.Easing.Linear.None).start();
-
-	this.tween = game.add.tween(this.sprite).to({ x: w/2, y: h/10}, 1500, Phaser.Easing.Linear.None)
-								  .to({ x: w/2+w/6, y: h/10+h/8-50}, 1000, Phaser.Easing.Linear.None)
-								  .to({ x: 5*w/6, y: h/10+h/4}, 1500, Phaser.Easing.Linear.None)
-								  .to({ x: w/2+w/6, y: h/10+3*h/8+50}, 1000, Phaser.Easing.Linear.None)
-								  .to({ x: w/2, y: h/10+h/2}, 1500, Phaser.Easing.Linear.None)
-								  .to({ x: w/2-w/6, y: h/10+3*h/8+50}, 1000, Phaser.Easing.Linear.None)
-								  .to({ x: w/6, y: h/10+h/4}, 1500, Phaser.Easing.Linear.None)
-								  .to({ x: w/2-w/6, y: h/10+h/8-50}, 1500, Phaser.Easing.Linear.None)
-								  .loop();
 	
-	this.HP = hp;
 	this.sprite.owner = this;
-	this.bullet = new SprayBullet('homingbullet', this);
-	this.isBoss = false;
+	this.bullet = new SprayBullet('spraybullet', this);
+	this.isBoss = true;
+	this.time = 0;
+
+	//Hp Bar
+	this.maxHP = this.HP;
+	this.hpbarEmpty = game.add.sprite(w/2 - w/6, h/20, 'hpbar');
+	this.hpbarEmpty.frame = 1;
+	this.hpbarFull = game.add.sprite(w/2 - w/6, h/20, 'hpbar');
+	this.hpbarEmpty.width = this.hpbarFull.width = w/3;
+	this.hpbarEmpty.height = this.hpbarFull.height = this.hpbarEmpty.width/20;
 };
 
 Boss.prototype = {
@@ -109,14 +123,32 @@ Boss.prototype = {
 		
 		if (this.introDone && !this.tweenBegin) {
 			this.sprite.reset(this.originX, this.originY);
-			this.tween.start();
+			//this.tween.start();
 			this.tweenBegin = true;
 			this.openSprite.destroy();
 		}
 		
 		this.bossHeartSprite.x = this.sprite.x;
 		this.bossHeartSprite.y = this.sprite.y;
+		if (Math.abs(this.sprite.x - this.movePoints[this.currentPoint].x) < 5 && Math.abs(this.sprite.y == this.movePoints[this.currentPoint].y)<5) {
+				this.currentPoint++;
+				if (this.currentPoint >= this.movePoints.length) this.currentPoint = 0;
+				this.bullet.fire();
+		}
+
+		game.physics.arcade.moveToXY(this.sprite, this.movePoints[this.currentPoint].x, this.movePoints[this.currentPoint].y, 200);
+
+		this.updateHpBar();
 	},
+
+	updateHpBar: function(){
+		this.hpbarFull.width = this.hpbarEmpty.width*this.HP/this.maxHP;
+		if (this.HP <= 0){
+			this.hpbarEmpty.destroy();
+			this.hpbarFull.destroy();
+			this.bossHeartSprite.destroy();
+		}
+	}
 
 };
 
@@ -150,33 +182,33 @@ EnemyManager.prototype = {
 			enemy.owner.update();
 			enemy.owner.bullet.update();
 		}
-
-		// Only visible enemy can fire
-		if (enemy && enemy.exists == true) {
-			enemy.owner.bullet.fire(enemy, owner);
-		}
-		
 		if (enemy && !enemy.exists && enemy.owner.bullet.outOfUsing) {
 			this.kill(enemy);
 		}
+		if (enemy && !(enemy.owner.isBoss)) {
+			// Only visible enemy can fire
+			if (enemy.exists == true) {
+				enemy.owner.bullet.fire(enemy, owner);
+			}
 		
-		if (enemy && enemy.owner.HP < 0 && !enemy.owner.stared) {
-			enemy.owner.stared = true;
-			var tmp = Math.random();
-			if (tmp>0.9) this.subPowerUpEffect.play(enemy.x, enemy.y);
-			else if (tmp>0.7) this.mainPowerUpEffect.play(enemy.x, enemy.y);
-			else this.starEffect.play(enemy.x, enemy.y);
+			if (enemy.owner.HP < 0 && !enemy.owner.stared) {
+				enemy.owner.stared = true;
+				var tmp = Math.random();
+				if (tmp>0.9) this.subPowerUpEffect.play(enemy.x, enemy.y);
+				else if (tmp>0.7) this.mainPowerUpEffect.play(enemy.x, enemy.y);
+				else this.starEffect.play(enemy.x, enemy.y);
+			}
+		
+			if (enemy.owner.path == this.STRAIGHTPATH) {
+				this.movePathManager.straightPath(enemy);
+			} else if (enemy.owner.path == this.CIRCLEPATH) {
+				this.movePathManager.circletPath(enemy);
+			} else if (enemy.owner.path == this.BARPATH)  {
+				this.movePathManager.barPath(enemy);
+			} else if (enemy.owner.path == this.RANDOMPATH && enemy.owner.pathNeededToUpdate) {
+				this.movePathManager.randomPath(enemy);
+			} 
 		}
-		
-		if (enemy && enemy.owner.path == this.STRAIGHTPATH) {
-			this.movePathManager.straightPath(enemy);
-		} else if (enemy && enemy.owner.path == this.CIRCLEPATH) {
-			this.movePathManager.circletPath(enemy);
-		} else if (enemy && enemy.owner.path == this.BARPATH)  {
-			this.movePathManager.barPath(enemy);
-		} else if (enemy && enemy.owner.path == this.RANDOMPATH && enemy.owner.pathNeededToUpdate) {
-			this.movePathManager.randomPath(enemy);
-		} 
 	},
 		
 	update: function(owner) {

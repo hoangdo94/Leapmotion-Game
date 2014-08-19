@@ -22,9 +22,11 @@ var playState = {
 		this.enemyManager = new EnemyManager(this.player);
 		this.player.initBullet(this.enemyManager);
 		
+		//Level Manager
+		this.levelManager = new LevelManager(this.enemyManager);
+
 		// CollisionManager
 		this.collisionManager = new CollisionManager(this.player, this.enemyManager);
-		this.enemyManager.addBoss('boss', w/2, h/10, 20);
 	},
 	
 	update: function() {
@@ -39,23 +41,13 @@ var playState = {
 			//update enemies
 			this.enemyManager.update(this.player);
 		
+			//update enemy waves
+			this.levelManager.update();
+
 			// Collision
 			this.collisionManager.update(this.player, this.enemyManager);
-			
-			
-			if (this.enemyManager.isOutOfEnemies) {
-				this.addEnemy(Math.floor((Math.random() * 5) + 1), this.enemyManager.getRandromPathType());
-			}
 		}
 	},
-
-	//this is just some functions for testing the game
-	addEnemy: function(type, path) {
-		if (type < 3) {
-			this.enemyManager.addEnemyGroup(type, 400, 50, 'enemylaserunchase', false, 5, path);
-		} else {
-			this.enemyManager.addEnemyGroup(type, 400, 50, 'enemylaserchase', true, 5, path);
-		}
-	},
+	
 };
 

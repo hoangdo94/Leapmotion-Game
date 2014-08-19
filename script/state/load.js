@@ -30,25 +30,28 @@ var loadState = {
 
 		game.load.spritesheet('player', 'asset/image/player.png', 112, 75, 3);
 		game.load.spritesheet('number', 'asset/image/number.png', 19, 19, 11);
+		game.load.spritesheet('hpbar', 'asset/image/hpbar.png', 10, 10, 2);
 		game.load.image('playerIcon', 'asset/image/playericon.png');
 		game.load.image('laser', 'asset/image/laser.png');
 		game.load.image('enemylaserchase', 'asset/image/enemybullet.png');
 		game.load.image('enemylaserunchase', 'asset/image/enemylaserunchase.png');
 		game.load.image('star', 'asset/image/star.png');
 		game.load.image('homingbullet', 'asset/image/rocket.png');
-		game.load.image('superbullet', 'asset/image/superBullet.png');
+		game.load.image('superbullet', 'asset/image/superbullet.png');
+		game.load.image('spraybullet', 'asset/image/spraybullet.png');
 		game.load.spritesheet('enemy1', 'asset/image/enemy1.png',93, 84, 2);
 		game.load.spritesheet('enemy2', 'asset/image/enemy2.png', 104, 84, 2);
 		game.load.spritesheet('enemy3', 'asset/image/enemy3.png', 103, 84, 2);
 		game.load.spritesheet('enemy4', 'asset/image/enemy4.png', 82, 83, 2);
 		game.load.spritesheet('enemy5', 'asset/image/enemy5.png', 97, 84, 2);
-		game.load.image('mainPowerup', 'asset/image/mainPowerup.png');
-		game.load.image('subPowerup', 'asset/image/subPowerup.png');
+		game.load.image('mainPowerup', 'asset/image/mainpowerup.png');
+		game.load.image('subPowerup', 'asset/image/subpowerup.png');
 		game.load.spritesheet('bulletHit', 'asset/image/bulletbitspritesheet.png', 20, 20, 10);
 		game.load.spritesheet('explose', 'asset/image/explosion.png',133.5, 134, 12);
 		game.load.spritesheet('glow', 'asset/image/glow.png',200, 200, 18);
 		game.load.spritesheet('starnum', 'asset/image/starNum.png',40, 40, 2);
 		game.load.spritesheet('boss', 'asset/image/boss.png', 400, 400, 2);
+		game.load.image('boss1', 'asset/image/boss1.png');
 		game.load.spritesheet('bossheart', 'asset/image/bossheart.png', 103, 103, 2);
 		//load audios
 		//game.load.audio('music', 'asset/sound/music.wav');

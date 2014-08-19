@@ -288,6 +288,7 @@ var CollisionManager = function(player, enemyManager) {
     this.player = player;
     this.enemyManager = enemyManager;
     this.boomEffect = new BoomEffects(1);
+	this.bossBoomEffect = new BossBoomEffects(1);
     
     this.playerEnemyCollision = function(player, enemy) {
         
@@ -312,6 +313,7 @@ var CollisionManager = function(player, enemyManager) {
         }
         
         this.boomEffect.update();
+		this.bossBoomEffect.update();
     }
     
     this.updateOperating = function(enemy, player) {
@@ -319,16 +321,29 @@ var CollisionManager = function(player, enemyManager) {
     }
     
     this.bulletHitEnemy = function(bullet, enemy) {
-        //  When a bullet hits an enemy we kill them both (When they appear on the screen)
-        if (enemy.y > 0) {
-            if (enemy.owner.HP <= 0) {
-                enemy.exists = false;
-                this.boomEffect.play(enemy.x, enemy.y);
-            }
-            bullet.kill();
-            enemy.owner.HP--;
-            enemy.animations.play('injured', 20, true);
-        }
+        if (enemy.owner.isBoss == false) {
+			//  When a bullet hits an enemy we kill them both (When they appear on the screen)
+			if (enemy.y > 0) {
+				if (enemy.owner.HP <= 0) {
+					enemy.exists = false;
+					this.boomEffect.play(enemy.x, enemy.y);
+				}
+				bullet.kill();
+				enemy.owner.HP--;
+				enemy.animations.play('injured', 20, true);
+			}	
+        } else if (enemy.owner.isBoss == true){
+			if (enemy.y > 0) {
+				if (enemy.owner.HP <= 0) {
+					enemy.exists = false;
+					this.bossBoomEffect.play(enemy.x, enemy.y);
+					
+				}
+				bullet.kill();
+				enemy.owner.HP--;
+				enemy.animations.play('injured', 20, true);
+			}
+		}
     }
     
     this.bulletHitPlayer = function(player, bullet) {
@@ -337,7 +352,64 @@ var CollisionManager = function(player, enemyManager) {
         player.owner.HP--;
         player.owner.HUD.updateHP();
         if (player.owner.HP == 0) {
-            //playing = false;
+
         }
     }
+}
+
+var BossBoomEffects = function(loop) {
+    this.loop = loop;
+    this.effects = game.add.group();
+    this.effects.createMultiple(60, 'explose', false);
+    this.effects.setAll('anchor.x', 0.5);
+    this.effects.setAll('anchor.y', 0.5);
+    this.effects.callAll('animations.add', 'animations', 'boom',[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 20, true);
+	this.timing = 0;
+	this.boomNo = 0;
+	this.finished = true;
+	this.x;
+	this.y;
+    this.play = function(x, y) {
+		this.x = x;
+		this.y = y;
+		this.boomNo = 0;
+		this.finished = false;
+	}
+	
+    this.playBoom = function(x, y) {
+        if (this.timing < game.time.now) {
+			var boom = this.effects.getFirstExists(false);
+			// reset loopCount
+			if (boom) {
+				boom.reset(x + this.getRandomPos(), y + this.getRandomPos());
+				boom.animations.currentAnim.restart();
+			}
+			this.timing = game.time.now + 30;
+			this.boomNo += 1;
+		}
+        
+    }
+    
+    this.update = function() {
+       	this.effects.forEach(function(boom){
+			if(boom.animations.currentAnim.loopCount == loop){
+				boom.kill();
+			}
+    	});
+        
+        if (!this.finished) {
+			this.playBoom(this.x, this.y);
+		}
+		
+		if (this.boomNo >= 50) {
+			this.finished = true;
+		}
+	}
+	
+	this.getRandomPos = function() {
+		var n = Math.floor(Math.random() * 3);
+		var pos = Math.floor(Math.pow(1, n) * Math.random() * 200);
+		return pos;
+		
+	}
 }

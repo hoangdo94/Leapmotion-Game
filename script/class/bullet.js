@@ -335,7 +335,7 @@ SprayBullet.prototype.fire = function() {
 			bullet.reset(this.owner.sprite.x + this.owner.sprite.width/2*vertical, this.owner.sprite.y + this.owner.sprite.height/2*horizal);
 			bullet.body.velocity.x =500*vertical;
 			bullet.body.velocity.y =500*horizal;
-			bullet.body.gravity.y = 300;
+			bullet.body.gravity.y = 600;
 		}
 		this.bulletTime = game.time.now + 1000;
 	}
