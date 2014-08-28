@@ -290,19 +290,6 @@ var CollisionManager = function(player, enemyManager) {
     this.boomEffect = new BoomEffects(1);
 	this.bossBoomEffect = new BossBoomEffects(1);
     
-    this.playerEnemyCollision = function(player, enemy) {
-        
-    }
-    
-    this.playerEnemyBulletCollision = function(player, bullet) {
-        bullet.kill();
-    }
-    
-    this.playerBulletEnemyCollision = function(bullet, enemy) {
-        bullet.kill();
-        enemy.owner.HP--;
-    }
-    
     this.update = function() {
         if (this.player && this.enemyManager) {
             game.physics.arcade.overlap(this.player.mainBullet.bullets, this.enemyManager.sprites, this.bulletHitEnemy, null, this);
@@ -333,15 +320,16 @@ var CollisionManager = function(player, enemyManager) {
 				enemy.animations.play('injured', 20, true);
 			}	
         } else if (enemy.owner.isBoss == true){
-			if (enemy.y > 0) {
-				if (enemy.owner.HP <= 0) {
-					enemy.exists = false;
-					this.bossBoomEffect.play(enemy.x, enemy.y);
-					
+			if (bullet.overlap(enemy.owner.bossHeartSprite)) {
+				if (enemy.y > 0) {
+					if (enemy.owner.HP <= 0) {
+						enemy.exists = false;
+						this.bossBoomEffect.play(enemy.x, enemy.y);
+					}
+					bullet.kill();
+					enemy.owner.HP--;
+					enemy.animations.play('injured', 20, true);
 				}
-				bullet.kill();
-				enemy.owner.HP--;
-				enemy.animations.play('injured', 20, true);
 			}
 		}
     }

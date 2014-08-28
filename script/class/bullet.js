@@ -24,6 +24,7 @@ Bullet.prototype = {
 
 	update: function() {
 		this.additionalUpdate();
+		game.world.bringToTop(this.bullets);
 	},
 
 	additionalUpdate: function() {

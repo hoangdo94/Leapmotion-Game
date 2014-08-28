@@ -38,6 +38,7 @@ Player.prototype = {
 
 	getPos: function() { return {x: this.sprite.x, y: this.sprite.y}},
 	update: function() {
+		game.world.bringToTop(this.sprite);
 		this.controller.update();
 		this.mainBullet.update();
 		this.subBullet.update();

@@ -60,7 +60,7 @@ var Boss = function(spriteName, x, y, hp) {
 	this.sprite.animations.add('injured', [1]);
 	this.sprite.animations.play('fly', 5, true);
 	this.sprite.exists = false;
-	
+	this.owner = this;
 	this.movePoints = [	{x: w/2, y: h/10},
 						{x: w/2+w/6, y: h/10+h/8-50}, 
 						{x: 5*w/6, y: h/10+h/4},
@@ -79,7 +79,7 @@ var Boss = function(spriteName, x, y, hp) {
 	this.bossHeartSprite = game.add.sprite(x, y, 'bossheart');
 	this.bossHeartSprite.animations.add('fly', [0, 1]);
 	this.bossHeartSprite.animations.play('fly', 10, true);
-	this.sprite.animations.play('fly', 10, true);
+	//this.sprite.animations.play('fly', 10, true);
 	this.bossHeartSprite.anchor.set(0.5);
 	
 	this.introDone = false;
@@ -105,6 +105,8 @@ var Boss = function(spriteName, x, y, hp) {
 	this.hpbarFull = game.add.sprite(w/2 - w/6, h/20, 'hpbar');
 	this.hpbarEmpty.width = this.hpbarFull.width = w/3;
 	this.hpbarEmpty.height = this.hpbarFull.height = this.hpbarEmpty.width/20;
+	
+	
 };
 
 Boss.prototype = {
