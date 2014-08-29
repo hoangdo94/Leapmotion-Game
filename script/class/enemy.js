@@ -20,6 +20,10 @@ var Enemy = function(spriteName, x, y, hp, bulletSprite, isChase, path) {
 	this.sprite.animations.add('injured', [1]);
 	this.sprite.animations.play('fly', 5, true);
 	
+	this.collisionSprite = this.sprite;
+	this.collisionSprite.owner = this;
+	this.sprite.owner = this;
+	
 	this.sprite.scale.x = this.sprite.scale.y = 0.8;
 	this.sprite.owner = this;
 	//bullet
@@ -50,7 +54,7 @@ Enemy.prototype = {
 
 //==================================================================================================================================================================
 
-var Boss = function(spriteName, x, y, hp) {
+var BossStage1 = function(spriteName, x, y, hp) {
 	this.HP = hp;
 	this.sprite = game.add.sprite(x, y, spriteName);
 	game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
@@ -60,7 +64,6 @@ var Boss = function(spriteName, x, y, hp) {
 	this.sprite.animations.add('injured', [1]);
 	this.sprite.animations.play('fly', 5, true);
 	this.sprite.exists = false;
-	this.owner = this;
 	this.movePoints = [	{x: w/2, y: h/10},
 						{x: w/2+w/6, y: h/10+h/8-50}, 
 						{x: 5*w/6, y: h/10+h/4},
@@ -76,10 +79,6 @@ var Boss = function(spriteName, x, y, hp) {
 
 	this.originX = x;
 	this.originY = y;
-	this.bossHeartSprite = game.add.sprite(x, y, 'bossheart');
-	this.bossHeartSprite.animations.add('fly', [0, 1]);
-	this.bossHeartSprite.animations.play('fly', 10, true);
-	this.bossHeartSprite.anchor.set(0.5);
 	
 	this.introDone = false;
 	this.tweenBegin = false;
@@ -90,7 +89,15 @@ var Boss = function(spriteName, x, y, hp) {
 	this.openSprite.scale.y = 0.1;
 	game.add.tween(this.openSprite.scale).to({x: 1, y: 1}, 2000, Phaser.Easing.Linear.None).start();
 	
+	this.bossHeartSprite = game.add.sprite(x, y, 'bossheart');
+	this.bossHeartSprite.animations.add('fly', [0, 1]);
+	this.bossHeartSprite.animations.play('fly', 10, true);
+	this.bossHeartSprite.anchor.set(0.5);
+	
+	this.collisionSprite = this.bossHeartSprite;
+	this.collisionSprite.owner = this;
 	this.sprite.owner = this;
+	
 	this.bullet = new SprayBullet('spraybullet', this);
 	this.isBoss = true;
 	this.time = 0;
@@ -101,16 +108,15 @@ var Boss = function(spriteName, x, y, hp) {
 	this.hpbarEmpty.frame = 1;
 	this.hpbarFull = game.add.sprite(w/2 - w/6, h/20, 'hpbar');
 	this.hpbarEmpty.width = this.hpbarFull.width = w/3;
-	this.hpbarEmpty.height = this.hpbarFull.height = this.hpbarEmpty.width/20;
-	
-	
+	this.hpbarEmpty.height = this.hpbarFull.height = this.hpbarEmpty.width/20;	
 };
 
-Boss.prototype = {
+BossStage1.prototype = {
 
-	constructor: Boss,
+	constructor: BossStage1,
 
 	update: function(){
+		game.world.bringToTop(this.bossHeartSprite);
 		this.sprite.angle += 1;
 		// update animations
 		if (this.sprite.animations.currentAnim.loopCount > 0 && this.sprite.animations.currentAnim.name == 'injured') {
@@ -123,7 +129,6 @@ Boss.prototype = {
 		
 		if (this.introDone && !this.tweenBegin) {
 			this.sprite.reset(this.originX, this.originY);
-			//this.tween.start();
 			this.tweenBegin = true;
 			this.openSprite.destroy();
 		}
@@ -154,19 +159,18 @@ Boss.prototype = {
 
 };
 
-var Boss2 = function(spriteName, x, y, hp, player) {
+var BossStage2 = function(spriteName, x, y, hp, player) {
 	this.player = player;
 	this.HP = 500;
 	this.dangerRange = this.HP / 3;
 	this.isIntro = true;
-	this.sprite = game.add.sprite(100, 100, 'boss2');
+	this.sprite = game.add.sprite(100, 100, spriteName);
 	game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 	this.sprite.anchor.set(0.5);
 	this.sprite.animations.add('fly',[0]);
 	this.sprite.animations.add('injured',[1]);
 	this.sprite.animations.add('dangered',[2]);
 	this.sprite.animations.play('fly', 5, true);
-	
 	//this.sprite.reset(-this.sprite.body.halfWidth, this.sprite.body.halfHeight);
 	tween1 = game.add.tween(this.sprite).to({ x: w + this.sprite.body.halfWidth }, 1000, Phaser.Easing.Linear.None).start();
 	this.isIntro = true;
@@ -183,8 +187,11 @@ var Boss2 = function(spriteName, x, y, hp, player) {
 		this.sprite.reset(w /2, this.sprite.body.halfHeight);
 		this.isIntro = false;
 		}, this);
-		
+
+	this.collisionSprite = this.sprite;
+	this.collisionSprite.owner = this;
 	this.sprite.owner = this;
+	
 	this.isBoss = true;
 	this.time = 0;
 
@@ -200,9 +207,9 @@ var Boss2 = function(spriteName, x, y, hp, player) {
 	
 };
 
-Boss2.prototype = {
+BossStage2.prototype = {
 
-	constructor: Boss,
+	constructor: BossStage2,
 
 	update: function(){
 		if (this.sprite.exists) {
@@ -323,8 +330,12 @@ EnemyManager.prototype = {
 		}
 	},
 
-	addBoss: function(spriteName, x, y, hp) {
-		var boss = new Boss(spriteName, x, y, hp, this.owner);
+	addBoss: function(spriteName, x, y, hp, type) {
+		if (type == 1) {
+			var boss = new BossStage1(spriteName, x, y, hp, this.owner);
+		} else if (type == 2) {
+			boss = new BossStage2(spriteName, x, y, hp, this.owner);
+		}
 		this.sprites.add(boss.sprite);
 	},
 

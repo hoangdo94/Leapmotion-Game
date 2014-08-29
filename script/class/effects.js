@@ -320,7 +320,7 @@ var CollisionManager = function(player, enemyManager) {
 				enemy.animations.play('injured', 20, true);
 			}	
         } else if (enemy.owner.isBoss == true){
-			if (bullet.overlap(enemy.owner.bossHeartSprite)) {
+			
 				if (enemy.y > 0) {
 					if (enemy.owner.HP <= 0) {
 						enemy.exists = false;
@@ -330,7 +330,6 @@ var CollisionManager = function(player, enemyManager) {
 					enemy.owner.HP--;
 					enemy.animations.play('injured', 20, true);
 				}
-			}
 			/*
 			if (enemy.y > 0) {
 				if (enemy.owner.HP <= 0) {
