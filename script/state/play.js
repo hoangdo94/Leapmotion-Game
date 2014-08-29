@@ -9,7 +9,7 @@ var playState = {
 		this.bg = new BackgroundControl();
 		
 		//add player
-		var startPosition = {x:w / 2, y: h / 2}
+		var startPosition = {x:w / 2, y: h - 100};
 		this.player = new Player('player', startPosition);
 
 		this.bg.getOriginalPos(this.player);
