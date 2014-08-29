@@ -1,6 +1,6 @@
 var bootState = {
 	preload: function () {
-		game.stage.backgroundColor = '#2c3e50';
+		game.stage.backgroundColor = '#000';
 		game.load.image('loading', 'asset/image/loading.png');
 		game.load.image('loading2', 'asset/image/loading2.png');
 	},
@@ -50,8 +50,11 @@ var loadState = {
 		game.load.spritesheet('explose', 'asset/image/explosion.png',133.5, 134, 12);
 		game.load.spritesheet('glow', 'asset/image/glow.png',200, 200, 18);
 		game.load.spritesheet('starnum', 'asset/image/starNum.png',40, 40, 2);
-		game.load.spritesheet('boss', 'asset/image/boss.png', 400, 400, 2);
+		game.load.spritesheet('boss1', 'asset/image/boss.png', 400, 400, 2);
 		game.load.spritesheet('bossheart', 'asset/image/bossheart.png', 103, 103, 2);
+		
+		game.load.image('magiccircle', 'asset/image/magiccircle5.jpg');
+		game.load.spritesheet('boss2', 'asset/image/boss2new.png', 242, 254, 3);
 		//load audios
 		//game.load.audio('music', 'asset/sound/music.wav');
 	},

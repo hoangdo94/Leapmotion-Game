@@ -2,15 +2,16 @@ var LevelManager = function(enemyManager){
 	this.enemyManager = enemyManager;
 	this.level;
 	this.currentWave = 0;
-	this.announcement = game.add.text(w/2, h/2, ' ', { font: '50px Arial bold', fill: '#fff' });
+	this.announcement = game.add.text(w/2, h/2, 'text ', { font: '50px Arial bold', fill: '#fff' });
 	this.announcement.anchor.set(0.5);
-	this.tween = game.add.tween(this.announcement).to({y: h/2-50}, 500).to({y: h/2}, 1000);
+	this.tween = game.add.tween(this.announcement).to({y: h/2-50}, 500).to({y: h/2}, 1000).start();
 	this.time = 0;
+	this.requestNextWave = false;
+	this.requested = false;
 };
 
 LevelManager.prototype = {
 	constructor: LevelManager,
-
 	update: function() {
 		if (this.enemyManager.isOutOfEnemies) {
 			this.currentWave++;
@@ -41,8 +42,31 @@ LevelManager.prototype = {
 			//  case 5:
 			// 		this.wave_5();
 			//		break;
+			// 	case 6:
+			// 		this.wave_6();
+			// 		break;
+			// 	case 7:
+			// 		this.wave_7();
+			// 		break;
 			// }
-		}
+		// if (this.enemyManager.isOutOfEnemies && !this.requested) {
+		// 	this.requestNextWave = true;
+		// }
+		// if (this.requestNextWave){
+		// 	this.requestNextWave = false;
+		// 	this.requested = true;
+		// 	game.time.events.add(1000, function() {
+		// 		this.currentWave++;
+		// 		if (this.currentWave<1){
+		// 			this.addEnemy((Math.floor(this.currentWave/2) + 1)%5 + 1, this.enemyManager.getRandromPathType(), this.currentWave%5 + 5);
+		// 		}
+		// 		else if (this.currentWave==1){
+		// 			this.enemyManager.addBoss('boss2', w/2, h/10, 500, 2);
+		// 		}
+		// 		this.requested = false;
+		// 	}, this);
+		// }
+		
 	},
 
 	loadLevel: function(level) {
