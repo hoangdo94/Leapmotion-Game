@@ -171,6 +171,8 @@ var BossStage2 = function(spriteName, x, y, hp, player) {
 	this.sprite.animations.add('injured',[1]);
 	this.sprite.animations.add('dangered',[2]);
 	this.sprite.animations.play('fly', 5, true);
+	this.sprite.body.setSize(this.sprite.width, this.sprite.height/2, 0, -this.sprite.height/4);
+
 	//this.sprite.reset(-this.sprite.body.halfWidth, this.sprite.body.halfHeight);
 	tween1 = game.add.tween(this.sprite).to({ x: w + this.sprite.body.halfWidth }, 1000, Phaser.Easing.Linear.None).start();
 	this.isIntro = true;
