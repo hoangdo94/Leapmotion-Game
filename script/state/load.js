@@ -54,6 +54,7 @@ var loadState = {
 		game.load.spritesheet('bossheart', 'asset/image/bossheart.png', 103, 103, 2);
 		
 		game.load.image('magiccircle', 'asset/image/magiccircle5.jpg');
+		game.load.spritesheet('boss2', 'asset/image/boss2new.png', 242, 254, 3);
 		//load audios
 		//game.load.audio('music', 'asset/sound/music.wav');
 	},

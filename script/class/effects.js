@@ -331,6 +331,16 @@ var CollisionManager = function(player, enemyManager) {
 					enemy.animations.play('injured', 20, true);
 				}
 			}
+			/*
+			if (enemy.y > 0) {
+				if (enemy.owner.HP <= 0) {
+					enemy.kill();
+					this.bossBoomEffect.play(enemy.x, enemy.y);
+				}
+				bullet.kill();
+				enemy.owner.HP--;
+				enemy.animations.play('injured', 20, true);
+			}*/
 		}
     }
     

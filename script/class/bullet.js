@@ -351,6 +351,118 @@ SprayBullet.prototype.additionalUpdate = function() {
 };
 
 /**
+* Bullet of boss2. It inheritances from Bullet class
+* @constructor
+* @param {string} spriteName - references to name of bullet image file was loaded in load.js
+* @param {owner} owner - references to currently owner
+* @param {EnemyManager} enemyManager - references enemyManager instance that currently controls enemy groups
+*/
+var FadeBullet = function(spriteName, owner) {
+	Bullet.call(this, spriteName, owner);
+	this.bullets.setAll('anchor.y', 0.5);
+	this.bulletArrayTime = 0;
+	this.isFireIntro = true;
+	this.isFireArray = true;
+	this.isFireCircle = true;
+	this.velocity = 400;
+	this.fireCircleActive = false;
+	//this.bullets.setAll('outOfBoundsKill', false);
+};
+
+FadeBullet.prototype = Object.create(Bullet.prototype);
+
+FadeBullet.prototype.fireIntro = function() {
+	if (game.time.now > this.bulletTime)
+	{
+		var bullet = this.bullets.getFirstExists(false);
+		if (bullet) {
+			bullet.reset(this.owner.sprite.x, this.owner.sprite.y);
+			bullet.alpha = 1;
+			bullet.isTween = false;
+			bullet.body.velocity.y = 500;
+		}
+		this.bulletTime = game.time.now + 50;
+	}
+};
+FadeBullet.prototype.fireArray = function(player) {
+	this.isFireIntro = false;
+	if ((game.time.now > this.bulletTime) && this.isFireArray)
+	{
+		if (this.isFireCircle && this.fireCircleActive) {
+			this.fireAround(0, this.owner.sprite.x+100, this.owner.sprite.y);
+			this.fireAround(60, this.owner.sprite.x+100, this.owner.sprite.y);
+			this.fireAround(120, this.owner.sprite.x+100, this.owner.sprite.y);
+			this.fireAround(180, this.owner.sprite.x+100, this.owner.sprite.y);
+			this.fireAround(240, this.owner.sprite.x+100, this.owner.sprite.y);
+			this.fireAround(300, this.owner.sprite.x+100, this.owner.sprite.y);
+			this.fireAround(0, this.owner.sprite.x-100, this.owner.sprite.y);
+			this.fireAround(60, this.owner.sprite.x-100, this.owner.sprite.y);
+			this.fireAround(120, this.owner.sprite.x-100, this.owner.sprite.y);
+			this.fireAround(180, this.owner.sprite.x-100, this.owner.sprite.y);
+			this.fireAround(240, this.owner.sprite.x-100, this.owner.sprite.y);
+			this.fireAround(300, this.owner.sprite.x-100, this.owner.sprite.y);
+			this.isFireCircle = false;
+		}
+		var bullet = this.bullets.getFirstExists(false);
+		bullet.alpha = 1;
+		if (bullet) {
+			bullet.reset(this.owner.sprite.x, this.owner.sprite.y);
+			if (player) 
+				bullet.rotation = game.physics.arcade.moveToObject(bullet, player, 50, 1500);
+		}
+		this.bulletTime = game.time.now + 50;
+	}
+};
+
+FadeBullet.prototype.updateFireIntro = function() {
+	this.bullets.forEach(function(bullet) {
+		
+		if (bullet.exists && !bullet.isTween) {
+			game.add.tween(bullet).to({alpha: 0},600, Phaser.Easing.Linear.None).start();
+			bullet.isTween = true;
+		}
+		
+		if (bullet.alpha <= 0) {
+			bullet.kill();
+		}
+	});
+}
+
+FadeBullet.prototype.updateFire = function() {
+	if (game.time.now > this.bulletArrayTime) {
+		if (this.isFireArray) {
+			this.isFireArray = false;
+			this.isFireCircle = false;
+		this.bulletArrayTime = game.time.now + 1000	;
+		} else {
+			this.isFireArray = true;
+			this.isFireCircle = true;
+		this.bulletArrayTime = game.time.now + 500	;
+		}
+	}
+}
+FadeBullet.prototype.update = function() {
+	if (this.isFireIntro) {
+		this.updateFireIntro();
+	} else {
+		this.updateFire();
+	}
+	/*
+	this.bullets.forEach(function(bullet){
+		if (bullet.x > h) bullet.exists = false;
+	});
+*/
+};
+FadeBullet.prototype.fireAround = function(angle, x, y) {
+	var bullet = this.bullets.getFirstDead(false);
+	bullet.alpha = 1;
+	if (bullet) {
+		bullet.reset(x, y);
+		bullet.body.velocity.y = -Math.cos(Math.PI * angle / 180) * this.velocity;
+		bullet.body.velocity.x = Math.sin(Math.PI * angle / 180) * this.velocity;
+	}
+}
+/**
 * Enemy weapon
 * @constructor
 * @param {string} spriteName - corresponding name of image file was loaded in loadState

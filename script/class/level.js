@@ -15,7 +15,7 @@ LevelManager.prototype = {
 		if (this.enemyManager.isOutOfEnemies) {
 			this.currentWave++;
 
-			if (this.currentWave<2){
+			if (this.currentWave<1){
 				this.addEnemy((Math.floor(this.currentWave/2) + 1)%5 + 1, this.enemyManager.getRandromPathType(), this.currentWave%5 + 5);
 			}
 			else if (this.currentWave==11){

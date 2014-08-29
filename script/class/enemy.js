@@ -79,7 +79,6 @@ var Boss = function(spriteName, x, y, hp) {
 	this.bossHeartSprite = game.add.sprite(x, y, 'bossheart');
 	this.bossHeartSprite.animations.add('fly', [0, 1]);
 	this.bossHeartSprite.animations.play('fly', 10, true);
-	//this.sprite.animations.play('fly', 10, true);
 	this.bossHeartSprite.anchor.set(0.5);
 	
 	this.introDone = false;
@@ -87,8 +86,6 @@ var Boss = function(spriteName, x, y, hp) {
 
 	this.openSprite = game.add.sprite(x, y, spriteName);
 	this.openSprite.anchor.set(0.5);
-	//this.open.animations.add('fly', [0]);
-	//this.open.animations.play('fly', 5, true);
 	this.openSprite.scale.x = 0.1;
 	this.openSprite.scale.y = 0.1;
 	game.add.tween(this.openSprite.scale).to({x: 1, y: 1}, 2000, Phaser.Easing.Linear.None).start();
@@ -154,6 +151,97 @@ Boss.prototype = {
 			this.bossHeartSprite.destroy();
 		}
 	}
+
+};
+
+var Boss2 = function(spriteName, x, y, hp, player) {
+	this.player = player;
+	this.HP = 500;
+	this.dangerRange = this.HP / 3;
+	this.isIntro = true;
+	this.sprite = game.add.sprite(100, 100, 'boss2');
+	game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
+	this.sprite.anchor.set(0.5);
+	this.sprite.animations.add('fly',[0]);
+	this.sprite.animations.add('injured',[1]);
+	this.sprite.animations.add('dangered',[2]);
+	this.sprite.animations.play('fly', 5, true);
+	
+	//this.sprite.reset(-this.sprite.body.halfWidth, this.sprite.body.halfHeight);
+	tween1 = game.add.tween(this.sprite).to({ x: w + this.sprite.body.halfWidth }, 1000, Phaser.Easing.Linear.None).start();
+	this.isIntro = true;
+	
+	this.sprite.reset(w + this.sprite.body.halfWidth, this.sprite.body.halfHeight);
+	tween2 = game.add.tween(this.sprite).to({ x: -this.sprite.body.halfWidth }, 1400, Phaser.Easing.Linear.None).delay(3000).start();
+	
+	this.sprite.reset(-this.sprite.body.halfWidth, this.sprite.body.halfHeight);
+	tween3 = game.add.tween(this.sprite).to({ x: w + this.sprite.body.halfWidth }, 1800, Phaser.Easing.Linear.None).delay(6000).start();
+	
+	this.sprite.reset(w + this.sprite.body.halfWidth, this.sprite.body.halfHeight);
+	tween4 = game.add.tween(this.sprite).to({ x: w / 2 }, 2000, Phaser.Easing.Linear.None).delay(9000).start();
+	tween4.onComplete.add(function(){
+		this.sprite.reset(w /2, this.sprite.body.halfHeight);
+		this.isIntro = false;
+		}, this);
+		
+	this.sprite.owner = this;
+	this.isBoss = true;
+	this.time = 0;
+
+	//Hp Bar
+	this.maxHP = this.HP;
+	this.hpbarEmpty = game.add.sprite(w/2 - w/6, h/20, 'hpbar');
+	this.hpbarEmpty.frame = 1;
+	this.hpbarFull = game.add.sprite(w/2 - w/6, h/20, 'hpbar');
+	this.hpbarEmpty.width = this.hpbarFull.width = w/3;
+	this.hpbarEmpty.height = this.hpbarFull.height = this.hpbarEmpty.width/20;
+	this.bullet = new FadeBullet('spraybullet', this);
+	
+	
+};
+
+Boss2.prototype = {
+
+	constructor: Boss,
+
+	update: function(){
+		if (this.sprite.exists) {
+		
+		if (this.sprite.animations.currentAnim.loopCount > 0 && this.sprite.animations.currentAnim.name == 'injured') {
+			if (this.HP > this.dangerRange){
+				this.sprite.animations.play('fly', 5, true);
+			} else if (this.HP <= this.dangerRange) {
+				this.sprite.animations.play('dangered', 5, true);
+			}
+		}
+		
+		//game.physics.arcade.moveToXY(this.sprite, this.movePoints[this.currentPoint].x, this.movePoints[this.currentPoint].y, 200);
+		if (this.isIntro) {
+			this.bullet.fireIntro();
+		} else {
+			if (this.player)
+				this.bullet.fireArray(this.player.sprite);
+				if (Math.abs(this.player.sprite.x - this.sprite.x) > 30)
+					game.physics.arcade.moveToObject(this.sprite, {x: this.player.sprite.x, y: this.sprite.body.halfHeight}, 50); 
+		}
+		if (this.HP <= this.dangerRange) {
+			this.bullet.fireCircleActive = true;
+			//this.sprite.animations.play('dangered', 5, true);
+		}
+		this.updateHpBar();
+		this.bullet.update(this.player.spirte);
+		}
+	},
+
+	updateHpBar: function(){
+		this.hpbarFull.width = this.hpbarEmpty.width*this.HP/this.maxHP;
+		if (this.HP <= 0){
+			this.hpbarEmpty.destroy();
+			this.hpbarFull.destroy();
+		}
+	}
+	
+	
 
 };
 
@@ -236,7 +324,7 @@ EnemyManager.prototype = {
 	},
 
 	addBoss: function(spriteName, x, y, hp) {
-		var boss = new Boss(spriteName, x, y, hp);
+		var boss = new Boss(spriteName, x, y, hp, this.owner);
 		this.sprites.add(boss.sprite);
 	},
 
