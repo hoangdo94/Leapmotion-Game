@@ -308,7 +308,7 @@ var CollisionManager = function(player, enemyManager) {
     }
     
     this.bulletHitEnemy = function(bullet, enemy) {
-        if (enemy.owner.isBoss == false) {
+		if (enemy.owner.isBoss == false) {
 			//  When a bullet hits an enemy we kill them both (When they appear on the screen)
 			if (enemy.y > 0) {
 				if (enemy.owner.HP <= 0) {
@@ -349,9 +349,10 @@ var CollisionManager = function(player, enemyManager) {
         player.owner.HP--;
         player.owner.HUD.updateHP();
         if (player.owner.HP == 0) {
-
         }
     }
+	
+	/* pixelcollision: http://shin.cl/pixelperfect/main.js */
 }
 
 var BossBoomEffects = function(loop) {
