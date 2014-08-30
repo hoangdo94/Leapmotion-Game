@@ -413,7 +413,7 @@ var MovePathManager = function() {
     			enemy.body.velocity.y = 200;
     			if (enemy.owner.direction === 1) 
     				enemy.body.velocity.x = 20;
-    			else
+    			else if (enemy.owner.direction === 2)
     				enemy.body.velocity.x = -20;
     		} else {
     			enemy.body.velocity.y = 100;

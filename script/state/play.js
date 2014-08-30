@@ -14,7 +14,7 @@ var playState = {
 
 		this.bg.getOriginalPos(this.player);
 
-        //set the controller
+		//set the controller
 		if (controllerType == 1) this.player.controller = new KeyboardController(this.player);
 		else this.player.controller = new LeapController(this.player);
 
@@ -46,5 +46,8 @@ var playState = {
 		this.collisionManager.update(this.player, this.enemyManager);
 	},
 	
+	render: function() {
+		this.levelManager.render();
+	}
 };
 
