@@ -30,23 +30,20 @@ var playState = {
 	},
 	
 	update: function() {
-		if (playing) {
-			//update background
-			//this.bg.tilePosition.y += 1;
-			this.bg.update(this.player);
+		//update background
+		this.bg.update(this.player);
 
-			//update player
-			this.player.update();
+		//update player
+		this.player.update();
 
-			//update enemies
-			this.enemyManager.update(this.player);
+		//update enemies
+		this.enemyManager.update(this.player);
 		
-			//update enemy waves
-			this.levelManager.update();
+		//update enemy waves
+		this.levelManager.update();
 
-			// Collision
-			this.collisionManager.update(this.player, this.enemyManager);
-		}
+		// Collision
+		this.collisionManager.update(this.player, this.enemyManager);
 	},
 	
 };
