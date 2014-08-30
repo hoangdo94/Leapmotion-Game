@@ -9,7 +9,7 @@
 * @param isChase - define the ability of chasing to the player of enemy bullet
 * @param path - define the moving path of enemy
 */
-var Enemy = function(spriteName, x, y, hp, bulletSprite, isChase, path) {
+var Enemy = function(spriteName, x, y, hp, bulletSprite, isChase, direction, path) {
 	this.HP = hp;
 	//add sprite
 	this.sprite = game.add.sprite(x, y, spriteName);
@@ -33,6 +33,7 @@ var Enemy = function(spriteName, x, y, hp, bulletSprite, isChase, path) {
 	// Path
 	this.path = path;
 	this.pathNeededToUpdate = true;
+	this.direction = direction;
 	this.time = 0;
 	this.isBoss = false;
 };
@@ -269,7 +270,8 @@ var EnemyManager = function(owner) {
 	this.CIRCLEPATH = 1;
 	this.BARPATH = 2;
 	this.RANDOMPATH = 3;
-	
+	this.CROSSPATH = 4;
+	this.CHAINEDPATH = 5;
 	this.isOutOfEnemies = true;
 };
 
@@ -307,7 +309,11 @@ EnemyManager.prototype = {
 				this.movePathManager.barPath(enemy);
 			} else if (enemy.owner.path == this.RANDOMPATH && enemy.owner.pathNeededToUpdate) {
 				this.movePathManager.randomPath(enemy);
-			} 
+			} else if (enemy.owner.path == this.CROSSPATH) {
+				this.movePathManager.crossPath(enemy);
+			} else if (enemy.owner.path == this.CHAINEDPATH) {
+				this.movePathManager.chainedPath(enemy);
+			}
 		}
 	},
 		
@@ -339,8 +345,8 @@ EnemyManager.prototype = {
 		this.sprites.add(boss.sprite);
 	},
 
-	addEnemy: function(enemyNumber, x, y, bulletSprite, isChase, path) {
-		var enemy = new Enemy('enemy' + enemyNumber, x, y, enemyNumber, bulletSprite, isChase, path);
+	addEnemy: function(enemyNumber, x, y, bulletSprite, isChase, direction, path) {
+		var enemy = new Enemy('enemy' + enemyNumber, x, y, enemyNumber, bulletSprite, isChase, direction, path);
 		this.sprites.add(enemy.sprite);
 	},
 	
@@ -403,7 +409,10 @@ var MovePathManager = function() {
 		if (enemy) {
 			if (enemy.y < (h / 5)) {
     			enemy.body.velocity.y = 200;
-    			enemy.body.velocity.x = 20;
+    			if (enemy.owner.direction === 1) 
+    				enemy.body.velocity.x = 20;
+    			else
+    				enemy.body.velocity.x = -20;
     		} else {
     			enemy.body.velocity.y = 100;
     		}
@@ -430,5 +439,40 @@ var MovePathManager = function() {
     	} else {
 			enemy.body.velocity.y = 100;
     	}
+	}
+
+	this.crossPath = function(enemy) {
+		enemy.body.velocity.y = 200;
+		if (enemy.owner.direction === 1) {
+			enemy.body.velocity.x = 250;
+			enemy.angle = -45;
+		}
+		else {
+			enemy.body.velocity.x = -250;
+			enemy.angle = 45;
+		}		
+	}
+
+	this.chainedPath = function(enemy) {
+		var vx = 150; 
+		if (enemy.y <= 200) {
+			if (enemy.owner.direction == 1)
+				enemy.body.velocity.x = vx;
+			else
+				enemy.body.velocity.x = -vx;
+			enemy.body.velocity.y = 100;
+		}
+		else if (enemy.y > 200 && enemy.y <= 400) {
+			if (enemy.owner.direction == 1)
+				enemy.body.velocity.x = -vx;
+			else
+				enemy.body.velocity.x = vx;
+		}
+		else if (enemy.y > 400) {
+			if (enemy.owner.direction == 1)
+				enemy.body.velocity.x = vx;
+			else
+				enemy.body.velocity.x = -vx;
+		}
 	}
 }

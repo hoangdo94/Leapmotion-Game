@@ -479,7 +479,7 @@ var EnemyBullet = function(spriteName, isChase) {
     this.bullets.setAll('anchor.y', 1);
     this.bullets.setAll('outOfBoundsKill', true);
     this.bullets.setAll('checkWorldBounds', true);
-	this.bulletTime = game.time.now + 2000;
+	this.bulletTime = game.time.now + 1000;
 	// Collsion Handler
 	this.outOfUsing = false;
 }
@@ -502,7 +502,7 @@ EnemyBullet.prototype = {
 					bullet.rotation = game.physics.arcade.moveToObject(bullet, target.sprite, 10, Math.floor(1000 + Math.random() * 1000));
 				else
 					bullet.body.velocity.y = 800;
-				this.bulletTime = game.time.now + 3000;
+				this.bulletTime = game.time.now + 1000;
 			}
 			
 		}
