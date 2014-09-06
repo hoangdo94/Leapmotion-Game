@@ -344,7 +344,7 @@ EnemyManager.prototype = {
 		} else if (type == 2) {
 			boss = new BossStage2(x, y, hp, this.owner);
 		}
-		this.sprites.add(boss.collisionSprite);
+		this.sprites.add(boss.sprite);
 	},
 
 	addEnemy: function(enemyNumber, x, y, bulletSprite, isChase, direction, path) {
