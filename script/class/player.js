@@ -103,7 +103,7 @@ var PlayerHUD = function(player, posX, posY) {
 	this.hpbar.height = 10 * this.scale;
 	this.hpbar.width = this.hpbarData.originWidth;
 	
-	this.rechargebarData = {x: this.hubBackgroundData.x + 11 * this.scale, y: this.hubBackgroundData.y + 48.5 * this.scale, originWidth: 37 * this.scale, originHeight: 9 * this.scale}
+	this.rechargebarData = {x: this.hubBackgroundData.x + 11 * this.scale, y: this.hubBackgroundData.y + 48.5 * this.scale, originWidth: 37 * this.scale, originHeight: -43 * this.scale}
 	this.rechargebar = game.add.sprite(this.rechargebarData.x, this.rechargebarData.y, 'playerRechargebar');
 	this.rechargebar.height = this.rechargebarData.originHeight;
 	this.rechargebar.width = this.rechargebarData.originWidth;
@@ -162,9 +162,9 @@ PlayerHUD.prototype = {
 	},
 	
 	updatePower: function() {
-		if (this.rechargebarData.originHeight * this.player.power / 100 < 0)
+		if (Math.abs(this.rechargebarData.originHeight) * this.player.power / 100 < 0)
 			this.rechargebar.height = 0;
 		else
-			this.rechargebar.height = -this.rechargebarData.originHeight * this.player.power / 100;
+			this.rechargebar.height = -Math.abs(this.rechargebarData.originHeight) * this.player.power / 100;
 	}
 };

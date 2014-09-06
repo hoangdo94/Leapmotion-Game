@@ -43,12 +43,9 @@ LevelManager.prototype = {
 			switch (this.currentWave) {
 				case 1:
 					this.wave_1();
-// 					this.enemyManager.addBoss(w/2, h/10, 200, 2);
-
 					break;
 				case 2:
 					this.wave_2();
-
 					break;
 				case 3:
 					this.wave_3();
@@ -56,14 +53,29 @@ LevelManager.prototype = {
 				case 4:
 					this.wave_4();
 					break;
-			 case 5:
+			 	case 5:
 					this.wave_5();
 					break;
 				case 6:
-					this.wave_6();
+					this.enemyManager.addBoss(w/2, h/10, 200, 1);
 					break;
 				case 7:
+					this.wave_6();
+					break;
+				case 8:
 					this.wave_7();
+					break;
+				case 9:
+					this.wave_8();
+					break;
+				case 10:
+					this.wave_9();
+					break;
+				case 11:
+					this.wave_10();
+					break;
+				case 12:
+					this.enemyManager.addBoss(w/2, h/10, 400, 2);
 					break;
 			}
 // 		if (this.enemyManager.isOutOfEnemies && !this.requested) {
