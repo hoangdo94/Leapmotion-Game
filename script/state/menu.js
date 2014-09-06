@@ -15,7 +15,7 @@ var menuState = {
 		var logo = game.add.sprite(w/2, -150, 'logo');
 		logo.anchor.setTo(0.5);
 		game.add.tween(logo).to({ y: h/2-80 }, 1000, Phaser.Easing.Bounce.Out).start();
-
+		
 		var label = game.add.text(w/2, h/2, 'Press ENTER to use Keyboard Controller\nPress SPACE to use Leapmotion Controller', { font: '20px Arial', fill: '#fff' });
 		label.anchor.setTo(0.5);
 		label.alpha = 0;
