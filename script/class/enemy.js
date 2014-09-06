@@ -84,7 +84,7 @@ var BossStage1 = function(x, y, hp) {
 	this.introDone = false;
 	this.tweenBegin = false;
 
-	this.openSprite = game.add.sprite(x, y, spriteName);
+	this.openSprite = game.add.sprite(x, y, 'boss1');
 	this.openSprite.anchor.set(0.5);
 	this.openSprite.scale.x = 0.1;
 	this.openSprite.scale.y = 0.1;
@@ -105,11 +105,12 @@ var BossStage1 = function(x, y, hp) {
 
 	//Hp Bar
 	this.maxHP = this.HP;
-	this.hpbarEmpty = game.add.sprite(w/2 - w/6, h/20, 'hpbar');
+	this.hpbarEmpty = game.add.sprite(20, h/2 - h/4, 'hpbar');
 	this.hpbarEmpty.frame = 1;
-	this.hpbarFull = game.add.sprite(w/2 - w/6, h/20, 'hpbar');
-	this.hpbarEmpty.width = this.hpbarFull.width = w/3;
-	this.hpbarEmpty.height = this.hpbarFull.height = this.hpbarEmpty.width/20;	
+	this.hpbarFull = game.add.sprite(20, h/2 + h/4, 'hpbar');
+	this.hpbarFull.anchor.set(0,1);
+	this.hpbarEmpty.height = this.hpbarFull.height = h/2;
+	this.hpbarEmpty.width = this.hpbarFull.width = this.hpbarEmpty.height/20;	
 };
 
 BossStage1.prototype = {
@@ -117,7 +118,6 @@ BossStage1.prototype = {
 	constructor: BossStage1,
 
 	update: function(){
-		game.world.bringToTop(this.bossHeartSprite);
 		this.sprite.angle += 1;
 		// update animations
 		if (this.sprite.animations.currentAnim.loopCount > 0 && this.sprite.animations.currentAnim.name == 'injured') {
@@ -150,7 +150,7 @@ BossStage1.prototype = {
 	},
 
 	updateHpBar: function(){
-		this.hpbarFull.width = this.hpbarEmpty.width*this.HP/this.maxHP;
+		this.hpbarFull.height = this.hpbarEmpty.height*this.HP/this.maxHP;
 		if (this.HP <= 0){
 			this.hpbarEmpty.destroy();
 			this.hpbarFull.destroy();
@@ -162,7 +162,7 @@ BossStage1.prototype = {
 
 var BossStage2 = function(x, y, hp, player) {
 	this.player = player;
-	this.HP = 500;
+	this.HP = hp;
 	this.dangerRange = this.HP / 3;
 	this.isIntro = true;
 	this.sprite = game.add.sprite(100, 100, 'boss2');
@@ -172,7 +172,8 @@ var BossStage2 = function(x, y, hp, player) {
 	this.sprite.animations.add('injured',[1]);
 	this.sprite.animations.add('dangered',[2]);
 	this.sprite.animations.play('fly', 5, true);
-	//this.sprite.reset(-this.sprite.body.halfWidth, this.sprite.body.halfHeight);
+	this.sprite.body.setSize(this.sprite.width, this.sprite.height/2, 0, -this.sprite.height/4);
+
 	tween1 = game.add.tween(this.sprite).to({ x: w + this.sprite.body.halfWidth }, 1000, Phaser.Easing.Linear.None).start();
 	this.isIntro = true;
 	
@@ -198,11 +199,14 @@ var BossStage2 = function(x, y, hp, player) {
 
 	//Hp Bar
 	this.maxHP = this.HP;
-	this.hpbarEmpty = game.add.sprite(w/2 - w/6, h/20, 'hpbar');
+	this.hpbarEmpty = game.add.sprite(20, h/2 - h/4, 'hpbar');
 	this.hpbarEmpty.frame = 1;
-	this.hpbarFull = game.add.sprite(w/2 - w/6, h/20, 'hpbar');
-	this.hpbarEmpty.width = this.hpbarFull.width = w/3;
-	this.hpbarEmpty.height = this.hpbarFull.height = this.hpbarEmpty.width/20;
+	this.hpbarFull = game.add.sprite(20, h/2 + h/4, 'hpbar');
+	this.hpbarFull.anchor.set(0,1);
+	this.hpbarEmpty.height = this.hpbarFull.height = h/2;
+	this.hpbarEmpty.width = this.hpbarFull.width = this.hpbarEmpty.height/20;
+
+
 	this.bullet = new FadeBullet('spraybullet', this);
 	
 	
@@ -223,7 +227,6 @@ BossStage2.prototype = {
 			}
 		}
 		
-		//game.physics.arcade.moveToXY(this.sprite, this.movePoints[this.currentPoint].x, this.movePoints[this.currentPoint].y, 200);
 		if (this.isIntro) {
 			this.bullet.fireIntro();
 		} else {
@@ -234,7 +237,6 @@ BossStage2.prototype = {
 		}
 		if (this.HP <= this.dangerRange) {
 			this.bullet.fireCircleActive = true;
-			//this.sprite.animations.play('dangered', 5, true);
 		}
 		this.updateHpBar();
 		this.bullet.update(this.player.spirte);
@@ -242,7 +244,7 @@ BossStage2.prototype = {
 	},
 
 	updateHpBar: function(){
-		this.hpbarFull.width = this.hpbarEmpty.width*this.HP/this.maxHP;
+		this.hpbarFull.height = this.hpbarEmpty.height*this.HP/this.maxHP;
 		if (this.HP <= 0){
 			this.hpbarEmpty.destroy();
 			this.hpbarFull.destroy();
@@ -411,7 +413,7 @@ var MovePathManager = function() {
     			enemy.body.velocity.y = 200;
     			if (enemy.owner.direction === 1) 
     				enemy.body.velocity.x = 20;
-    			else
+    			else if (enemy.owner.direction === 2)
     				enemy.body.velocity.x = -20;
     		} else {
     			enemy.body.velocity.y = 100;

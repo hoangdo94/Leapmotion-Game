@@ -6,7 +6,7 @@ var menuState = {
 		this.magiccircle.anchor.setTo(0.5);
 		this.magiccircle.alpha = 1;
 		
-		var logo = game.add.text(w/2, -150, 'This is GAME NAME', { font: '50px Arial', fill: '#fff' });
+		var logo = game.add.text(w/2, -150, 'Galaxy WAR', { font: '50px Arial', fill: '#fff' });
 		logo.anchor.setTo(0.5);
 		game.add.tween(logo).to({ y: h/2-80 }, 1000, Phaser.Easing.Bounce.Out).start();
 		

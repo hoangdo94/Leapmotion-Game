@@ -40,11 +40,13 @@ var BoomEffects = function(loop) {
     this.effects.setAll('anchor.x', 0.5);
     this.effects.setAll('anchor.y', 0.5);
     this.effects.callAll('animations.add', 'animations', 'boom',[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 20, true);
+    this.sound = game.add.audio('explosion');
 
     this.play = function(x, y) {
         var boom = this.effects.getFirstExists(false);
 		// reset loopCount
         if (boom) {
+        	this.sound.play();
             boom.reset(x, y);
 			boom.animations.currentAnim.restart();
         }
@@ -224,7 +226,7 @@ var BackgroundControl = function() {
 	this.planet3Flag = true;
 	
 	this.playerOriginPos = {};
-	this.update = function(player) {
+	this.update = function() {
 		if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
 			this.bg.tilePosition.x += 0.3;
 			this.planet1.body.velocity.x = 23;
@@ -307,18 +309,12 @@ var CollisionManager = function(player, enemyManager) {
         game.physics.arcade.overlap(player.sprite, enemy.owner.bullet.bullets, this.bulletHitPlayer, null, this);
     }
     
+    this.collisionSprite = function(sprite1, sprite2) {
+		return game.physics.arcade.overlap(sprite1, sprite2);
+	}
     
-    this.cache = new Phaser.Cache(game);
     this.bulletHitEnemy = function(bullet, enemy) {
-		var bulletBitmap = new Phaser.BitmapData(game, 'laser',13, 37);
-		var bulletData = bulletBitmap.getPixels(new Phaser.Rectangle(0, 0, 13, 37));
-		var enemyBitmap = new Phaser.BitmapData(game, 'boss2', 242, 254);
-		var enemyData = enemyBitmap.getPixels(new Phaser.Rectangle(0, 0, 242, 254));
-		
-		if (this.isPixelCollision(bulletData, bullet.x, bullet.y, enemyData, enemy.x, enemy.y, true)) {
-			this.boomEffect(500, 500);
-		}
-		
+		if (bullet.overlap(enemy.owner.collisionSprite)) {
 		if (enemy.owner.isBoss == false) {
 			//  When a bullet hits an enemy we kill them both (When they appear on the screen)
 			if (enemy.y > 0) {
@@ -331,7 +327,6 @@ var CollisionManager = function(player, enemyManager) {
 				enemy.animations.play('injured', 20, true);
 			}	
         } else if (enemy.owner.isBoss == true){
-			
 				if (enemy.y > 0) {
 					if (enemy.owner.HP <= 0) {
 						enemy.exists = false;
@@ -352,6 +347,7 @@ var CollisionManager = function(player, enemyManager) {
 				enemy.animations.play('injured', 20, true);
 			}*/
 		}
+		}
     }
     
     this.bulletHitPlayer = function(player, bullet) {
@@ -360,102 +356,15 @@ var CollisionManager = function(player, enemyManager) {
         player.owner.HP--;
         player.owner.HUD.updateHP();
         if (player.owner.HP == 0) {
+        	status = 0; //lose
+        	score = player.owner.starNum;
+        	game.time.events.add(1000, function(){
+        		gameMusic.stop();
+        		game.state.start('end');
+        	});
+        	
         }
     }
-	
-	this.isPixelCollision = function( first, x, y, other, x2, y2, isCentred ) {
-		// we need to avoid using floats, as were doing array lookups
-		x  = Math.round( x );
-		y  = Math.round( y );
-		x2 = Math.round( x2 );
-		y2 = Math.round( y2 );
-
-		var w  = first.width,
-			h  = first.height,
-			w2 = other.width,
-			h2 = other.height ;
-
-		// deal with the image being centred
-		if ( isCentred ) {
-			// fast rounding, but positive only
-			x  -= ( w/2 + 0.5) << 0
-			y  -= ( h/2 + 0.5) << 0
-			x2 -= (w2/2 + 0.5) << 0
-			y2 -= (h2/2 + 0.5) << 0
-		}
-
-		// find the top left and bottom right corners of overlapping area
-		var xMin = Math.max( x, x2 ),
-			yMin = Math.max( y, y2 ),
-			xMax = Math.min( x+w, x2+w2 ),
-			yMax = Math.min( y+h, y2+h2 );
-
-		// Sanity collision check, we ensure that the top-left corner is both
-		// above and to the left of the bottom-right corner.
-		if ( xMin >= xMax || yMin >= yMax ) {
-			return false;
-		}
-
-		var xDiff = xMax - xMin,
-			yDiff = yMax - yMin;
-
-		// get the pixels out from the images
-		var pixels  = first.data,
-			pixels2 = other.data;
-
-		// if the area is really small,
-		// then just perform a normal image collision check
-		if ( xDiff < 4 && yDiff < 4 ) {
-			for ( var pixelX = xMin; pixelX < xMax; pixelX++ ) {
-				for ( var pixelY = yMin; pixelY < yMax; pixelY++ ) {
-					if (
-							( pixels [ ((pixelX-x ) + (pixelY-y )*w )*4 + 3 ] !== 0 ) &&
-							( pixels2[ ((pixelX-x2) + (pixelY-y2)*w2)*4 + 3 ] !== 0 )
-					) {
-						return true;
-					}
-				}
-			}
-		} else {
-			/* What is this doing?
-			 * It is iterating over the overlapping area,
-			 * across the x then y the,
-			 * checking if the pixels are on top of this.
-			 *
-			 * What is special is that it increments by incX or incY,
-			 * allowing it to quickly jump across the image in large increments
-			 * rather then slowly going pixel by pixel.
-			 *
-			 * This makes it more likely to find a colliding pixel early.
-			 */
-
-			// Work out the increments,
-			// it's a third, but ensure we don't get a tiny
-			// slither of an area for the last iteration (using fast ceil).
-			var incX = xDiff / 3.0,
-				incY = yDiff / 3.0;
-			incX = (~~incX === incX) ? incX : (incX+1 | 0);
-			incY = (~~incY === incY) ? incY : (incY+1 | 0);
-
-			for ( var offsetY = 0; offsetY < incY; offsetY++ ) {
-				for ( var offsetX = 0; offsetX < incX; offsetX++ ) {
-					for ( var pixelY = yMin+offsetY; pixelY < yMax; pixelY += incY ) {
-						for ( var pixelX = xMin+offsetX; pixelX < xMax; pixelX += incX ) {
-							if (
-									( pixels [ ((pixelX-x ) + (pixelY-y )*w )*4 + 3 ] !== 0 ) &&
-									( pixels2[ ((pixelX-x2) + (pixelY-y2)*w2)*4 + 3 ] !== 0 )
-							) {
-								return true;
-							}
-						}
-					}
-				}
-			}
-		}
-
-		return false;
-	}
-	/* pixelcollision: http://shin.cl/pixelperfect/main.js */
 }
 
 var BossBoomEffects = function(loop) {

@@ -62,6 +62,7 @@ Bullet.prototype = {
 var Laser = function(spriteName, owner) {
 	Bullet.call(this, spriteName, owner);
 	this.level = 1;
+	this.sound = game.add.audio('laserFire');
 };
 
 Laser.prototype = Object.create(Bullet.prototype);
@@ -175,6 +176,7 @@ Laser.prototype.fire = function() {
 	 //  To avoid them being allowed to fire too fast we set a time limit
 	if (game.time.now > this.bulletTime)
 	{
+		this.sound.play();
 		if (this.level == 1) {
 			this.fireOne();
 		} else if (this.level == 2) {
@@ -256,6 +258,7 @@ var SuperBullet = function(spriteName, owner) {
 	this.isFinished = true;
 	this.isActive = false;
 	this.recharge = 0;
+	this.sound = game.add.audio('skill');
 };
 
 SuperBullet.prototype = Object.create(Bullet.prototype);
@@ -274,7 +277,7 @@ SuperBullet.prototype.fireAround = function(angle) {
 }
 
 SuperBullet.prototype.fire = function(number) {
-	 //  To avoid them being allowed to fire too fast we set a time limit
+	this.sound.play();
 	this.maxAngle = number * 360;
 	if (this.isActive) { 
 		this.isFinished = false;

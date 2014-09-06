@@ -1,8 +1,11 @@
 var h = window.innerHeight;
 var w = window.innerWidth;
-var playing = true;
-var pause = false;
 var controllerType;
+var gameMusic;
+
+var status; //0 for lose, 1 for win
+var score;
+
 var game = new Phaser.Game(w, h, Phaser.CANVAS, 'gameContainer');
 
 game.state.add('boot', bootState);

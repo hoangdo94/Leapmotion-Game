@@ -9,12 +9,12 @@ var playState = {
 		this.bg = new BackgroundControl();
 		
 		//add player
-		var startPosition = {x:w / 2, y: h - 100};
-		this.player = new Player('player', startPosition);
+		this.playerPosition = {x:w / 2, y: h - 100};
+		this.player = new Player('player', this.playerPosition, 100);
 
 		this.bg.getOriginalPos(this.player);
 
-        //set the controller
+		//set the controller
 		if (controllerType == 1) this.player.controller = new KeyboardController(this.player);
 		else this.player.controller = new LeapController(this.player);
 
@@ -27,27 +27,30 @@ var playState = {
 
 		// CollisionManager
 		this.collisionManager = new CollisionManager(this.player, this.enemyManager);
+
+		gameMusic = game.add.audio('gameMusic',1,true);
+		gameMusic.play();
 	},
 	
 	update: function() {
-		if (playing) {
-			//update background
-			//this.bg.tilePosition.y += 1;
-			this.bg.update(this.player);
+		//update background
+		this.bg.update();
 
-			//update player
-			this.player.update();
+		//update player
+		this.player.update();
 
-			//update enemies
-			this.enemyManager.update(this.player);
+		//update enemies
+		this.enemyManager.update(this.player);
 		
-			//update enemy waves
-			this.levelManager.update();
+		//update enemy waves
+		this.levelManager.update();
 
-			// Collision
-			this.collisionManager.update(this.player, this.enemyManager);
-		}
+		// Collision
+		this.collisionManager.update(this.player, this.enemyManager);
 	},
 	
+	render: function() {
+		this.levelManager.render();
+	}
 };
 
