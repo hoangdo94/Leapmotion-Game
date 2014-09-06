@@ -120,7 +120,7 @@ var PlayerHUD = function(player, posX, posY) {
 	this.hubBackground = game.add.sprite(this.hubBackgroundData.x, this.hubBackgroundData.y, 'hubBG')
 
 	//text
-	this.bulletText = game.add.text(this.bulletbarData.x + this.bulletbarData.originWidth/2, this.bulletbarData.y + 6, 'LEVEL 1', { font: '16px Arial Bold', fill: '#fff' });
+	this.bulletText = game.add.text(this.bulletbarData.x + this.bulletbarData.originWidth/2, this.bulletbarData.y + 7, 'LEVEL 1', { font: '16px Arial Bold', fill: '#fff' });
 	this.bulletText.anchor.set(0.5);
 	this.timeText = game.add.text(this.hubBackgroundData.x + 38, this.hubBackgroundData.y + 92, '0s', { font: '18px Arial Bold', fill: '#fff' });
 	this.timeText.anchor.set(0.5);
