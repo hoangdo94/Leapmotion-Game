@@ -27,18 +27,16 @@ var loadState = {
 		game.load.image('planet2', 'asset/image/planet2.png');
 		game.load.image('planet3', 'asset/image/planet3.png');
 		game.load.image('planet4', 'asset/image/planet4.png');
-		game.load.image('hubBG', 'asset/image/hubBG.png')
+		game.load.image('hubBG', 'asset/image/hubBG.png');
+		game.load.image('logo', 'asset/image/gamename.png')
 
 		game.load.spritesheet('player', 'asset/image/player.png', 112, 75, 3);
-		game.load.spritesheet('number', 'asset/image/number.png', 19, 19, 11);
 		
 		game.load.spritesheet('hpbar', 'asset/image/hpbarnew.png', 10, 10, 2);
 		game.load.image('playerHPbar', 'asset/image/hpbar.png');
 		game.load.image('playerbulletbar', 'asset/image/bulletbar.png');
 		game.load.image('playerRechargebar', 'asset/image/rechargebar.png');
 		
-		
-		game.load.image('playerIcon', 'asset/image/playericon.png');
 		game.load.image('laser', 'asset/image/laser.png');
 		game.load.image('enemylaserchase', 'asset/image/enemybullet.png');
 		game.load.image('enemylaserunchase', 'asset/image/enemylaserunchase.png');
@@ -61,7 +59,7 @@ var loadState = {
 		game.load.spritesheet('bossheart', 'asset/image/bossheart.png', 103, 103, 2);
 		game.load.spritesheet('hurtview', 'asset/image/hurtview.png', 1024, 1024, 1);
 		
-		game.load.image('magiccircle', 'asset/image/magiccircle5.jpg');
+		game.load.image('magiccircle', 'asset/image/magiccircle.png');
 		game.load.spritesheet('boss2', 'asset/image/boss2.png', 242, 254, 3);
 		//load audios
 		game.load.audio('explosion', 'asset/audio/explosion.wav');
