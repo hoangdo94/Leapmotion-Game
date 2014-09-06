@@ -56,7 +56,11 @@ var loadState = {
 		game.load.image('magiccircle', 'asset/image/magiccircle5.jpg');
 		game.load.spritesheet('boss2', 'asset/image/boss2new.png', 242, 254, 3);
 		//load audios
-		//game.load.audio('music', 'asset/sound/music.wav');
+		game.load.audio('explosion', 'asset/audio/explosion.wav');
+		game.load.audio('gameMusic', 'asset/audio/gameMusic.mp3');
+		game.load.audio('laserFire', 'asset/audio/laserFire.wav');
+		game.load.audio('skill', 'asset/audio/skill.MP3');
+
 	},
 	create: function () {
 		game.state.start('menu');

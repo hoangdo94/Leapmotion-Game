@@ -40,11 +40,13 @@ var BoomEffects = function(loop) {
     this.effects.setAll('anchor.x', 0.5);
     this.effects.setAll('anchor.y', 0.5);
     this.effects.callAll('animations.add', 'animations', 'boom',[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 20, true);
+    this.sound = game.add.audio('explosion');
 
     this.play = function(x, y) {
         var boom = this.effects.getFirstExists(false);
 		// reset loopCount
         if (boom) {
+        	this.sound.play();
             boom.reset(x, y);
 			boom.animations.currentAnim.restart();
         }
@@ -352,6 +354,7 @@ var CollisionManager = function(player, enemyManager) {
         	status = 0; //lose
         	score = player.owner.starNum;
         	game.time.events.add(1000, function(){
+        		gameMusic.stop();
         		game.state.start('end');
         	});
         	

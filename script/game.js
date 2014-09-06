@@ -1,6 +1,7 @@
 var h = window.innerHeight;
 var w = window.innerWidth;
 var controllerType;
+var gameMusic;
 
 var status; //0 for lose, 1 for win
 var score;

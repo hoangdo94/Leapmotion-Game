@@ -27,6 +27,9 @@ var playState = {
 
 		// CollisionManager
 		this.collisionManager = new CollisionManager(this.player, this.enemyManager);
+
+		gameMusic = game.add.audio('gameMusic',1,true);
+		gameMusic.play();
 	},
 	
 	update: function() {

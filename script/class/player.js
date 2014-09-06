@@ -38,33 +38,36 @@ Player.prototype = {
 
 	getPos: function() { return {x: this.sprite.x, y: this.sprite.y}},
 	update: function() {
-		game.world.bringToTop(this.sprite);
-		this.controller.update();
-		this.mainBullet.update();
-		this.subBullet.update();
-		this.superBullet.update();
-		this.openGlowEffects.update(this.sprite.x, this.sprite.y);
-		// update animations
-		if (this.sprite.animations.currentAnim.loopCount > 0 && this.sprite.animations.currentAnim.name == 'injured') {
-			this.sprite.animations.play('fly', 5, true);
-		}
-		//update sub bullet time
-		if (this.subBulletTime > 0){
-			this.subBullet.enabled = true;
-
-			this.subBulletTime -= game.time.elapsed;
-			if (this.subBulletTime <= 0) {
-				this.subBulletTime = 0;
-				this.subBullet.enabled = false;
+		if (this.HP > 0){
+			game.world.bringToTop(this.sprite);
+			this.controller.update();
+			this.mainBullet.update();
+			this.subBullet.update();
+			this.superBullet.update();
+			this.openGlowEffects.update(this.sprite.x, this.sprite.y);
+			// update animations
+			if (this.sprite.animations.currentAnim.loopCount > 0 && this.sprite.animations.currentAnim.name == 'injured') {
+				this.sprite.animations.play('fly', 5, true);
 			}
+			//update sub bullet time
+			if (this.subBulletTime > 0){
+				this.subBullet.enabled = true;
+
+				this.subBulletTime -= game.time.elapsed;
+				if (this.subBulletTime <= 0) {
+					this.subBulletTime = 0;
+					this.subBullet.enabled = false;
+				}
+			}
+		
+			this.power = this.superBullet.recharge * 100 / 1000;
+			if (this.power > 100)
+				this.power = 100;
+			this.HUD.updatePower();
+			this.HUD.updateSubBulletTimeText();
+			this.HUD.updateStar();
 		}
 		
-		this.power = this.superBullet.recharge * 100 / 1000;
-		if (this.power > 100)
-			this.power = 100;
-		this.HUD.updatePower();
-		this.HUD.updateSubBulletTimeText();
-		this.HUD.updateStar();
 	},
 	
 	fire: function() {
