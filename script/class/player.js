@@ -66,6 +66,7 @@ Player.prototype = {
 			this.HUD.updatePower();
 			this.HUD.updateSubBulletTimeText();
 			this.HUD.updateStar();
+			this.HUD.update();
 		}
 		
 	},
@@ -126,10 +127,25 @@ var PlayerHUD = function(player, posX, posY) {
 	this.hubBackground = game.add.sprite(this.hubBackgroundData.x, this.hubBackgroundData.y, 'hubBG')
 
 	//text
-	this.bulletText = game.add.text(this.bulletbarData.x + this.bulletbarData.originWidth/2, this.bulletbarData.y + 7, 'LEVEL 1', { font: '16px Arial Bold', fill: '#fff' });
+	this.bulletText = game.add.text(this.bulletbarData.x + this.bulletbarData.originWidth/2 + 60, this.bulletbarData.y + 7, 'LEVEL 1', { font: '16px Arial Bold', fill: '#fff' });
 	this.bulletText.anchor.set(0.5);
 	this.timeText = game.add.text(this.hubBackgroundData.x + 38, this.hubBackgroundData.y + 92, '0s', { font: '18px Arial Bold', fill: '#fff' });
 	this.timeText.anchor.set(0.5);
+	
+	
+	this.hudGroup = game.add.group();
+	this.hudGroup.add(this.hpbar);
+	this.hudGroup.add(this.rechargebar);
+	this.hudGroup.add(this.hubBackground);
+	this.hudGroup.add(this.bulletbar);
+	this.hudGroup.add(this.star);
+	this.hudGroup.add(this.hubBackground);
+	this.hudGroup.add(this.bulletText);
+	this.hudGroup.add(this.timeText);
+	
+	/*this.hudGroup.forEach(function(sprite) {
+		game.world.bringToTop(sprite);
+	});*/
 };
 
 PlayerHUD.prototype = {
@@ -166,5 +182,9 @@ PlayerHUD.prototype = {
 			this.rechargebar.height = 0;
 		else
 			this.rechargebar.height = -Math.abs(this.rechargebarData.originHeight) * this.player.power / 100;
+	},
+	
+	update: function() {
+		game.world.bringToTop(this.hudGroup);
 	}
 };

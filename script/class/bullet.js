@@ -479,7 +479,7 @@ var EnemyBullet = function(spriteName, isChase) {
     this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
     this.bullets.createMultiple(60, spriteName);
     this.bullets.setAll('anchor.x', 0.5)	;
-    this.bullets.setAll('anchor.y', 1);
+    this.bullets.setAll('anchor.y', 0);
     this.bullets.setAll('outOfBoundsKill', true);
     this.bullets.setAll('checkWorldBounds', true);
 	this.bulletTime = game.time.now + 1000;
@@ -499,7 +499,7 @@ EnemyBullet.prototype = {
 			{
 				game.physics.enable(bullet, Phaser.Physics.ARCADE);
 				//  And fire it
-				bullet.reset(enemy.x, enemy.y + enemy.height);
+				bullet.reset(enemy.x, enemy.y);
 				
 				if (this.isChase)
 					bullet.rotation = game.physics.arcade.moveToObject(bullet, target.sprite, 10, Math.floor(1000 + Math.random() * 1000));
