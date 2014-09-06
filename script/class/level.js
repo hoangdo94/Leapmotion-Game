@@ -96,7 +96,7 @@ LevelManager.prototype = {
 						this.wave_21();
 						break;
 					default:
-						status = 0; //lose
+						status = 1; //win
         				score = this.player.starNum;
         				game.time.events.add(1000, function(){
         					gameMusic.stop();
