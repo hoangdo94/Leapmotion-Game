@@ -1,6 +1,6 @@
 var bootState = {
 	preload: function () {
-		game.stage.backgroundColor = '#2c3e50';
+		game.stage.backgroundColor = '#000';
 		game.load.image('loading', 'asset/image/loading.png');
 		game.load.image('loading2', 'asset/image/loading2.png');
 	},
@@ -27,11 +27,16 @@ var loadState = {
 		game.load.image('planet2', 'asset/image/planet2.png');
 		game.load.image('planet3', 'asset/image/planet3.png');
 		game.load.image('planet4', 'asset/image/planet4.png');
+		game.load.image('hubBG', 'asset/image/hubBG.png');
+		game.load.image('logo', 'asset/image/gamename.png')
 
 		game.load.spritesheet('player', 'asset/image/player.png', 112, 75, 3);
-		game.load.spritesheet('number', 'asset/image/number.png', 19, 19, 11);
-		game.load.spritesheet('hpbar', 'asset/image/hpbar.png', 10, 10, 2);
-		game.load.image('playerIcon', 'asset/image/playericon.png');
+		
+		game.load.spritesheet('hpbar', 'asset/image/hpbarnew.png', 10, 10, 2);
+		game.load.image('playerHPbar', 'asset/image/hpbar.png');
+		game.load.image('playerbulletbar', 'asset/image/bulletbar.png');
+		game.load.image('playerRechargebar', 'asset/image/rechargebar.png');
+		
 		game.load.image('laser', 'asset/image/laser.png');
 		game.load.image('enemylaserchase', 'asset/image/enemybullet.png');
 		game.load.image('enemylaserunchase', 'asset/image/enemylaserunchase.png');
@@ -50,9 +55,19 @@ var loadState = {
 		game.load.spritesheet('explose', 'asset/image/explosion.png',133.5, 134, 12);
 		game.load.spritesheet('glow', 'asset/image/glow.png',200, 200, 18);
 		game.load.spritesheet('starnum', 'asset/image/starNum.png',40, 40, 2);
-		game.load.image('boss1', 'asset/image/boss1.png');
+		game.load.spritesheet('boss1', 'asset/image/boss.png', 400, 400, 2);
+		game.load.spritesheet('bossheart', 'asset/image/bossheart.png', 103, 103, 2);
+		game.load.spritesheet('hurtview', 'asset/image/hurtview.png', 1024, 1024, 1);
+		
+		game.load.image('magiccircle', 'asset/image/magiccircle.png');
+		game.load.spritesheet('boss2', 'asset/image/boss2.png', 242, 254, 3);
 		//load audios
-		//game.load.audio('music', 'asset/sound/music.wav');
+		game.load.audio('explosion', 'asset/audio/explosion.wav');
+		game.load.audio('gameMusic', 'asset/audio/gameMusic.mp3');
+		game.load.audio('laserFire', 'asset/audio/laserFire.wav');
+		game.load.audio('skill', 'asset/audio/skill.MP3');
+		game.load.audio('hitsound', 'asset/audio/hit.wav');
+
 	},
 	create: function () {
 		game.state.start('menu');

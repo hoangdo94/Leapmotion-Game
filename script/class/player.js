@@ -1,10 +1,10 @@
-var Player = function(spriteName, startPosition) {
-	this.HP = 3;
+var Player = function(spriteName, startPosition, hp) {
+	this.HP = hp;
 	this.level = 1;
 	this.starNum = 0;
 	this.power = 0;
 
-	this.numOfPowerUpCollected = 0;
+	this.numOfPowerUpCollected = {temp: 0, total: 0};
 	this.subBulletTime = 0;
 
 	//add sprite
@@ -38,32 +38,36 @@ Player.prototype = {
 
 	getPos: function() { return {x: this.sprite.x, y: this.sprite.y}},
 	update: function() {
-		this.controller.update();
-		this.mainBullet.update();
-		this.subBullet.update();
-		this.superBullet.update();
-		this.openGlowEffects.update(this.sprite.x, this.sprite.y);
-		// update animations
-		if (this.sprite.animations.currentAnim.loopCount > 0 && this.sprite.animations.currentAnim.name == 'injured') {
-			this.sprite.animations.play('fly', 5, true);
-		}
-		//update sub bullet time
-		if (this.subBulletTime > 0){
-			this.subBullet.enabled = true;
-
-			this.subBulletTime -= game.time.elapsed;
-			if (this.subBulletTime <= 0) {
-				this.subBulletTime = 0;
-				this.subBullet.enabled = false;
+		if (this.HP > 0){
+			game.world.bringToTop(this.sprite);
+			this.controller.update();
+			this.mainBullet.update();
+			this.subBullet.update();
+			this.superBullet.update();
+			this.openGlowEffects.update(this.sprite.x, this.sprite.y);
+			// update animations
+			if (this.sprite.animations.currentAnim.loopCount > 0 && this.sprite.animations.currentAnim.name == 'injured') {
+				this.sprite.animations.play('fly', 5, true);
 			}
+			//update sub bullet time
+			if (this.subBulletTime > 0){
+				this.subBullet.enabled = true;
+
+				this.subBulletTime -= game.time.elapsed;
+				if (this.subBulletTime <= 0) {
+					this.subBulletTime = 0;
+					this.subBullet.enabled = false;
+				}
+			}
+		
+			this.power = this.superBullet.recharge * 100 / 1000;
+			if (this.power > 100)
+				this.power = 100;
+			this.HUD.updatePower();
+			this.HUD.updateSubBulletTimeText();
+			this.HUD.updateStar();
 		}
 		
-		this.power = this.superBullet.recharge * 100 / 1000;
-		if (this.power > 100)
-			this.power = 100;
-		this.HUD.updatePower();
-		this.HUD.updateSubBulletTimeText();
-		this.HUD.updateStar();
 	},
 	
 	fire: function() {
@@ -85,53 +89,65 @@ Player.prototype = {
 	}
 };
 
-var PlayerHUD = function(player, x, y) {
+var PlayerHUD = function(player, posX, posY) {
 	this.player = player;
-	this.x = x;
-	this.y = y;
+	
+	// This section is for new HUD
+	this.hubBackgroundData = {x: posX, y: posY, originWidth: 356}
+	this.scale = this.hubBackgroundData.originWidth / 237;
+	this.maxHP = this.player.HP;
+	//HP bar
+	this.hpbarData = {x: this.hubBackgroundData.x + 57 * this.scale, y: this.hubBackgroundData.y + 10.5 * this.scale, originWidth: 173 * this.scale}
+	this.hpbar = game.add.sprite(this.hpbarData.x, this.hpbarData.y, 'playerHPbar');
+	this.hpbar.frame = 1;
+	this.hpbar.height = 10 * this.scale;
+	this.hpbar.width = this.hpbarData.originWidth;
+	
+	this.rechargebarData = {x: this.hubBackgroundData.x + 11 * this.scale, y: this.hubBackgroundData.y + 48.5 * this.scale, originWidth: 37 * this.scale, originHeight: -43 * this.scale}
+	this.rechargebar = game.add.sprite(this.rechargebarData.x, this.rechargebarData.y, 'playerRechargebar');
+	this.rechargebar.height = this.rechargebarData.originHeight;
+	this.rechargebar.width = this.rechargebarData.originWidth;
+	this.hubBackground = game.add.sprite(this.hubBackgroundData.x, this.hubBackgroundData.y, 'hubBG')
 
-	//player lives
-	this.playerIcon = game.add.sprite(this.x,this.y,'playerIcon');
-	this.xIcon1 = game.add.sprite(this.x + 40, this.y + 5, 'number');
-	this.xIcon1.frame = 10;
-	this.hpCount = game.add.sprite(this.x + 60, this.y + 5, 'number');
-	this.hpCount.frame = this.player.HP;
-
-	//player level
-	this.playerLevel = game.add.text(this.x, this.y + 30, 'M.Bullet Level:', { font: '16px Arial', fill: '#fff' });
-	this.levelText = game.add.text(this.x + 120, this.y + 28, '1 (0/4)', { font: '18px Arial Bold', fill: '#fff' });
-
-	//sub bullet time
-	this.subBulletTime = game.add.text(this.x, this.y + 50, 'S.Bullet Time:', { font: '16px Arial', fill: '#fff' });
-	this.timeText = game.add.text(this.x + 120, this.y + 48, '0s', { font: '18px Arial Bold', fill: '#fff' });
+	//Bullet bar
+	this.bulletbarData = {x: this.hubBackgroundData.x + 57 * this.scale, y: this.hubBackgroundData.y + 28.5 * this.scale, originWidth: 173 * this.scale}
+	this.bulletbar = game.add.sprite(this.bulletbarData.x, this.bulletbarData.y, 'playerbulletbar');
+	this.bulletbar.height = 9 * this.scale;
+	this.bulletbar.width = 0;
+	this.bulletText = game.add.text(this.bulletbarData.x + this.bulletbarData.originWidth/2, this.bulletbarData.y + 7, 'LEVEL 1', { font: '12px Arial Bold', fill: '#fff' });
+	this.bulletText.anchor.set(0.5);
 	
 	//star
-	this.star = game.add.sprite(this.x + 100, this.y - 9, 'starnum');
+	this.star = game.add.sprite(this.hubBackgroundData.x + 100, this.hubBackgroundData.y + 75, 'starnum');
 	this.star.animations.add('normal', [0]);
 	this.star.animations.add('change', [1]);
 	this.star.animations.play('normal', 5, true);
 	game.physics.enable(this.star, Phaser.Physics.ARCADE);
 	this.starNum = game.add.text(this.star.x + 40, this.star.y + 12, 'unknown', { font: '20px Arial Bold', fill: '#fff' });
 
-	//power
-	this.power = game.add.text(this.x, this.y + 70, 'Skill Recharged: ', { font: '16px Arial', fill: '#fff' });
-	this.powerText = game.add.text(this.x + 120, this.y + 70, '0%', { font: '18px Arial Bold', fill: '#fff' });
+	//subbullet time
+	this.timeText = game.add.text(this.hubBackgroundData.x + 38, this.hubBackgroundData.y + 92, '0s', { font: '18px Arial Bold', fill: '#fff' });
+	this.timeText.anchor.set(0.5);
+
+	this.hubBackground = game.add.sprite(this.hubBackgroundData.x, this.hubBackgroundData.y, 'hubBG')
 };
+	
 
 PlayerHUD.prototype = {
 
 	constructor: PlayerHUD,
 
 	updateHP: function(){
-		this.hpCount.frame = this.player.HP;
+		if (this.hpbarData.originWidth * this.player.HP / this.maxHP < 0)
+			this.hpbar.width = 0;
+		else
+			this.hpbar.width = this.hpbarData.originWidth * this.player.HP / this.maxHP;
 	},
 
 	updateLevel: function(){
 		if (this.player.level < 5) {
-			this.levelText.text = this.player.level + ' (' + this.player.numOfPowerUpCollected + '/' + Math.pow(2, this.player.level+1) + ')';
-		}
-		else {
-			this.levelText.text = '5 (MAXED)';
+			this.bulletbar.width = this.bulletbarData.originWidth * this.player.numOfPowerUpCollected.total / 60;
+			this.bulletText.text = 'LEVEL ' + this.player.level;
 		}
 	},
 
@@ -147,6 +163,9 @@ PlayerHUD.prototype = {
 	},
 	
 	updatePower: function() {
-		this.powerText.text = this.player.power + '%';
+		if (Math.abs(this.rechargebarData.originHeight) * this.player.power / 100 < 0)
+			this.rechargebar.height = 0;
+		else
+			this.rechargebar.height = -Math.abs(this.rechargebarData.originHeight) * this.player.power / 100;
 	}
 };

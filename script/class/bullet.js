@@ -24,6 +24,7 @@ Bullet.prototype = {
 
 	update: function() {
 		this.additionalUpdate();
+		game.world.bringToTop(this.bullets);
 	},
 
 	additionalUpdate: function() {
@@ -61,6 +62,7 @@ Bullet.prototype = {
 var Laser = function(spriteName, owner) {
 	Bullet.call(this, spriteName, owner);
 	this.level = 1;
+	this.sound = game.add.audio('laserFire');
 };
 
 Laser.prototype = Object.create(Bullet.prototype);
@@ -174,6 +176,7 @@ Laser.prototype.fire = function() {
 	 //  To avoid them being allowed to fire too fast we set a time limit
 	if (game.time.now > this.bulletTime)
 	{
+		this.sound.play();
 		if (this.level == 1) {
 			this.fireOne();
 		} else if (this.level == 2) {
@@ -253,8 +256,9 @@ var SuperBullet = function(spriteName, owner) {
 	this.velocity = 800;
 	this.timing = 0;
 	this.isFinished = true;
-	this.isActive = true;
+	this.isActive = false;
 	this.recharge = 0;
+	this.sound = game.add.audio('skill');
 };
 
 SuperBullet.prototype = Object.create(Bullet.prototype);
@@ -272,10 +276,10 @@ SuperBullet.prototype.fireAround = function(angle) {
 	}
 }
 
-SuperBullet.prototype.fire = function(number) {
-	 //  To avoid them being allowed to fire too fast we set a time limit
+SuperBullet.prototype.fire = function(number) {	
 	this.maxAngle = number * 360;
 	if (this.isActive) { 
+		this.sound.play();
 		this.isFinished = false;
 		this.isActive = false;
 		this.recharge = 0;
@@ -350,6 +354,118 @@ SprayBullet.prototype.additionalUpdate = function() {
 };
 
 /**
+* Bullet of boss2. It inheritances from Bullet class
+* @constructor
+* @param {string} spriteName - references to name of bullet image file was loaded in load.js
+* @param {owner} owner - references to currently owner
+* @param {EnemyManager} enemyManager - references enemyManager instance that currently controls enemy groups
+*/
+var FadeBullet = function(spriteName, owner) {
+	Bullet.call(this, spriteName, owner);
+	this.bullets.setAll('anchor.y', 0.5);
+	this.bulletArrayTime = 0;
+	this.isFireIntro = true;
+	this.isFireArray = true;
+	this.isFireCircle = true;
+	this.velocity = 400;
+	this.fireCircleActive = false;
+	//this.bullets.setAll('outOfBoundsKill', false);
+};
+
+FadeBullet.prototype = Object.create(Bullet.prototype);
+
+FadeBullet.prototype.fireIntro = function() {
+	if (game.time.now > this.bulletTime)
+	{
+		var bullet = this.bullets.getFirstExists(false);
+		if (bullet) {
+			bullet.reset(this.owner.sprite.x, this.owner.sprite.y);
+			bullet.alpha = 1;
+			bullet.isTween = false;
+			bullet.body.velocity.y = 500;
+		}
+		this.bulletTime = game.time.now + 50;
+	}
+};
+FadeBullet.prototype.fireArray = function(player) {
+	this.isFireIntro = false;
+	if ((game.time.now > this.bulletTime) && this.isFireArray)
+	{
+		if (this.isFireCircle && this.fireCircleActive) {
+			this.fireAround(0, this.owner.sprite.x+100, this.owner.sprite.y);
+			this.fireAround(60, this.owner.sprite.x+100, this.owner.sprite.y);
+			this.fireAround(120, this.owner.sprite.x+100, this.owner.sprite.y);
+			this.fireAround(180, this.owner.sprite.x+100, this.owner.sprite.y);
+			this.fireAround(240, this.owner.sprite.x+100, this.owner.sprite.y);
+			this.fireAround(300, this.owner.sprite.x+100, this.owner.sprite.y);
+			this.fireAround(0, this.owner.sprite.x-100, this.owner.sprite.y);
+			this.fireAround(60, this.owner.sprite.x-100, this.owner.sprite.y);
+			this.fireAround(120, this.owner.sprite.x-100, this.owner.sprite.y);
+			this.fireAround(180, this.owner.sprite.x-100, this.owner.sprite.y);
+			this.fireAround(240, this.owner.sprite.x-100, this.owner.sprite.y);
+			this.fireAround(300, this.owner.sprite.x-100, this.owner.sprite.y);
+			this.isFireCircle = false;
+		}
+		var bullet = this.bullets.getFirstExists(false);
+		bullet.alpha = 1;
+		if (bullet) {
+			bullet.reset(this.owner.sprite.x, this.owner.sprite.y);
+			if (player) 
+				bullet.rotation = game.physics.arcade.moveToObject(bullet, player, 50, 1500);
+		}
+		this.bulletTime = game.time.now + 50;
+	}
+};
+
+FadeBullet.prototype.updateFireIntro = function() {
+	this.bullets.forEach(function(bullet) {
+		
+		if (bullet.exists && !bullet.isTween) {
+			game.add.tween(bullet).to({alpha: 0},600, Phaser.Easing.Linear.None).start();
+			bullet.isTween = true;
+		}
+		
+		if (bullet.alpha <= 0) {
+			bullet.kill();
+		}
+	});
+}
+
+FadeBullet.prototype.updateFire = function() {
+	if (game.time.now > this.bulletArrayTime) {
+		if (this.isFireArray) {
+			this.isFireArray = false;
+			this.isFireCircle = false;
+		this.bulletArrayTime = game.time.now + 1000	;
+		} else {
+			this.isFireArray = true;
+			this.isFireCircle = true;
+		this.bulletArrayTime = game.time.now + 500	;
+		}
+	}
+}
+FadeBullet.prototype.update = function() {
+	if (this.isFireIntro) {
+		this.updateFireIntro();
+	} else {
+		this.updateFire();
+	}
+	/*
+	this.bullets.forEach(function(bullet){
+		if (bullet.x > h) bullet.exists = false;
+	});
+*/
+};
+FadeBullet.prototype.fireAround = function(angle, x, y) {
+	var bullet = this.bullets.getFirstDead(false);
+	bullet.alpha = 1;
+	if (bullet) {
+		bullet.reset(x, y);
+		bullet.body.velocity.y = -Math.cos(Math.PI * angle / 180) * this.velocity;
+		bullet.body.velocity.x = Math.sin(Math.PI * angle / 180) * this.velocity;
+	}
+}
+/**
 * Enemy weapon
 * @constructor
 * @param {string} spriteName - corresponding name of image file was loaded in loadState
@@ -366,7 +482,7 @@ var EnemyBullet = function(spriteName, isChase) {
     this.bullets.setAll('anchor.y', 1);
     this.bullets.setAll('outOfBoundsKill', true);
     this.bullets.setAll('checkWorldBounds', true);
-	this.bulletTime = game.time.now + 2000;
+	this.bulletTime = game.time.now + 1000;
 	// Collsion Handler
 	this.outOfUsing = false;
 }
@@ -389,7 +505,7 @@ EnemyBullet.prototype = {
 					bullet.rotation = game.physics.arcade.moveToObject(bullet, target.sprite, 10, Math.floor(1000 + Math.random() * 1000));
 				else
 					bullet.body.velocity.y = 800;
-				this.bulletTime = game.time.now + 3000;
+				this.bulletTime = game.time.now + 1000;
 			}
 			
 		}

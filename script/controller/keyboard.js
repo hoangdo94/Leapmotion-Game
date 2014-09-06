@@ -22,5 +22,8 @@ KeyboardController.prototype = {
 		if (game.input.keyboard.isDown(Phaser.Keyboard.S)) {
 			this.player.fireSuper();
 		}
+		if (game.input.keyboard.isDown(Phaser.Keyboard.P)) {
+			pause = (pause == false ? true : false);
+		}
 	}
 };

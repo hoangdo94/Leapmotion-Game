@@ -40,11 +40,13 @@ var BoomEffects = function(loop) {
     this.effects.setAll('anchor.x', 0.5);
     this.effects.setAll('anchor.y', 0.5);
     this.effects.callAll('animations.add', 'animations', 'boom',[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 20, true);
+    this.sound = game.add.audio('explosion');
 
     this.play = function(x, y) {
         var boom = this.effects.getFirstExists(false);
 		// reset loopCount
         if (boom) {
+        	this.sound.play();
             boom.reset(x, y);
 			boom.animations.currentAnim.restart();
         }
@@ -150,6 +152,33 @@ var StarEffects = function(player) {
 	}
 }
 
+var HurtViewEffects = function(loop) {
+    this.loop = loop;
+    this.effects = game.add.group();
+    this.effects.createMultiple(60, 'hurtview', false);
+    this.effects.setAll('width', w);
+    this.effects.setAll('height', h);
+    this.effects.callAll('animations.add', 'animations', 'show',[0], 5, true);
+
+    this.play = function() {
+        var hurtview = this.effects.getFirstExists(false);
+		// reset loopCount
+        if (hurtview) {
+            hurtview.reset(0, 0);
+			hurtview.animations.currentAnim.restart();
+        }
+    }
+    
+    this.update = function() {
+       	this.effects.forEach(function(hurtview){
+			if(hurtview.animations.currentAnim.loopCount == loop){
+				hurtview.kill();
+			}
+    	});
+        
+	}	
+}
+
 /**
 * Effects occur when player hit powerup
 * @constructor
@@ -163,6 +192,7 @@ var PowerUpEffects = function(type) {
     this.effects.createMultiple(30, (this.type == 'main')?'mainPowerup':'subPowerup');
     this.effects.setAll('anchor.x', 0.5);
     this.effects.setAll('anchor.y', 0.5);
+
     
     this.play = function(x, y) {
         var powerUp = this.effects.getFirstExists(false);
@@ -187,10 +217,11 @@ var PowerUpEffects = function(type) {
     this.playerHitPowerUp = function(player, powerUp) {
         powerUp.kill();
         if (this.type == 'main') {
-            player.owner.numOfPowerUpCollected++;
-            if (player.owner.numOfPowerUpCollected == Math.pow(2, player.owner.level+1)){
+            player.owner.numOfPowerUpCollected.temp++;
+            player.owner.numOfPowerUpCollected.total++;
+            if (player.owner.numOfPowerUpCollected.temp == Math.pow(2, player.owner.level+1)){
                 player.owner.mainBulletPowerUp();
-                player.owner.numOfPowerUpCollected = 0;
+                player.owner.numOfPowerUpCollected.temp = 0;
             }
             player.owner.HUD.updateLevel();
         }
@@ -224,7 +255,7 @@ var BackgroundControl = function() {
 	this.planet3Flag = true;
 	
 	this.playerOriginPos = {};
-	this.update = function(player) {
+	this.update = function() {
 		if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
 			this.bg.tilePosition.x += 0.3;
 			this.planet1.body.velocity.x = 23;
@@ -281,24 +312,16 @@ var BackgroundControl = function() {
 /**
 * Handle Collision
 * @constructor
+* @param player - current game player, instance of Player
+* @param enemyManager - current instance of EnemyManager
 */
 var CollisionManager = function(player, enemyManager) {
     this.player = player;
     this.enemyManager = enemyManager;
     this.boomEffect = new BoomEffects(1);
-    
-    this.playerEnemyCollision = function(player, enemy) {
-        
-    }
-    
-    this.playerEnemyBulletCollision = function(player, bullet) {
-        bullet.kill();
-    }
-    
-    this.playerBulletEnemyCollision = function(bullet, enemy) {
-        bullet.kill();
-        enemy.owner.HP--;
-    }
+	this.bossBoomEffect = new BossBoomEffects(1);
+	this.hurtVewEffect = new HurtViewEffects(1);
+	this.hitsound = game.add.audio('hitsound');
     
     this.update = function() {
         if (this.player && this.enemyManager) {
@@ -310,32 +333,118 @@ var CollisionManager = function(player, enemyManager) {
         }
         
         this.boomEffect.update();
+		this.bossBoomEffect.update();
+		this.hurtVewEffect.update();
     }
     
     this.updateOperating = function(enemy, player) {
         game.physics.arcade.overlap(player.sprite, enemy.owner.bullet.bullets, this.bulletHitPlayer, null, this);
     }
     
+    this.collisionSprite = function(sprite1, sprite2) {
+		return game.physics.arcade.overlap(sprite1, sprite2);
+	}
+    
     this.bulletHitEnemy = function(bullet, enemy) {
-        //  When a bullet hits an enemy we kill them both (When they appear on the screen)
-        if (enemy.y > 0) {
-            if (enemy.owner.HP <= 0) {
-                enemy.exists = false;
-                this.boomEffect.play(enemy.x, enemy.y);
-            }
-            bullet.kill();
-            enemy.owner.HP--;
-            enemy.animations.play('injured', 20, true);
-        }
+		if (bullet.overlap(enemy.owner.collisionSprite)) {
+			if (enemy.owner.isBoss == false) {
+				if (enemy.y > 0) {
+					if (enemy.owner.HP <= 0) {
+						enemy.exists = false;
+						this.boomEffect.play(enemy.x, enemy.y);
+					}
+					bullet.kill();
+					enemy.owner.HP--;
+					enemy.animations.play('injured', 20, true);
+				}	
+        	} else if (enemy.owner.isBoss == true){
+				if (enemy.y > 0) {
+					if (enemy.owner.HP <= 0) {
+						enemy.exists = false;
+						this.bossBoomEffect.play(enemy.x, enemy.y);
+					}
+					bullet.kill();
+					enemy.owner.HP--;
+					enemy.animations.play('injured', 20, true);
+				}
+			}
+			this.hitsound.play();
+		}
     }
     
     this.bulletHitPlayer = function(player, bullet) {
         bullet.kill();
         player.animations.play('injured', 20, true);
+		this.hurtVewEffect.play();
         player.owner.HP--;
         player.owner.HUD.updateHP();
         if (player.owner.HP == 0) {
-            
+        	status = 0; //lose
+        	score = player.owner.starNum;
+        	game.time.events.add(1000, function(){
+        		gameMusic.stop();
+        		game.state.start('end');
+        	});
+        	
         }
     }
+}
+
+var BossBoomEffects = function(loop) {
+    this.loop = loop;
+    this.effects = game.add.group();
+    this.effects.createMultiple(60, 'explose', false);
+    this.effects.setAll('anchor.x', 0.5);
+    this.effects.setAll('anchor.y', 0.5);
+    this.effects.callAll('animations.add', 'animations', 'boom',[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 20, true);
+	this.timing = 0;
+	this.boomNo = 0;
+	this.finished = true;
+	this.x;
+	this.y;
+	this.sound = game.add.audio('explosion');
+    this.play = function(x, y) {
+		this.x = x;
+		this.y = y;
+		this.boomNo = 0;
+		this.finished = false;
+	}
+	
+    this.playBoom = function(x, y) {
+        if (this.timing < game.time.now) {
+			var boom = this.effects.getFirstExists(false);
+			// reset loopCount
+			if (boom) {
+				boom.reset(x + this.getRandomPos(), y + this.getRandomPos());
+				boom.animations.currentAnim.restart();
+				this.sound.play();
+			}
+			this.timing = game.time.now + 30;
+			this.boomNo += 1;
+		}
+        
+    }
+    
+    this.update = function() {
+       	this.effects.forEach(function(boom){
+			if(boom.animations.currentAnim.loopCount == loop){
+				boom.kill();
+			}
+    	});
+        
+        if (!this.finished) {
+			this.playBoom(this.x, this.y);
+		}
+		
+		if (this.boomNo >= 50) {
+			this.finished = true;
+		}
+	}
+	
+	this.getRandomPos = function() {
+		var n = Math.floor(Math.random() * 3);
+		var pos = Math.floor(Math.pow(1, n) * Math.random() * 200);
+		return pos;
+		
+	}
 }

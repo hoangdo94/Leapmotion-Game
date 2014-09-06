@@ -1,9 +1,15 @@
 /**
 * Enemy of the game
 * @constructor
-* @param
+* @param spriteName - name of sprite of enemy
+* @param x - x coordnates at first loading
+* @param y - y coordinates at first loading
+* @param hp - hp of enemy
+* @param bulletSprite - name of spirte of corresponding enemy bullet
+* @param isChase - define the ability of chasing to the player of enemy bullet
+* @param path - define the moving path of enemy
 */
-var Enemy = function(spriteName, x, y, hp, bulletSprite, isChase, path) {
+var Enemy = function(spriteName, x, y, hp, bulletSprite, isChase, direction, path) {
 	this.HP = hp;
 	//add sprite
 	this.sprite = game.add.sprite(x, y, spriteName);
@@ -14,6 +20,10 @@ var Enemy = function(spriteName, x, y, hp, bulletSprite, isChase, path) {
 	this.sprite.animations.add('injured', [1]);
 	this.sprite.animations.play('fly', 5, true);
 	
+	this.collisionSprite = this.sprite;
+	this.collisionSprite.owner = this;
+	this.sprite.owner = this;
+	
 	this.sprite.scale.x = this.sprite.scale.y = 0.8;
 	this.sprite.owner = this;
 	//bullet
@@ -23,6 +33,7 @@ var Enemy = function(spriteName, x, y, hp, bulletSprite, isChase, path) {
 	// Path
 	this.path = path;
 	this.pathNeededToUpdate = true;
+	this.direction = direction;
 	this.time = 0;
 	this.isBoss = false;
 };
@@ -44,11 +55,16 @@ Enemy.prototype = {
 
 //==================================================================================================================================================================
 
-var Boss = function(spriteName, x, y, hp) {
+var BossStage1 = function(x, y, hp) {
 	this.HP = hp;
-	this.sprite = game.add.sprite(x, y, spriteName);
+	this.sprite = game.add.sprite(x, y, 'boss1');
 	game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
-	this.sprite.anchor.set(0.5);				
+	this.sprite.body.setSize(this.sprite.width/Math.sqrt(2), this.sprite.height/Math.sqrt(2), 0, 0);
+	this.sprite.anchor.set(0.5);
+	this.sprite.animations.add('fly', [0]);
+	this.sprite.animations.add('injured', [1]);
+	this.sprite.animations.play('fly', 5, true);
+	this.sprite.exists = false;
 	this.movePoints = [	{x: w/2, y: h/10},
 						{x: w/2+w/6, y: h/10+h/8-50}, 
 						{x: 5*w/6, y: h/10+h/4},
@@ -61,31 +77,71 @@ var Boss = function(spriteName, x, y, hp) {
 	
 	this.currentPoint = 0;
 
+
+	this.originX = x;
+	this.originY = y;
+	
+	this.introDone = false;
+	this.tweenBegin = false;
+
+	this.openSprite = game.add.sprite(x, y, 'boss1');
+	this.openSprite.anchor.set(0.5);
+	this.openSprite.scale.x = 0.1;
+	this.openSprite.scale.y = 0.1;
+	game.add.tween(this.openSprite.scale).to({x: 1, y: 1}, 2000, Phaser.Easing.Linear.None).start();
+	
+	this.bossHeartSprite = game.add.sprite(x, y, 'bossheart');
+	this.bossHeartSprite.animations.add('fly', [0, 1]);
+	this.bossHeartSprite.animations.play('fly', 10, true);
+	this.bossHeartSprite.anchor.set(0.5);
+	
+	this.collisionSprite = this.bossHeartSprite;
+	this.collisionSprite.owner = this;
 	this.sprite.owner = this;
+	
 	this.bullet = new SprayBullet('spraybullet', this);
 	this.isBoss = true;
 	this.time = 0;
 
 	//Hp Bar
 	this.maxHP = this.HP;
-	this.hpbarEmpty = game.add.sprite(w/2 - w/6, h/20, 'hpbar');
+	this.hpbarEmpty = game.add.sprite(20, h/2 - h/4, 'hpbar');
 	this.hpbarEmpty.frame = 1;
-	this.hpbarFull = game.add.sprite(w/2 - w/6, h/20, 'hpbar');
-	this.hpbarEmpty.width = this.hpbarFull.width = w/3;
-	this.hpbarEmpty.height = this.hpbarFull.height = this.hpbarEmpty.width/20;
+	this.hpbarFull = game.add.sprite(20, h/2 + h/4, 'hpbar');
+	this.hpbarFull.anchor.set(0,1);
+	this.hpbarEmpty.height = this.hpbarFull.height = h/2;
+	this.hpbarEmpty.width = this.hpbarFull.width = this.hpbarEmpty.height/20;	
 };
 
-Boss.prototype = {
+BossStage1.prototype = {
 
-	constructor: Boss,
+	constructor: BossStage1,
 
 	update: function(){
 		this.sprite.angle += 1;
+		// update animations
+		if (this.sprite.animations.currentAnim.loopCount > 0 && this.sprite.animations.currentAnim.name == 'injured') {
+			this.sprite.animations.play('fly', 5, true);
+		}
 		
+		if (this.openSprite.scale.x == 1) {
+			this.introDone = true;
+		}
+		
+		if (this.introDone && !this.tweenBegin) {
+			this.sprite.reset(this.originX, this.originY);
+			this.tweenBegin = true;
+			this.openSprite.destroy();
+		}
+		
+		this.bossHeartSprite.x = this.sprite.x;
+		this.bossHeartSprite.y = this.sprite.y;
 		if (Math.abs(this.sprite.x - this.movePoints[this.currentPoint].x) < 5 && Math.abs(this.sprite.y == this.movePoints[this.currentPoint].y)<5) {
-				this.currentPoint++;
-				if (this.currentPoint >= this.movePoints.length) this.currentPoint = 0;
+			this.currentPoint++;
+			if (this.currentPoint >= this.movePoints.length) this.currentPoint = 0;
+			if (this.introDone) {
 				this.bullet.fire();
+			}
 		}
 
 		game.physics.arcade.moveToXY(this.sprite, this.movePoints[this.currentPoint].x, this.movePoints[this.currentPoint].y, 200);
@@ -94,12 +150,108 @@ Boss.prototype = {
 	},
 
 	updateHpBar: function(){
-		this.hpbarFull.width = this.hpbarEmpty.width*this.HP/this.maxHP;
+		this.hpbarFull.height = this.hpbarEmpty.height*this.HP/this.maxHP;
 		if (this.HP <= 0){
-			this.hpbarEmpty.kill();
-			this.hpbarFull.kill();
+			this.hpbarEmpty.destroy();
+			this.hpbarFull.destroy();
+			this.bossHeartSprite.destroy();
 		}
 	}
+
+};
+
+var BossStage2 = function(x, y, hp, player) {
+	this.player = player;
+	this.HP = hp;
+	this.dangerRange = this.HP / 3;
+	this.isIntro = true;
+	this.sprite = game.add.sprite(100, 100, 'boss2');
+	game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
+	this.sprite.anchor.set(0.5);
+	this.sprite.animations.add('fly',[0]);
+	this.sprite.animations.add('injured',[1]);
+	this.sprite.animations.add('dangered',[2]);
+	this.sprite.animations.play('fly', 5, true);
+	this.sprite.body.setSize(this.sprite.width, this.sprite.height/2, 0, -this.sprite.height/4);
+
+	tween1 = game.add.tween(this.sprite).to({ x: w + this.sprite.body.halfWidth }, 1000, Phaser.Easing.Linear.None).start();
+	this.isIntro = true;
+	
+	this.sprite.reset(w + this.sprite.body.halfWidth, this.sprite.body.halfHeight);
+	tween2 = game.add.tween(this.sprite).to({ x: -this.sprite.body.halfWidth }, 1400, Phaser.Easing.Linear.None).delay(3000).start();
+	
+	this.sprite.reset(-this.sprite.body.halfWidth, this.sprite.body.halfHeight);
+	tween3 = game.add.tween(this.sprite).to({ x: w + this.sprite.body.halfWidth }, 1800, Phaser.Easing.Linear.None).delay(6000).start();
+	
+	this.sprite.reset(w + this.sprite.body.halfWidth, this.sprite.body.halfHeight);
+	tween4 = game.add.tween(this.sprite).to({ x: w / 2 }, 2000, Phaser.Easing.Linear.None).delay(9000).start();
+	tween4.onComplete.add(function(){
+		this.sprite.reset(w /2, this.sprite.body.halfHeight);
+		this.isIntro = false;
+		}, this);
+
+	this.collisionSprite = this.sprite;
+	this.collisionSprite.owner = this;
+	this.sprite.owner = this;
+	
+	this.isBoss = true;
+	this.time = 0;
+
+	//Hp Bar
+	this.maxHP = this.HP;
+	this.hpbarEmpty = game.add.sprite(20, h/2 - h/4, 'hpbar');
+	this.hpbarEmpty.frame = 1;
+	this.hpbarFull = game.add.sprite(20, h/2 + h/4, 'hpbar');
+	this.hpbarFull.anchor.set(0,1);
+	this.hpbarEmpty.height = this.hpbarFull.height = h/2;
+	this.hpbarEmpty.width = this.hpbarFull.width = this.hpbarEmpty.height/20;
+
+
+	this.bullet = new FadeBullet('spraybullet', this);
+	
+	
+};
+
+BossStage2.prototype = {
+
+	constructor: BossStage2,
+
+	update: function(){
+		if (this.sprite.exists) {
+		
+		if (this.sprite.animations.currentAnim.loopCount > 0 && this.sprite.animations.currentAnim.name == 'injured') {
+			if (this.HP > this.dangerRange){
+				this.sprite.animations.play('fly', 5, true);
+			} else if (this.HP <= this.dangerRange) {
+				this.sprite.animations.play('dangered', 5, true);
+			}
+		}
+		
+		if (this.isIntro) {
+			this.bullet.fireIntro();
+		} else {
+			if (this.player)
+				this.bullet.fireArray(this.player.sprite);
+				if (Math.abs(this.player.sprite.x - this.sprite.x) > 30)
+					game.physics.arcade.moveToObject(this.sprite, {x: this.player.sprite.x, y: this.sprite.body.halfHeight}, 50); 
+		}
+		if (this.HP <= this.dangerRange) {
+			this.bullet.fireCircleActive = true;
+		}
+		this.updateHpBar();
+		this.bullet.update(this.player.spirte);
+		}
+	},
+
+	updateHpBar: function(){
+		this.hpbarFull.height = this.hpbarEmpty.height*this.HP/this.maxHP;
+		if (this.HP <= 0){
+			this.hpbarEmpty.destroy();
+			this.hpbarFull.destroy();
+		}
+	}
+	
+	
 
 };
 
@@ -120,7 +272,8 @@ var EnemyManager = function(owner) {
 	this.CIRCLEPATH = 1;
 	this.BARPATH = 2;
 	this.RANDOMPATH = 3;
-	
+	this.CROSSPATH = 4;
+	this.CHAINEDPATH = 5;
 	this.isOutOfEnemies = true;
 };
 
@@ -158,7 +311,11 @@ EnemyManager.prototype = {
 				this.movePathManager.barPath(enemy);
 			} else if (enemy.owner.path == this.RANDOMPATH && enemy.owner.pathNeededToUpdate) {
 				this.movePathManager.randomPath(enemy);
-			} 
+			} else if (enemy.owner.path == this.CROSSPATH) {
+				this.movePathManager.crossPath(enemy);
+			} else if (enemy.owner.path == this.CHAINEDPATH) {
+				this.movePathManager.chainedPath(enemy);
+			}
 		}
 	},
 		
@@ -181,13 +338,17 @@ EnemyManager.prototype = {
 		}
 	},
 
-	addBoss: function(spriteName, x, y, hp) {
-		var boss = new Boss(spriteName, x, y, hp);
+	addBoss: function(x, y, hp, type) {
+		if (type == 1) {
+			var boss = new BossStage1(x, y, hp, this.owner);
+		} else if (type == 2) {
+			boss = new BossStage2(x, y, hp, this.owner);
+		}
 		this.sprites.add(boss.sprite);
 	},
 
-	addEnemy: function(enemyNumber, x, y, bulletSprite, isChase, path) {
-		var enemy = new Enemy('enemy' + enemyNumber, x, y, enemyNumber, bulletSprite, isChase, path);
+	addEnemy: function(enemyNumber, x, y, bulletSprite, isChase, direction, path) {
+		var enemy = new Enemy('enemy' + enemyNumber, x, y, enemyNumber, bulletSprite, isChase, direction, path);
 		this.sprites.add(enemy.sprite);
 	},
 	
@@ -250,7 +411,10 @@ var MovePathManager = function() {
 		if (enemy) {
 			if (enemy.y < (h / 5)) {
     			enemy.body.velocity.y = 200;
-    			enemy.body.velocity.x = 20;
+    			if (enemy.owner.direction === 1) 
+    				enemy.body.velocity.x = 20;
+    			else if (enemy.owner.direction === 2)
+    				enemy.body.velocity.x = -20;
     		} else {
     			enemy.body.velocity.y = 100;
     		}
@@ -277,5 +441,40 @@ var MovePathManager = function() {
     	} else {
 			enemy.body.velocity.y = 100;
     	}
+	}
+
+	this.crossPath = function(enemy) {
+		enemy.body.velocity.y = 200;
+		if (enemy.owner.direction === 1) {
+			enemy.body.velocity.x = 250;
+			enemy.angle = -45;
+		}
+		else {
+			enemy.body.velocity.x = -250;
+			enemy.angle = 45;
+		}		
+	}
+
+	this.chainedPath = function(enemy) {
+		var vx = 150; 
+		if (enemy.y <= 200) {
+			if (enemy.owner.direction == 1)
+				enemy.body.velocity.x = vx;
+			else
+				enemy.body.velocity.x = -vx;
+			enemy.body.velocity.y = 100;
+		}
+		else if (enemy.y > 200 && enemy.y <= 400) {
+			if (enemy.owner.direction == 1)
+				enemy.body.velocity.x = -vx;
+			else
+				enemy.body.velocity.x = vx;
+		}
+		else if (enemy.y > 400) {
+			if (enemy.owner.direction == 1)
+				enemy.body.velocity.x = vx;
+			else
+				enemy.body.velocity.x = -vx;
+		}
 	}
 }
