@@ -68,6 +68,7 @@ var loadState = {
 		game.load.audio('gameMusic', 'asset/audio/gameMusic.mp3');
 		game.load.audio('laserFire', 'asset/audio/laserFire.wav');
 		game.load.audio('skill', 'asset/audio/skill.MP3');
+		game.load.audio('hitsound', 'asset/audio/hit.wav');
 
 	},
 	create: function () {
