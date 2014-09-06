@@ -192,6 +192,7 @@ var PowerUpEffects = function(type) {
     this.effects.createMultiple(30, (this.type == 'main')?'mainPowerup':'subPowerup');
     this.effects.setAll('anchor.x', 0.5);
     this.effects.setAll('anchor.y', 0.5);
+
     
     this.play = function(x, y) {
         var powerUp = this.effects.getFirstExists(false);
@@ -320,6 +321,7 @@ var CollisionManager = function(player, enemyManager) {
     this.boomEffect = new BoomEffects(1);
 	this.bossBoomEffect = new BossBoomEffects(1);
 	this.hurtVewEffect = new HurtViewEffects(1);
+	this.hitsound = game.add.audio('hitsound');
     
     this.update = function() {
         if (this.player && this.enemyManager) {
@@ -345,28 +347,28 @@ var CollisionManager = function(player, enemyManager) {
     
     this.bulletHitEnemy = function(bullet, enemy) {
 		if (bullet.overlap(enemy.owner.collisionSprite)) {
-		if (enemy.owner.isBoss == false) {
-			//  When a bullet hits an enemy we kill them both (When they appear on the screen)
-			if (enemy.y > 0) {
-				if (enemy.owner.HP <= 0) {
-					enemy.exists = false;
-					this.boomEffect.play(enemy.x, enemy.y);
+			if (enemy.owner.isBoss == false) {
+				if (enemy.y > 0) {
+					if (enemy.owner.HP <= 0) {
+						enemy.exists = false;
+						this.boomEffect.play(enemy.x, enemy.y);
+					}
+					bullet.kill();
+					enemy.owner.HP--;
+					enemy.animations.play('injured', 20, true);
+				}	
+        	} else if (enemy.owner.isBoss == true){
+				if (enemy.y > 0) {
+					if (enemy.owner.HP <= 0) {
+						enemy.exists = false;
+						this.bossBoomEffect.play(enemy.x, enemy.y);
+					}
+					bullet.kill();
+					enemy.owner.HP--;
+					enemy.animations.play('injured', 20, true);
 				}
-				bullet.kill();
-				enemy.owner.HP--;
-				enemy.animations.play('injured', 20, true);
-			}	
-        } else if (enemy.owner.isBoss == true){
-			if (enemy.y > 0) {
-				if (enemy.owner.HP <= 0) {
-					enemy.exists = false;
-					this.bossBoomEffect.play(enemy.x, enemy.y);
-				}
-				bullet.kill();
-				enemy.owner.HP--;
-				enemy.animations.play('injured', 20, true);
 			}
-		}
+			this.hitsound.play();
 		}
     }
     
@@ -400,6 +402,7 @@ var BossBoomEffects = function(loop) {
 	this.finished = true;
 	this.x;
 	this.y;
+	this.sound = game.add.audio('explosion');
     this.play = function(x, y) {
 		this.x = x;
 		this.y = y;
@@ -414,6 +417,7 @@ var BossBoomEffects = function(loop) {
 			if (boom) {
 				boom.reset(x + this.getRandomPos(), y + this.getRandomPos());
 				boom.animations.currentAnim.restart();
+				this.sound.play();
 			}
 			this.timing = game.time.now + 30;
 			this.boomNo += 1;
