@@ -224,7 +224,7 @@ var BackgroundControl = function() {
 	this.planet3Flag = true;
 	
 	this.playerOriginPos = {};
-	this.update = function(player) {
+	this.update = function() {
 		if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
 			this.bg.tilePosition.x += 0.3;
 			this.planet1.body.velocity.x = 23;
@@ -349,7 +349,12 @@ var CollisionManager = function(player, enemyManager) {
         player.owner.HP--;
         player.owner.HUD.updateHP();
         if (player.owner.HP == 0) {
-
+        	status = 0; //lose
+        	score = player.owner.starNum;
+        	game.time.events.add(1000, function(){
+        		game.state.start('end');
+        	});
+        	
         }
     }
 }

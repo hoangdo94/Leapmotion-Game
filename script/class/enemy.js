@@ -105,11 +105,12 @@ var BossStage1 = function(spriteName, x, y, hp) {
 
 	//Hp Bar
 	this.maxHP = this.HP;
-	this.hpbarEmpty = game.add.sprite(w/2 - w/6, h/20, 'hpbar');
+	this.hpbarEmpty = game.add.sprite(20, h/2 - h/4, 'hpbar');
 	this.hpbarEmpty.frame = 1;
-	this.hpbarFull = game.add.sprite(w/2 - w/6, h/20, 'hpbar');
-	this.hpbarEmpty.width = this.hpbarFull.width = w/3;
-	this.hpbarEmpty.height = this.hpbarFull.height = this.hpbarEmpty.width/20;	
+	this.hpbarFull = game.add.sprite(20, h/2 + h/4, 'hpbar');
+	this.hpbarFull.anchor.set(0,1);
+	this.hpbarEmpty.height = this.hpbarFull.height = h/2;
+	this.hpbarEmpty.width = this.hpbarFull.width = this.hpbarEmpty.height/20;	
 };
 
 BossStage1.prototype = {
@@ -150,7 +151,7 @@ BossStage1.prototype = {
 	},
 
 	updateHpBar: function(){
-		this.hpbarFull.width = this.hpbarEmpty.width*this.HP/this.maxHP;
+		this.hpbarFull.height = this.hpbarEmpty.height*this.HP/this.maxHP;
 		if (this.HP <= 0){
 			this.hpbarEmpty.destroy();
 			this.hpbarFull.destroy();
@@ -200,11 +201,14 @@ var BossStage2 = function(spriteName, x, y, hp, player) {
 
 	//Hp Bar
 	this.maxHP = this.HP;
-	this.hpbarEmpty = game.add.sprite(w/2 - w/6, h/20, 'hpbar');
+	this.hpbarEmpty = game.add.sprite(20, h/2 - h/4, 'hpbar');
 	this.hpbarEmpty.frame = 1;
-	this.hpbarFull = game.add.sprite(w/2 - w/6, h/20, 'hpbar');
-	this.hpbarEmpty.width = this.hpbarFull.width = w/3;
-	this.hpbarEmpty.height = this.hpbarFull.height = this.hpbarEmpty.width/20;
+	this.hpbarFull = game.add.sprite(20, h/2 + h/4, 'hpbar');
+	this.hpbarFull.anchor.set(0,1);
+	this.hpbarEmpty.height = this.hpbarFull.height = h/2;
+	this.hpbarEmpty.width = this.hpbarFull.width = this.hpbarEmpty.height/20;
+
+
 	this.bullet = new FadeBullet('spraybullet', this);
 	
 	
@@ -244,7 +248,7 @@ BossStage2.prototype = {
 	},
 
 	updateHpBar: function(){
-		this.hpbarFull.width = this.hpbarEmpty.width*this.HP/this.maxHP;
+		this.hpbarFull.height = this.hpbarEmpty.height*this.HP/this.maxHP;
 		if (this.HP <= 0){
 			this.hpbarEmpty.destroy();
 			this.hpbarFull.destroy();

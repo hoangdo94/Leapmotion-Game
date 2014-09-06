@@ -9,8 +9,8 @@ var playState = {
 		this.bg = new BackgroundControl();
 		
 		//add player
-		var startPosition = {x:w / 2, y: h - 100};
-		this.player = new Player('player', startPosition);
+		this.playerPosition = {x:w / 2, y: h - 100};
+		this.player = new Player('player', this.playerPosition);
 
 		this.bg.getOriginalPos(this.player);
 
@@ -31,7 +31,7 @@ var playState = {
 	
 	update: function() {
 		//update background
-		this.bg.update(this.player);
+		this.bg.update();
 
 		//update player
 		this.player.update();

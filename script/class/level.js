@@ -31,10 +31,14 @@ LevelManager.prototype = {
 			// }
 
 			//test
-			if (this.currentWave == 8) {
-				this.wave_8();
+			// if (this.currentWave == 8) {
+			// 	this.wave_8();
 
-			}
+			// }
+			// if (this.currentWave == 9) {
+			// 	this.wave_9();
+
+			// }
 			// switch (this.currentWave) {
 			// 	case 1:
 			// 		this.wave_1();
@@ -70,19 +74,25 @@ LevelManager.prototype = {
 		// 			this.addEnemy((Math.floor(this.currentWave/2) + 1)%5 + 1, this.enemyManager.getRandromPathType(), this.currentWave%5 + 5);
 		// 		}
 		// 		else if (this.currentWave==1){
-		// 			this.enemyManager.addBoss('boss2', w/2, h/10, 500, 2);
+					this.enemyManager.addBoss('boss2', w/2, h/10, 500, 2);
 		// 		}
-		// 		this.requested = false;
+				// this.requested = false;
 		// 	}, this);
 		// }
 		}
-		if (this.currentWave == 8) {
-			this.line1.fromSprite(this.enemyManager.sprites.getAt(0), this.enemyManager.sprites.getAt(3), false);
-			this.line2.fromSprite(this.enemyManager.sprites.getAt(1), this.enemyManager.sprites.getAt(2), false);
-			this.line3.fromSprite(this.enemyManager.sprites.getAt(1), this.enemyManager.sprites.getAt(4), false);
-			this.line4.fromSprite(this.enemyManager.sprites.getAt(3), this.enemyManager.sprites.getAt(2), false);
-			this.line5.fromSprite(this.enemyManager.sprites.getAt(4), this.enemyManager.sprites.getAt(0), false);
-		}
+		// if (this.currentWave == 8 || this.currentWave == 9) {
+		// 	this.line1.fromSprite(this.enemyManager.sprites.getAt(0), this.enemyManager.sprites.getAt(3), false);
+		// 	this.line2.fromSprite(this.enemyManager.sprites.getAt(1), this.enemyManager.sprites.getAt(2), false);
+		// 	this.line3.fromSprite(this.enemyManager.sprites.getAt(1), this.enemyManager.sprites.getAt(4), false);
+		// 	this.line4.fromSprite(this.enemyManager.sprites.getAt(3), this.enemyManager.sprites.getAt(2), false);
+		// 	this.line5.fromSprite(this.enemyManager.sprites.getAt(4), this.enemyManager.sprites.getAt(0), false);
+		// 	if (this.currentWave == 9 && this.enemyManager.sprites.getAt(0).y == 600) {
+		// 		for (var i = 0; i < 5; i++) {
+		// 			this.enemyManager.sprites.getAt(i).body.velocity.x = 0;
+		// 			this.enemyManager.sprites.getAt(i).body.velocity.y = 0;
+		// 		}
+		// 	}
+		// }
 	},
 
 	loadLevel: function(level) {
@@ -180,11 +190,22 @@ LevelManager.prototype = {
 	},
 
 	wave_8: function() {
-		this.enemyManager.addEnemy(1, w/2, 0, 'enemylaserunchase', false, 3, this.enemyManager.STRAIGHTPATH);
-		this.enemyManager.addEnemy(1, w/2 - 150, -200, 'enemylaserunchase', false, 3, this.enemyManager.STRAIGHTPATH);
-		this.enemyManager.addEnemy(1, w/2 + 150, -200, 'enemylaserunchase', false, 3, this.enemyManager.STRAIGHTPATH);
-		this.enemyManager.addEnemy(1, w/2 - 75, -460, 'enemylaserunchase', false, 3, this.enemyManager.STRAIGHTPATH);
-		this.enemyManager.addEnemy(1, w/2 + 75, -460, 'enemylaserunchase', false, 3, this.enemyManager.STRAIGHTPATH);
+		var type = (Math.floor(this.currentWave/2) + 1)%5 + 1;
+		if (type < 3) {
+			this.enemyManager.addEnemy(type, w/2, 0, 'enemylaserunchase', false, 3, this.enemyManager.STRAIGHTPATH);
+			this.enemyManager.addEnemy(type, w/2 - 150, -200, 'enemylaserunchase', false, 3, this.enemyManager.STRAIGHTPATH);
+			this.enemyManager.addEnemy(type, w/2 + 150, -200, 'enemylaserunchase', false, 3, this.enemyManager.STRAIGHTPATH);
+			this.enemyManager.addEnemy(type, w/2 - 75, -460, 'enemylaserunchase', false, 3, this.enemyManager.STRAIGHTPATH);
+			this.enemyManager.addEnemy(type, w/2 + 75, -460, 'enemylaserunchase', false, 3, this.enemyManager.STRAIGHTPATH);
+		}
+		else {
+			this.enemyManager.addEnemy(type, w/2, 0, 'enemylaserchase', true, 3, this.enemyManager.STRAIGHTPATH);
+			this.enemyManager.addEnemy(type, w/2 - 150, -200, 'enemylaserchase', true, 3, this.enemyManager.STRAIGHTPATH);
+			this.enemyManager.addEnemy(type, w/2 + 150, -200, 'enemylaserchase', true, 3, this.enemyManager.STRAIGHTPATH);
+			this.enemyManager.addEnemy(type, w/2 - 75, -460, 'enemylaserchase', true, 3, this.enemyManager.STRAIGHTPATH);
+			this.enemyManager.addEnemy(type, w/2 + 75, -460, 'enemylaserchase', true, 3, this.enemyManager.STRAIGHTPATH);		
+		}
+
 		this.line1 = new Phaser.Line(this.enemyManager.sprites.getAt(0).x, this.enemyManager.sprites.getAt(0).y, this.enemyManager.sprites.getAt(4).x, this.enemyManager.sprites.getAt(4).y);
 		this.line2 = new Phaser.Line(this.enemyManager.sprites.getAt(1).x, this.enemyManager.sprites.getAt(1).y, this.enemyManager.sprites.getAt(2).x, this.enemyManager.sprites.getAt(2).y);
 		this.line3 = new Phaser.Line(this.enemyManager.sprites.getAt(1).x, this.enemyManager.sprites.getAt(1).y, this.enemyManager.sprites.getAt(4).x, this.enemyManager.sprites.getAt(4).y);
@@ -193,16 +214,26 @@ LevelManager.prototype = {
 	},
 
 	wave_9: function() {
+		var type = (Math.floor(this.currentWave/2) + 1)%5 + 1;
+		this.wave_8();
+		for (var i = 0; i < 5; i++) {
+			this.enemyManager.addEnemy(type, w/2, -200 * i, 'enemylaserunchase', false, 3, this.enemyManager.CIRCLEPATH);
+		}
+	},
 
+	wave_10: function() {
+		for (var i = 0; i < 5; i++) {
+			this.enemyManager.addEnemy(1, w/2, -200 * i, 'enemylaserunchase', false, 3, this.enemyManager.CIRCLEPATH);
+		}
 	},
 
 	render: function() {
-		if (this.currentWave == 8 && this.enemyManager.sprites.length == 5) {
-			game.debug.geom(this.line1);
-			game.debug.geom(this.line2);
-			game.debug.geom(this.line3);
-			game.debug.geom(this.line4);
-			game.debug.geom(this.line5);
+		if ((this.currentWave == 8 && this.enemyManager.sprites.length == 5) || (this.currentWave == 9 && this.enemyManager.sprites.length == 10)) {
+			game.debug.geom(this.line1, 'rgb(255,255,255)');
+			game.debug.geom(this.line2, 'rgb(255,255,255)');
+			game.debug.geom(this.line3, 'rgb(255,255,255)');
+			game.debug.geom(this.line4, 'rgb(255,255,255)');
+			game.debug.geom(this.line5, 'rgb(255,255,255)');
 		}
 	}
 };
