@@ -152,6 +152,33 @@ var StarEffects = function(player) {
 	}
 }
 
+var HurtViewEffects = function(loop) {
+    this.loop = loop;
+    this.effects = game.add.group();
+    this.effects.createMultiple(60, 'hurtview', false);
+    this.effects.setAll('width', w);
+    this.effects.setAll('height', h);
+    this.effects.callAll('animations.add', 'animations', 'show',[0], 5, true);
+
+    this.play = function() {
+        var hurtview = this.effects.getFirstExists(false);
+		// reset loopCount
+        if (hurtview) {
+            hurtview.reset(0, 0);
+			hurtview.animations.currentAnim.restart();
+        }
+    }
+    
+    this.update = function() {
+       	this.effects.forEach(function(hurtview){
+			if(hurtview.animations.currentAnim.loopCount == loop){
+				hurtview.kill();
+			}
+    	});
+        
+	}	
+}
+
 /**
 * Effects occur when player hit powerup
 * @constructor
@@ -291,6 +318,7 @@ var CollisionManager = function(player, enemyManager) {
     this.enemyManager = enemyManager;
     this.boomEffect = new BoomEffects(1);
 	this.bossBoomEffect = new BossBoomEffects(1);
+	this.hurtVewEffect = new HurtViewEffects(1);
     
     this.update = function() {
         if (this.player && this.enemyManager) {
@@ -303,6 +331,7 @@ var CollisionManager = function(player, enemyManager) {
         
         this.boomEffect.update();
 		this.bossBoomEffect.update();
+		this.hurtVewEffect.update();
     }
     
     this.updateOperating = function(enemy, player) {
@@ -353,6 +382,7 @@ var CollisionManager = function(player, enemyManager) {
     this.bulletHitPlayer = function(player, bullet) {
         bullet.kill();
         player.animations.play('injured', 20, true);
+		this.hurtVewEffect.play();
         player.owner.HP--;
         player.owner.HUD.updateHP();
         if (player.owner.HP == 0) {

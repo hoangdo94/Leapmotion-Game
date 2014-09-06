@@ -58,6 +58,7 @@ var loadState = {
 		game.load.spritesheet('starnum', 'asset/image/starNum.png',40, 40, 2);
 		game.load.spritesheet('boss1', 'asset/image/boss.png', 400, 400, 2);
 		game.load.spritesheet('bossheart', 'asset/image/bossheart.png', 103, 103, 2);
+		game.load.spritesheet('hurtview', 'asset/image/hurtview.png', 1024, 1024, 1);
 		
 		game.load.image('magiccircle', 'asset/image/magiccircle5.jpg');
 		game.load.spritesheet('boss2', 'asset/image/boss2new.png', 242, 254, 3);
