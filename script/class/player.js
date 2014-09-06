@@ -115,8 +115,6 @@ var PlayerHUD = function(player, posX, posY) {
 	this.bulletbar = game.add.sprite(this.bulletbarData.x, this.bulletbarData.y, 'playerbulletbar');
 	this.bulletbar.height = 9 * this.scale;
 	this.bulletbar.width = 0;
-// 	this.bulletText = game.add.text(this.bulletbarData.x + this.bulletbarData.originWidth/2, this.bulletbarData.y + 7, 'LEVEL 1', { font: '11px Arial Bold', fill: '#fff' });
-// 	this.bulletText.anchor.set(0.5);
 	
 	//star
 	this.star = game.add.sprite(this.hubBackgroundData.x + 100, this.hubBackgroundData.y + 75, 'starnum');
@@ -126,7 +124,6 @@ var PlayerHUD = function(player, posX, posY) {
 	game.physics.enable(this.star, Phaser.Physics.ARCADE);
 	this.starNum = game.add.text(this.star.x + 40, this.star.y + 12, 'unknown', { font: '20px Arial Bold', fill: '#fff' });
 
-// <<<<<<< HEAD
 	this.hubBackground = game.add.sprite(this.hubBackgroundData.x, this.hubBackgroundData.y, 'hubBG')
 
 	//text
@@ -134,7 +131,6 @@ var PlayerHUD = function(player, posX, posY) {
 	this.bulletText.anchor.set(0.5);
 	this.timeText = game.add.text(this.hubBackgroundData.x + 38, this.hubBackgroundData.y + 92, '0s', { font: '18px Arial Bold', fill: '#fff' });
 	this.timeText.anchor.set(0.5);
-	
 	
 	this.hudGroup = game.add.group();
 	this.hudGroup.add(this.hpbar);
@@ -145,19 +141,7 @@ var PlayerHUD = function(player, posX, posY) {
 	this.hudGroup.add(this.hubBackground);
 	this.hudGroup.add(this.bulletText);
 	this.hudGroup.add(this.timeText);
-	
-	/*this.hudGroup.forEach(function(sprite) {
-		game.world.bringToTop(sprite);
-	});*/
-// =======
-// 	//subbullet time
-// 	this.timeText = game.add.text(this.hubBackgroundData.x + 38, this.hubBackgroundData.y + 92, '0s', { font: '18px Arial Bold', fill: '#fff' });
-// 	this.timeText.anchor.set(0.5);
-
-// 	this.hubBackground = game.add.sprite(this.hubBackgroundData.x, this.hubBackgroundData.y, 'hubBG')
-// >>>>>>> 46a2624005ec6a9de1d5ef4df94c2f5b7b81deb3
 };
-	
 
 PlayerHUD.prototype = {
 
