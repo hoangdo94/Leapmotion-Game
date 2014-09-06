@@ -23,7 +23,7 @@ var playState = {
 		this.player.initBullet(this.enemyManager);
 		
 		//Level Manager
-		this.levelManager = new LevelManager(this.enemyManager);
+		this.levelManager = new LevelManager(this.player, this.enemyManager);
 
 		// CollisionManager
 		this.collisionManager = new CollisionManager(this.player, this.enemyManager);
