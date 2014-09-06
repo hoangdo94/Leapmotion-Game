@@ -1,4 +1,5 @@
-var LevelManager = function(enemyManager){
+var LevelManager = function(player, enemyManager){
+	this.player = player;
 	this.enemyManager = enemyManager;
 	this.level;
 	this.currentWave = 0;
@@ -96,7 +97,7 @@ LevelManager.prototype = {
 						break;
 					default:
 						status = 0; //lose
-        				score = player.owner.starNum;
+        				score = this.player.owner.starNum;
         				game.time.events.add(1000, function(){
         					gameMusic.stop();
         					game.state.start('end');
@@ -259,7 +260,7 @@ LevelManager.prototype = {
 	},
 
 	wave_10: function() {
-		this.enemyManager.addBoss('boss1', w/2, h/10, 50, 1);
+		this.enemyManager.addBoss(w/2, h/10, 50, 1);
 	},
 	
 	wave_11: function() {
@@ -385,7 +386,7 @@ LevelManager.prototype = {
 	},
 	
 	wave_21: function() {
-		this.enemyManager.addBoss('boss2', w/2, h/10, 100, 2);
+		this.enemyManager.addBoss(w/2, h/10, 100, 2);
 	},
 	
 
