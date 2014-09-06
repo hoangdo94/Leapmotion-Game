@@ -256,7 +256,7 @@ LevelManager.prototype = {
 	},
 
 	wave_10: function() {
-		this.enemyManager.addBoss(w/2, h/10, 500, 1);
+		this.enemyManager.addBoss(w/2, h/10, 200, 1);
 	},
 	
 	wave_11: function() {
@@ -382,7 +382,7 @@ LevelManager.prototype = {
 	},
 	
 	wave_21: function() {
-		this.enemyManager.addBoss(w/2, h/10, 1000, 2);
+		this.enemyManager.addBoss(w/2, h/10, 500, 2);
 	},
 	
 

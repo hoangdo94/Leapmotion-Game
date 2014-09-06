@@ -350,7 +350,7 @@ var CollisionManager = function(player, enemyManager) {
 			if (enemy.owner.isBoss == false) {
 				if (enemy.y > 0) {
 					if (enemy.owner.HP <= 0) {
-						enemy.exists = false;
+						enemy.kill();
 						this.boomEffect.play(enemy.x, enemy.y);
 					}
 					bullet.kill();
@@ -360,7 +360,7 @@ var CollisionManager = function(player, enemyManager) {
         	} else if (enemy.owner.isBoss == true){
 				if (enemy.y > 0) {
 					if (enemy.owner.HP <= 0) {
-						enemy.exists = false;
+						enemy.kill();
 						this.bossBoomEffect.play(enemy.x, enemy.y);
 					}
 					bullet.kill();
