@@ -118,6 +118,14 @@ var PlayerHUD = function(player, x, y) {
 	this.bulletbar.height = 9 * this.scale;
 	this.bulletbar.width = 0;
 	
+	//star
+	this.star = game.add.sprite(this.hubBackgroundData.x + 100, this.hubBackgroundData.y + 75, 'starnum');
+	this.star.animations.add('normal', [0]);
+	this.star.animations.add('change', [1]);
+	this.star.animations.play('normal', 5, true);
+	game.physics.enable(this.star, Phaser.Physics.ARCADE);
+	this.starNum = game.add.text(this.star.x + 40, this.star.y + 12, 'unknown', { font: '20px Arial Bold', fill: '#fff' });
+
 
 	this.hubBackground = game.add.sprite(this.hubBackgroundData.x, this.hubBackgroundData.y, 'hubBG')
 	this.bulletText = game.add.text(this.bulletbarData.x + this.bulletbarData.originWidth/2, this.bulletbarData.y + 6, 'LEVEL 1', { font: '16px Arial Bold', fill: '#fff' });
@@ -133,13 +141,7 @@ var PlayerHUD = function(player, x, y) {
 	this.subBulletTime = game.add.text(this.x, this.y + 50, 'S.Bullet Time:', { font: '16px Arial', fill: '#fff' });
 	this.timeText = game.add.text(this.x + 120, this.y + 48, '0s', { font: '18px Arial Bold', fill: '#fff' });
 	
-	//star
-	this.star = game.add.sprite(this.x + 100, this.y - 9, 'starnum');
-	this.star.animations.add('normal', [0]);
-	this.star.animations.add('change', [1]);
-	this.star.animations.play('normal', 5, true);
-	game.physics.enable(this.star, Phaser.Physics.ARCADE);
-	this.starNum = game.add.text(this.star.x + 40, this.star.y + 12, 'unknown', { font: '20px Arial Bold', fill: '#fff' });
+	
 
 	//power
 	this.power = game.add.text(this.x, this.y + 70, 'Skill Recharged: ', { font: '16px Arial', fill: '#fff' });
