@@ -55,9 +55,9 @@ Enemy.prototype = {
 
 //==================================================================================================================================================================
 
-var BossStage1 = function(spriteName, x, y, hp) {
+var BossStage1 = function(x, y, hp) {
 	this.HP = hp;
-	this.sprite = game.add.sprite(x, y, spriteName);
+	this.sprite = game.add.sprite(x, y, 'boss1');
 	game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 	this.sprite.body.setSize(this.sprite.width/Math.sqrt(2), this.sprite.height/Math.sqrt(2), 0, 0);
 	this.sprite.anchor.set(0.5);
@@ -160,12 +160,12 @@ BossStage1.prototype = {
 
 };
 
-var BossStage2 = function(spriteName, x, y, hp, player) {
+var BossStage2 = function(x, y, hp, player) {
 	this.player = player;
 	this.HP = 500;
 	this.dangerRange = this.HP / 3;
 	this.isIntro = true;
-	this.sprite = game.add.sprite(100, 100, spriteName);
+	this.sprite = game.add.sprite(100, 100, 'boss2');
 	game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 	this.sprite.anchor.set(0.5);
 	this.sprite.animations.add('fly',[0]);
@@ -336,11 +336,11 @@ EnemyManager.prototype = {
 		}
 	},
 
-	addBoss: function(spriteName, x, y, hp, type) {
+	addBoss: function(x, y, hp, type) {
 		if (type == 1) {
-			var boss = new BossStage1(spriteName, x, y, hp, this.owner);
+			var boss = new BossStage1(x, y, hp, this.owner);
 		} else if (type == 2) {
-			boss = new BossStage2(spriteName, x, y, hp, this.owner);
+			boss = new BossStage2(x, y, hp, this.owner);
 		}
 		this.sprites.add(boss.sprite);
 	},

@@ -20,7 +20,7 @@ LevelManager.prototype = {
 			// 	this.addEnemy((Math.floor(this.currentWave/2) + 1)%5 + 1, this.enemyManager.getRandromPathType(), this.currentWave%5 + 5);
 			// }
 			if (this.currentWave==5){
-				this.enemyManager.addBoss('boss', w/2, h/10, 500);
+				this.enemyManager.addBoss(w/2, h/10, 500, 2);
 			}
 
 			//test
@@ -66,7 +66,7 @@ LevelManager.prototype = {
 		// 		this.requested = false;
 		// 	}, this);
 		// }
-		
+		}
 	},
 
 	loadLevel: function(level) {
