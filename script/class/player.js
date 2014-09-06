@@ -100,7 +100,27 @@ var PlayerHUD = function(player, x, y) {
 	this.xIcon1.frame = 10;
 	this.hpCount = game.add.sprite(this.x + 60, this.y + 5, 'number');
 	this.hpCount.frame = this.player.HP;
+	
+	
+	// This section is for new HUD
+	this.hubBackgroundData = {x: this.x, y: this.y + 200, originWidth: 356}
+	this.scale = this.hubBackgroundData.originWidth / 237;
+	this.maxHP = this.player.HP;
+	this.hpbarData = {x: this.hubBackgroundData.x + 57 * this.scale, y: this.hubBackgroundData.y + 10.5 * this.scale, originWidth: 173 * this.scale}
+	this.hpbar = game.add.sprite(this.hpbarData.x, this.hpbarData.y, 'playerHPbar');
+	this.hpbar.frame = 1;
+	this.hpbar.height = 10 * this.scale;
+	this.hpbar.width = this.hpbarData.originWidth;
+	
+	this.rechargebarData = {x: this.hubBackgroundData.x + 57 * this.scale, y: this.hubBackgroundData.y + 28.5 * this.scale, originWidth: 173 * this.scale}
+	this.rechargebar = game.add.sprite(this.rechargebarData.x, this.rechargebarData.y, 'playerRechargebar');
+	this.rechargebar.height = 9 * this.scale;
+	this.rechargebar.width = this.rechargebarData.originWidth;
+	this.hubBackground = game.add.sprite(this.hubBackgroundData.x, this.hubBackgroundData.y, 'hubBG')
 
+
+	
+	
 	//player level
 	this.playerLevel = game.add.text(this.x, this.y + 30, 'M.Bullet Level:', { font: '16px Arial', fill: '#fff' });
 	this.levelText = game.add.text(this.x + 120, this.y + 28, '1 (0/4)', { font: '18px Arial Bold', fill: '#fff' });
@@ -128,6 +148,10 @@ PlayerHUD.prototype = {
 
 	updateHP: function(){
 		this.hpCount.frame = this.player.HP;
+		if (this.hpbarData.originWidth * this.player.HP / this.maxHP < 0)
+			this.hpbar.width = 0;
+		else
+			this.hpbar.width = this.hpbarData.originWidth * this.player.HP / this.maxHP;
 	},
 
 	updateLevel: function(){
@@ -152,5 +176,10 @@ PlayerHUD.prototype = {
 	
 	updatePower: function() {
 		this.powerText.text = this.player.power + '%';
+		if (this.rechargebarData.originWidth * this.player.power / 100 < 0)
+			this.rechargebar.width = 0;
+		else
+			this.rechargebar.width = this.rechargebarData.originWidth * this.player.power / 100;
+
 	}
 };

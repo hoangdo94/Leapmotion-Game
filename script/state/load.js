@@ -27,10 +27,16 @@ var loadState = {
 		game.load.image('planet2', 'asset/image/planet2.png');
 		game.load.image('planet3', 'asset/image/planet3.png');
 		game.load.image('planet4', 'asset/image/planet4.png');
+		game.load.image('hubBG', 'asset/image/hubBG.png')
 
 		game.load.spritesheet('player', 'asset/image/player.png', 112, 75, 3);
 		game.load.spritesheet('number', 'asset/image/number.png', 19, 19, 11);
-		game.load.spritesheet('hpbar', 'asset/image/hpbar.png', 10, 10, 2);
+		
+		game.load.spritesheet('hpbar', 'asset/image/hpbarnew.png', 10, 10, 2);
+		game.load.image('playerHPbar', 'asset/image/hpbar.png');
+		game.load.image('playerRechargebar', 'asset/image/rechargebar.png');
+		
+		
 		game.load.image('playerIcon', 'asset/image/playericon.png');
 		game.load.image('laser', 'asset/image/laser.png');
 		game.load.image('enemylaserchase', 'asset/image/enemybullet.png');

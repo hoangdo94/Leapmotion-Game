@@ -42,11 +42,13 @@ LevelManager.prototype = {
 			// }
 			switch (this.currentWave) {
 				case 1:
-					//this.wave_1();
-					this.enemyManager.addBoss(w/2, h/10, 500, 1);
+					this.wave_1();
+// 					this.enemyManager.addBoss(w/2, h/10, 200, 2);
+
 					break;
 				case 2:
 					this.wave_2();
+
 					break;
 				case 3:
 					this.wave_3();
