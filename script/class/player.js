@@ -89,21 +89,11 @@ Player.prototype = {
 	}
 };
 
-var PlayerHUD = function(player, x, y) {
+var PlayerHUD = function(player, posX, posY) {
 	this.player = player;
-	this.x = x;
-	this.y = y;
-
-	//player lives
-	this.playerIcon = game.add.sprite(this.x,this.y,'playerIcon');
-	this.xIcon1 = game.add.sprite(this.x + 40, this.y + 5, 'number');
-	this.xIcon1.frame = 10;
-	this.hpCount = game.add.sprite(this.x + 60, this.y + 5, 'number');
-	this.hpCount.frame = this.player.HP;
-	
 	
 	// This section is for new HUD
-	this.hubBackgroundData = {x: this.x, y: this.y + 200, originWidth: 356}
+	this.hubBackgroundData = {x: posX, y: posY, originWidth: 356}
 	this.scale = this.hubBackgroundData.originWidth / 237;
 	this.maxHP = this.player.HP;
 	//HP bar
@@ -128,24 +118,12 @@ var PlayerHUD = function(player, x, y) {
 
 
 	this.hubBackground = game.add.sprite(this.hubBackgroundData.x, this.hubBackgroundData.y, 'hubBG')
+
+	//text
 	this.bulletText = game.add.text(this.bulletbarData.x + this.bulletbarData.originWidth/2, this.bulletbarData.y + 6, 'LEVEL 1', { font: '16px Arial Bold', fill: '#fff' });
 	this.bulletText.anchor.set(0.5);
-
-	
-
-	//player level
-	this.playerLevel = game.add.text(this.x, this.y + 30, 'M.Bullet Level:', { font: '16px Arial', fill: '#fff' });
-	this.levelText = game.add.text(this.x + 120, this.y + 28, '1 (0/4)', { font: '18px Arial Bold', fill: '#fff' });
-
-	//sub bullet time
-	this.subBulletTime = game.add.text(this.x, this.y + 50, 'S.Bullet Time:', { font: '16px Arial', fill: '#fff' });
-	this.timeText = game.add.text(this.x + 120, this.y + 48, '0s', { font: '18px Arial Bold', fill: '#fff' });
-	
-	
-
-	//power
-	this.power = game.add.text(this.x, this.y + 70, 'Skill Recharged: ', { font: '16px Arial', fill: '#fff' });
-	this.powerText = game.add.text(this.x + 120, this.y + 70, '0%', { font: '18px Arial Bold', fill: '#fff' });
+	this.timeText = game.add.text(this.hubBackgroundData.x + 38, this.hubBackgroundData.y + 92, '0s', { font: '18px Arial Bold', fill: '#fff' });
+	this.timeText.anchor.set(0.5);
 };
 
 PlayerHUD.prototype = {
@@ -153,7 +131,6 @@ PlayerHUD.prototype = {
 	constructor: PlayerHUD,
 
 	updateHP: function(){
-		this.hpCount.frame = this.player.HP;
 		if (this.hpbarData.originWidth * this.player.HP / this.maxHP < 0)
 			this.hpbar.width = 0;
 		else
@@ -162,12 +139,8 @@ PlayerHUD.prototype = {
 
 	updateLevel: function(){
 		if (this.player.level < 5) {
-			this.levelText.text = this.player.level + ' (' + this.player.numOfPowerUpCollected.temp + '/' + Math.pow(2, this.player.level+1) + ')';
 			this.bulletbar.width = this.bulletbarData.originWidth * this.player.numOfPowerUpCollected.total / 60;
 			this.bulletText.text = 'LEVEL ' + this.player.level;
-		}
-		else {
-			this.levelText.text = '5 (MAXED)';
 		}
 	},
 
@@ -183,8 +156,6 @@ PlayerHUD.prototype = {
 	},
 	
 	updatePower: function() {
-		this.powerText.text = this.player.power + '%';
 		
-
 	}
 };
