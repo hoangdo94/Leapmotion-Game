@@ -189,10 +189,11 @@ var PowerUpEffects = function(type) {
     this.playerHitPowerUp = function(player, powerUp) {
         powerUp.kill();
         if (this.type == 'main') {
-            player.owner.numOfPowerUpCollected++;
-            if (player.owner.numOfPowerUpCollected == Math.pow(2, player.owner.level+1)){
+            player.owner.numOfPowerUpCollected.temp++;
+            player.owner.numOfPowerUpCollected.total++;
+            if (player.owner.numOfPowerUpCollected.temp == Math.pow(2, player.owner.level+1)){
                 player.owner.mainBulletPowerUp();
-                player.owner.numOfPowerUpCollected = 0;
+                player.owner.numOfPowerUpCollected.temp = 0;
             }
             player.owner.HUD.updateLevel();
         }

@@ -34,7 +34,7 @@ var loadState = {
 		
 		game.load.spritesheet('hpbar', 'asset/image/hpbarnew.png', 10, 10, 2);
 		game.load.image('playerHPbar', 'asset/image/hpbar.png');
-		game.load.image('playerRechargebar', 'asset/image/rechargebar.png');
+		game.load.image('playerbulletbar', 'asset/image/bulletbar.png');
 		
 		
 		game.load.image('playerIcon', 'asset/image/playericon.png');

@@ -276,10 +276,10 @@ SuperBullet.prototype.fireAround = function(angle) {
 	}
 }
 
-SuperBullet.prototype.fire = function(number) {
-	this.sound.play();
+SuperBullet.prototype.fire = function(number) {	
 	this.maxAngle = number * 360;
 	if (this.isActive) { 
+		this.sound.play();
 		this.isFinished = false;
 		this.isActive = false;
 		this.recharge = 0;

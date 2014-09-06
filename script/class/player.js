@@ -4,7 +4,7 @@ var Player = function(spriteName, startPosition, hp) {
 	this.starNum = 0;
 	this.power = 0;
 
-	this.numOfPowerUpCollected = 0;
+	this.numOfPowerUpCollected = {temp: 0, total: 0};
 	this.subBulletTime = 0;
 
 	//add sprite
@@ -106,21 +106,25 @@ var PlayerHUD = function(player, x, y) {
 	this.hubBackgroundData = {x: this.x, y: this.y + 200, originWidth: 356}
 	this.scale = this.hubBackgroundData.originWidth / 237;
 	this.maxHP = this.player.HP;
+	//HP bar
 	this.hpbarData = {x: this.hubBackgroundData.x + 57 * this.scale, y: this.hubBackgroundData.y + 10.5 * this.scale, originWidth: 173 * this.scale}
 	this.hpbar = game.add.sprite(this.hpbarData.x, this.hpbarData.y, 'playerHPbar');
 	this.hpbar.frame = 1;
 	this.hpbar.height = 10 * this.scale;
 	this.hpbar.width = this.hpbarData.originWidth;
+	//Bullet bar
+	this.bulletbarData = {x: this.hubBackgroundData.x + 57 * this.scale, y: this.hubBackgroundData.y + 28.5 * this.scale, originWidth: 173 * this.scale}
+	this.bulletbar = game.add.sprite(this.bulletbarData.x, this.bulletbarData.y, 'playerbulletbar');
+	this.bulletbar.height = 9 * this.scale;
+	this.bulletbar.width = 0;
 	
-	this.rechargebarData = {x: this.hubBackgroundData.x + 57 * this.scale, y: this.hubBackgroundData.y + 28.5 * this.scale, originWidth: 173 * this.scale}
-	this.rechargebar = game.add.sprite(this.rechargebarData.x, this.rechargebarData.y, 'playerRechargebar');
-	this.rechargebar.height = 9 * this.scale;
-	this.rechargebar.width = this.rechargebarData.originWidth;
+
 	this.hubBackground = game.add.sprite(this.hubBackgroundData.x, this.hubBackgroundData.y, 'hubBG')
-
+	this.bulletText = game.add.text(this.bulletbarData.x + this.bulletbarData.originWidth/2, this.bulletbarData.y + 6, 'LEVEL 1', { font: '16px Arial Bold', fill: '#fff' });
+	this.bulletText.anchor.set(0.5);
 
 	
-	
+
 	//player level
 	this.playerLevel = game.add.text(this.x, this.y + 30, 'M.Bullet Level:', { font: '16px Arial', fill: '#fff' });
 	this.levelText = game.add.text(this.x + 120, this.y + 28, '1 (0/4)', { font: '18px Arial Bold', fill: '#fff' });
@@ -156,7 +160,9 @@ PlayerHUD.prototype = {
 
 	updateLevel: function(){
 		if (this.player.level < 5) {
-			this.levelText.text = this.player.level + ' (' + this.player.numOfPowerUpCollected + '/' + Math.pow(2, this.player.level+1) + ')';
+			this.levelText.text = this.player.level + ' (' + this.player.numOfPowerUpCollected.temp + '/' + Math.pow(2, this.player.level+1) + ')';
+			this.bulletbar.width = this.bulletbarData.originWidth * this.player.numOfPowerUpCollected.total / 60;
+			this.bulletText.text = 'LEVEL ' + this.player.level;
 		}
 		else {
 			this.levelText.text = '5 (MAXED)';
@@ -176,10 +182,7 @@ PlayerHUD.prototype = {
 	
 	updatePower: function() {
 		this.powerText.text = this.player.power + '%';
-		if (this.rechargebarData.originWidth * this.player.power / 100 < 0)
-			this.rechargebar.width = 0;
-		else
-			this.rechargebar.width = this.rechargebarData.originWidth * this.player.power / 100;
+		
 
 	}
 };
