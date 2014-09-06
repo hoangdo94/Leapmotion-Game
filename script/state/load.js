@@ -62,7 +62,7 @@ var loadState = {
 		game.load.spritesheet('hurtview', 'asset/image/hurtview.png', 1024, 1024, 1);
 		
 		game.load.image('magiccircle', 'asset/image/magiccircle5.jpg');
-		game.load.spritesheet('boss2', 'asset/image/boss2new.png', 242, 254, 3);
+		game.load.spritesheet('boss2', 'asset/image/boss2.png', 242, 254, 3);
 		//load audios
 		game.load.audio('explosion', 'asset/audio/explosion.wav');
 		game.load.audio('gameMusic', 'asset/audio/gameMusic.mp3');
