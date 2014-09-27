@@ -10,7 +10,7 @@ var playState = {
 		
 		//add player
 		this.playerPosition = {x:w / 2, y: h - 100};
-		this.player = new Player('player', this.playerPosition, 100);
+		this.player = new Player('player', this.playerPosition, 70);
 
 		this.bg.getOriginalPos(this.player);
 

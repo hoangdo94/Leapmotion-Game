@@ -177,16 +177,16 @@ var BossStage2 = function(x, y, hp, player) {
 	tween1 = game.add.tween(this.sprite).to({ x: w + this.sprite.body.halfWidth }, 1000, Phaser.Easing.Linear.None).start();
 	this.isIntro = true;
 	
-	this.sprite.reset(w + this.sprite.body.halfWidth, this.sprite.body.halfHeight);
+	this.sprite.reset(w + this.sprite.body.halfWidth, this.sprite.body.halfHeight * 2);
 	tween2 = game.add.tween(this.sprite).to({ x: -this.sprite.body.halfWidth }, 1400, Phaser.Easing.Linear.None).delay(3000).start();
 	
-	this.sprite.reset(-this.sprite.body.halfWidth, this.sprite.body.halfHeight);
+	this.sprite.reset(-this.sprite.body.halfWidth, this.sprite.body.halfHeight * 2);
 	tween3 = game.add.tween(this.sprite).to({ x: w + this.sprite.body.halfWidth }, 1800, Phaser.Easing.Linear.None).delay(6000).start();
 	
-	this.sprite.reset(w + this.sprite.body.halfWidth, this.sprite.body.halfHeight);
+	this.sprite.reset(w + this.sprite.body.halfWidth, this.sprite.body.halfHeight * 2);
 	tween4 = game.add.tween(this.sprite).to({ x: w / 2 }, 2000, Phaser.Easing.Linear.None).delay(9000).start();
 	tween4.onComplete.add(function(){
-		this.sprite.reset(w /2, this.sprite.body.halfHeight);
+		this.sprite.reset(w /2, this.sprite.body.halfHeight * 2);
 		this.isIntro = false;
 		}, this);
 
@@ -233,7 +233,7 @@ BossStage2.prototype = {
 			if (this.player)
 				this.bullet.fireArray(this.player.sprite);
 				if (Math.abs(this.player.sprite.x - this.sprite.x) > 30)
-					game.physics.arcade.moveToObject(this.sprite, {x: this.player.sprite.x, y: this.sprite.body.halfHeight}, 50); 
+					game.physics.arcade.moveToObject(this.sprite, {x: this.player.sprite.x, y: this.sprite.body.halfHeight * 2}, 50); 
 		}
 		if (this.HP <= this.dangerRange) {
 			this.bullet.fireCircleActive = true;
@@ -275,6 +275,7 @@ var EnemyManager = function(owner) {
 	this.CROSSPATH = 4;
 	this.CHAINEDPATH = 5;
 	this.isOutOfEnemies = true;
+	this.isBossTime = false;
 };
 
 EnemyManager.prototype = {	

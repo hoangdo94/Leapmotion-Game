@@ -3,10 +3,6 @@ var LevelManager = function(player, enemyManager){
 	this.enemyManager = enemyManager;
 	this.level;
 	this.currentWave = 0;
-	this.announcement = game.add.text(w/2, h/2, 'text ', { font: '50px Arial bold', fill: '#fff' });
-	this.announcement.anchor.set(0.5);
-	this.tween = game.add.tween(this.announcement).to({y: h/2-50}, 500).to({y: h/2}, 1000).start();
-	this.time = 0;
 	this.requestNextWave = false;
 	this.requested = false;
 
@@ -24,7 +20,11 @@ LevelManager.prototype = {
 	update: function() {
 
 		if (this.enemyManager.isOutOfEnemies && !this.requested) {
-			this.requestNextWave = true;
+			if (this.enemyManager.isBossTime) {
+				this.requestNextWave = false;
+			}
+			else
+				this.requestNextWave = true;
 		}
 		if (this.requestNextWave){
 			this.requestNextWave = false;
@@ -61,6 +61,7 @@ LevelManager.prototype = {
 						break;
 					case 10:
 						this.wave_10();
+						this.enemyManager.isBossTime = true;
 						break;
 					case 11:
 						this.wave_11();
@@ -94,6 +95,7 @@ LevelManager.prototype = {
 						break;
 					case 21:
 						this.wave_21();
+						this.enemyManager.isBossTime = true;
 						break;
 					default:
 						status = 1; //win
@@ -365,10 +367,10 @@ LevelManager.prototype = {
 		var type = (Math.floor(this.currentWave/2) + 1)%5 + 1;
 		for (var i = 0; i < 5; i++) {
 			if (type < 3) {
-				this.enemyManager.addEnemy(type, w/6 -50 - 300*i, -100 - 200*i, 'enemylaserunchase', false, 5, this.enemyManager.CIRCLEPATH); 				
+				this.enemyManager.addEnemy(type, w -450 - 200*i, -100 - 200*i, 'enemylaserunchase', false, 5, this.enemyManager.CIRCLEPATH); 				
 			}
 			else {
-				this.enemyManager.addEnemy(type, w/6 -50 - 300*i, -100 - 200*i, 'enemylaserchase', true, 5, this.enemyManager.CIRCLEPATH);
+				this.enemyManager.addEnemy(type, w -450 - 200*i, -100 - 200*i, 'enemylaserchase', true, 5, this.enemyManager.CIRCLEPATH);
 			}
 		}
 	},
@@ -377,10 +379,10 @@ LevelManager.prototype = {
 		var type = (Math.floor(this.currentWave/2) + 1)%5 + 1;
 		for (var i = 0; i < 5; i++) {
 		if (type < 3) {
-			this.enemyManager.addEnemy(type, 4*w/5 - 50 + 300*i, -100 - 200*i, 'enemylaserunchase', false, 4, this.enemyManager.CIRCLEPATH);
+			this.enemyManager.addEnemy(type, w/6 - 30 + 200*i, -100 - 200*i, 'enemylaserunchase', false, 4, this.enemyManager.CIRCLEPATH);
 			}
 		else {
-			this.enemyManager.addEnemy(type, 4*w/5 - 50 + 300*i, -100 - 200*i, 'enemylaserchase', true, 4, this.enemyManager.CIRCLEPATH);
+			this.enemyManager.addEnemy(type, w/6 - 30 + 200*i, -100 - 200*i, 'enemylaserchase', true, 4, this.enemyManager.CIRCLEPATH);
 			}
 		}
 	},

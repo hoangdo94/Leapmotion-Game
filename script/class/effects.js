@@ -361,6 +361,7 @@ var CollisionManager = function(player, enemyManager) {
 				if (enemy.y > 0) {
 					if (enemy.owner.HP <= 0) {
 						enemy.kill();
+						this.enemyManager.isBossTime = false;
 						this.bossBoomEffect.play(enemy.x, enemy.y);
 					}
 					bullet.kill();
