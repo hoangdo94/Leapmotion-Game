@@ -49,8 +49,8 @@ var playState = {
 		this.collisionManager.update(this.player, this.enemyManager);
 	},
 	
-	render: function() {
-		this.levelManager.render();
-	}
+// 	render: function() {
+// 		this.levelManager.render();
+// 	}
 };
 

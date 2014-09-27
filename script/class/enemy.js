@@ -393,36 +393,15 @@ EnemyManager.prototype = {
 var MovePathManager = function() {
 	this.circletPath = function(enemy) {
 		if (enemy) {
-    		if (enemy.y < h/3 && enemy.owner.direction != 3 && enemy.owner.direction != 4 && enemy.owner.direction != 5) {
+    		if (enemy.y < h/3) {
     			enemy.body.velocity.y = 200;
-				enemy.body.velocity.x = 20;
+    			enemy.body.velocity.x = 20;
     		}
-    		else if (enemy.y < h/5 && enemy.owner.direction == 3) {
-    			enemy.body.velocity.y = 200;
-    		}
-			else if (enemy.y < h/5 && enemy.owner.direction == 4) {
-				enemy.body.velocity.y = 200;
-				enemy.body.velocity.x = -300;
-			}
-			else if (enemy.y < h/3 && enemy.owner.direction == 5) {
-				enemy.body.velocity.y = 200;
-				enemy.body.velocity.x = 300;
-			}
     		else {
     			enemy.body.velocity.y = 0;
     			enemy.body.velocity.x = 0;
-				if (enemy.owner.direction != 2 && enemy.owner.direction != 4) {
-    				if (enemy.owner.direction != 5)	
-						enemy.x += 2 * Math.cos(enemy.angle);
-					if (enemy.owner.direction == 5)	
-						enemy.x += 1.2 * Math.cos(enemy.angle);
-				}
-    			else if (enemy.owner.direction == 2 || enemy.owner.direction == 4)
-					enemy.x += -2 * Math.cos(enemy.angle);
-				if (enemy.owner.direction != 5)	
-    				enemy.y += 2 * Math.sin(enemy.angle);
-				if (enemy.owner.direction == 5)	
-					enemy.y += 1.2 * Math.sin(enemy.angle);
+    			enemy.x += 2 * Math.cos(enemy.angle);
+    			enemy.y += 2 * Math.sin(enemy.angle);
     			enemy.angle += 0.01;
     		}
     	}
@@ -430,14 +409,14 @@ var MovePathManager = function() {
 
 	this.straightPath = function(enemy) {
 		if (enemy) {
-			if (enemy.y < (h / 6)) {
+			if (enemy.y < (h / 5)) {
     			enemy.body.velocity.y = 200;
     			if (enemy.owner.direction === 1) 
     				enemy.body.velocity.x = 20;
     			else if (enemy.owner.direction === 2)
     				enemy.body.velocity.x = -20;
     		} else {
-    			enemy.body.velocity.y = 80;
+    			enemy.body.velocity.y = 100;
     		}
     	}
 	}

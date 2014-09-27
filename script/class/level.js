@@ -3,6 +3,10 @@ var LevelManager = function(player, enemyManager){
 	this.enemyManager = enemyManager;
 	this.level;
 	this.currentWave = 0;
+	this.announcement = game.add.text(w/2, h/2, 'text ', { font: '50px Arial bold', fill: '#fff' });
+	this.announcement.anchor.set(0.5);
+	this.tween = game.add.tween(this.announcement).to({y: h/2-50}, 500).to({y: h/2}, 1000).start();
+	this.time = 0;
 	this.requestNextWave = false;
 	this.requested = false;
 
@@ -256,7 +260,7 @@ LevelManager.prototype = {
 	},
 
 	wave_10: function() {
-		this.enemyManager.addBoss(w/2, h/10, 500, 1);
+		this.enemyManager.addBoss(w/2, h/10, 200, 1);
 	},
 	
 	wave_11: function() {
@@ -382,7 +386,7 @@ LevelManager.prototype = {
 	},
 	
 	wave_21: function() {
-		this.enemyManager.addBoss(w/2, h/10, 1000, 2);
+		this.enemyManager.addBoss(w/2, h/10, 500, 2);
 	},
 	
 
